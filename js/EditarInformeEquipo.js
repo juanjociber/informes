@@ -305,29 +305,3 @@ function FnListarInformes(){
 }
 
 
-// Acceso a los elementos del DOM
-const video = document.getElementById('video');
-const canvas = document.getElementById('canvas');
-const photo = document.getElementById('photo');
-const captureButton = document.getElementById('capture');
-
-// Acceso a la cámara
-navigator.mediaDevices.getUserMedia({ video: true })
-    .then(stream => {
-        video.srcObject = stream;
-    })
-    .catch(err => {
-        console.error("Error al acceder a la cámara: ", err);
-    });
-
-// Captura de la imagen
-captureButton.addEventListener('click', () => {
-    const context = canvas.getContext('2d');
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    context.drawImage(video, 0, 0, canvas.width, canvas.height);
-    const dataURL = canvas.toDataURL('image/png');
-    photo.setAttribute('src', dataURL);
-});
-
-

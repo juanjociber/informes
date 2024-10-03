@@ -153,17 +153,6 @@
         </div>
       <?php endif; ?>
     </div>
-
-    video {
-            width: 100%;
-            height: auto;
-            border: 1px solid #ccc;
-        }
-        #photo {
-            display: block;
-            margin-top: 10px;
-            border: 1px solid #ccc;
-        }
     
 
   
