@@ -1,18 +1,12 @@
 <?php
   session_start();
-
-  if(!isset($_SESSION['UserName']) || !isset($_SESSION['CliId'])){
-    header("location:/gesman");
-    exit();
-  }
+  if(!isset($_SESSION['UserName']) || !isset($_SESSION['CliId'])){ header("location:/gesman"); exit(); }
   require_once $_SERVER['DOCUMENT_ROOT']."/gesman/connection/ConnGesmanDb.php";
   require_once $_SERVER['DOCUMENT_ROOT']."/informes/datos/InformesData.php";
 
   $ID = empty($_GET['id'])?0:$_GET['id'];
-  $CLI_ID = $_SESSION['CliId'];
   $isAuthorized = false;
   $errorMessage = '';
-  $Estado=0;
   $Nombre='';
   $supervisores = array();
   $contactos = array();
@@ -23,14 +17,14 @@
     $conmy->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     if (is_numeric($ID) && $ID > 0) {
-      $informe = FnBuscarInforme($conmy, $ID, $CLI_ID);
+      $informe = FnBuscarInforme($conmy, $ID, $_SESSION['CliId']);
       if($informe && $informe->Estado !=3){
         $isAuthorized = true;
         $Nombre = $informe->Nombre;
         $claseHabilitado = "btn-outline-primary";
         $atributoHabilitado = ""; 
         $supervisores = FnBuscarSupervisores($conmy);
-        $contactos = FnBuscarContacto($conmy, $CLI_ID);
+        $contactos = FnBuscarContacto($conmy, $_SESSION['CliId']);
       }
     } 
     $conmy = null;
@@ -164,8 +158,8 @@
         </div>
         <!-- BOTON GUARDAR -->
         <div class="row mt-4">
-          <div class="col-12 col-md-3 mt-2">
-            <button id="guardarDataEquipo" class="btn btn-primary pt-2 pb-2 col-12 fw-bold" onclick="fnGuardarDatosGenerales();"><i class="fas fa-save" style="margin-right:10px;"></i>GUARDAR</button>
+          <div class="col-12 mt-2">
+            <button id="guardarDataEquipo" class="btn btn-outline-primary pt-2 pb-2 col-12 fw-bold" onclick="fnGuardarDatosGenerales();"><i class="fas fa-save" style="margin-right:10px;"></i>GUARDAR</button>
           </div>
         </div>
       <?php endif ?>

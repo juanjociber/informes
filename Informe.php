@@ -18,7 +18,6 @@
   $Estado=0;
   $NUMERO=1;
 	$tablaHTML ='';
-
   $actividades = array();
   $conclusiones = array();
   $recomendaciones = array();
@@ -50,34 +49,38 @@
 		foreach ($arbol as $key=>$nodo) {
 			$indiceActual = $nivel==0?$contador++:$indice.'.'.($key+1);
 			$html.='
-            <div class="col-12 mb-0 border-bottom bg-light">
-              <p class="mt-2 mb-2 fw-bold" style="padding-left: 10px;">'.$numero.'.'.$indiceActual.' - '.$nodo['actividad'].'</p>
-            </div>
-						<div class="row p-1 m-0 border border-opacity-10">
-							<div class="col-12 mb-1">
-                <p class="mb-0 text-secondary fw-lights">Diagnóstico</p>
-                <p class="mb-0 diagnostico" style="font-size=15px" id="diagnostico-'.$nodo['id'].'">'.$nodo['diagnostico'].'</p>
-              </div>
-							<div class="col-12 mb-1">
-                <p class="text-secondary fw-light mb-0">Trabajos</p>
-                <p class="mb-0 trabajo" style="font-size=15px" id="trabajo-'.$nodo['id'].'">'.$nodo['trabajos'].'</p>
-              </div>
-							<div class="col-12 mb-1">
-                <p class="text-secondary fw-light mb-0">Observaciones</p>
-                <p class="mb-0 observacion" style="font-size=15px" id="observacion-'.$nodo['id'].'">'.$nodo['observaciones'].'</p>
-              </div>
-						  <div class="row m-0 mt-2 mb-2 p-0 d-flex justify-content-center" id="'.$nodo['id'].'">';
-							  if(isset($imagenes[$nodo['id']])){
-								  foreach($imagenes[$nodo['id']] as $elemento){
-									  $html.='
-                    <div class="col-5 col-lg-4 col-xl-3 m-1 border border-secondary border-opacity-50" id="archivo-'.$elemento['id'].'">
-                      <p class="text-center mb-1">'.$elemento['titulo'].'</p>
-                        <img src="/mycloud/gesman/files/'.$elemento['nombre'].'" class="img-fluid" alt="">
-                      <p class="text-center mb-0">'.$elemento['descripcion'].'</p>
-                    </div>';
-								  }
-							  }
-			$html.='</div>';
+        <div class="col-12 mb-0 border-bottom bg-light">
+          <p class="mt-2 mb-2 fw-bold text-secondary" style="padding-left: 10px;">'.$numero.'.'.$indiceActual.' - '.$nodo['actividad'].'</p>
+        </div>
+        <div class="row p-1 m-0 border border-opacity-10">
+          <div class="col-12 mb-1">
+            <p class="mb-0 text-secondary fw-lights">Diagnóstico</p>
+            <p class="mb-0 diagnostico text-secondary fw-bold" style="font-size=15px" id="diagnostico-'.$nodo['id'].'">'.$nodo['diagnostico'].'</p>
+          </div>
+          <div class="col-12 mb-1">
+            <p class="text-secondary fw-light mb-0">Trabajos</p>
+            <p class="mb-0 trabajo text-secondary fw-bold" style="font-size=15px" id="trabajo-'.$nodo['id'].'">'.$nodo['trabajos'].'</p>
+          </div>
+          <div class="col-12 mb-1">
+            <p class="text-secondary fw-light mb-0">Observaciones</p>
+            <p class="mb-0 observacion text-secondary fw-bold" style="font-size=15px" id="observacion-'.$nodo['id'].'">'.$nodo['observaciones'].'</p>
+          </div>
+          <div class="row m-0 mt-2 mb-2 p-0 d-flex justify-content-center" id="'.$nodo['id'].'">';
+            if(isset($imagenes[$nodo['id']])){
+              $html.='<div class="contenedor-imagenes">';
+              foreach($imagenes[$nodo['id']] as $elemento){
+                $html.='
+                <div class=" text-center m-1 p-0 border border-1" id="archivo-'.$elemento['id'].'">
+                  <p class="bg-light text-secondary m-0 pt-1 pb-2" style="text-align:justify;padding-left:5px;">'.$elemento['titulo'].'</p>
+                    <img src="/mycloud/gesman/files/'.$elemento['nombre'].'" class="img-fluid imagen-ajustada" alt="">
+                  <p class="bg-light text-secondary mb-0 pt-1 pb-2" style="text-align:justify;padding-left:5px;">'.$elemento['descripcion'].'</p>
+                </div>  
+                ';
+              }
+              $html.='</div>';
+            }
+			    $html.='
+          </div>';
 			if (!empty($nodo['hijos'])) {
 				$html.='<div class="p-0 hijos">';
 				$html.=FnGenerarInformeHtmlAcordeon($nodo['hijos'], $imagenes,$numero, $nivel+1, $indiceActual);
@@ -188,11 +191,16 @@
     <link rel="stylesheet" href="/gesman/menu/sidebar.css">
     <style>
       .hijos p:first-child{ padding-top: 10px;}
-      .img-fluid{
-        object-fit: cover !important;
+      .imagen-ajustada {
+        width: auto !important;
+        height: 150px;
+        object-fit: contain; 
+      }
+      @media(min-width:576px){ .imagen-ajustada { width: auto !important;height: 200px; object-fit: contain;}
       }
       .contenedor-imagen{display:grid;grid-template-columns:1fr 1fr !important;gap:5px;}
-      @media(min-width:768px){.contenedor-imagen{grid-template-columns:1fr 1fr 1fr 1fr !important;}}
+      @media(min-width:768px){.contenedor-imagen{grid-template-columns:1fr 1fr 1fr !important;}}
+      .contenedor-imagenes{display: grid; grid-template-columns:1fr 1fr}
     </style>
   </head>
   <body>
@@ -215,13 +223,11 @@
           <p class="m-0 text-secondary"><?php echo $isAuthorized ? $Nombre :'UNKNOWN' ; ?></p>
         </div>
       </div>
-
       <?php if ($isAuthorized): ?>
-
         <!-- DATOS GENERALES -->
         <div class="row p-1 mb-2 mt-2">
           <div class="col-12 m-0 border-bottom bg-light" >
-            <p class="mt-2 mb-2 fw-bold"><?php echo $NUMERO; ?>- DATOS GENERALES</p>
+            <p class="mt-2 mb-2 fw-bold text-secondary"><?php echo $NUMERO; ?>- DATOS GENERALES</p>
           </div>
           <div class="row p-1 m-0">
             <div class="col-6 col-sm-4 col-lg-4 mb-1">
@@ -253,31 +259,30 @@
               <p class="m-0"><?php echo  $informe->Supervisor  ; ?></p>
             </div>
             <div class="col-6 col-sm-4 mb-1">
-                <p class="m-0 text-secondary" style="font-size: 12px;">Estado</p>
-                <?php
-                    switch ($informe->Estado){
-                        case 1:
-                            echo "<span class='badge bg-danger'>Anulado</span>";
-                            break;
-                        case 2:
-                            echo "<span class='badge bg-primary'>Abierto</span>";
-                            break;
-                        case 3:
-                            echo "<span class='badge bg-success'>Cerrado</span>";
-                            break;
-                        default:
-                            echo "<span class='badge bg-secondary'>Unknown</span>";
-                    }
-                ?>
+              <p class="m-0 text-secondary" style="font-size: 12px;">Estado</p>
+              <?php
+                switch ($informe->Estado){
+                  case 1:
+                    echo "<span class='badge bg-danger'>Anulado</span>";
+                    break;
+                  case 2:
+                    echo "<span class='badge bg-primary'>Abierto</span>";
+                    break;
+                  case 3:
+                    echo "<span class='badge bg-success'>Cerrado</span>";
+                    break;
+                  default:
+                    echo "<span class='badge bg-secondary'>Unknown</span>";
+                }
+              ?>
             </div>
           </div>
         </div>
         <?php $NUMERO+=1; ?>
-          
         <!-- DATOS DEL EQUIPO -->
         <div class="row p-1 mb-2 mt-2">
           <div class="col-12 mb-0 border-bottom bg-light">
-            <p class="mt-2 mb-2 fw-bold"><?php echo $NUMERO; ?>- DATOS DEL EQUIPO</p>
+            <p class="mt-2 mb-2 fw-bold text-secondary"><?php echo $NUMERO; ?>- DATOS DEL EQUIPO</p>
           </div>
         </div>
         <div class="row p-1 m-0">
@@ -314,14 +319,12 @@
             <p class="m-0"><?php echo  $informe->EquDatos  ; ?></p>
           </div>
         </div>
-        <div class="row mt-2 mb-2 p-1 contenedor-imagen">
+        <div class="row mt-1 mb-2 contenedor-imagen">
           <?php foreach($imagenInformes as $imagenInforme): ?>
-            <div class="mt-2">
-              <div class="card p-0 h-100">
-                <div class="card-header p-0 bg-transparent text-center"><?php echo ($imagenInforme['titulo']); ?></div>
-                <img src="/mycloud/gesman/files/<?php echo empty($imagenInforme['nombre']) ? '0.jpg' : $imagenInforme['nombre'] ?>" class="img-fluid" alt="">
-                <div class="card-footer p-0 text-center"><?php echo ($imagenInforme['descripcion']); ?></div>
-              </div>
+            <div class="text-center border border-1 p-0">
+              <p class="m-0 bg-light text-secondary pt-1 pb-2" style="text-align:justify;padding-left:5px;"><?php echo ($imagenInforme['titulo']); ?></p>
+              <img src="/mycloud/gesman/files/<?php echo empty($imagenInforme['nombre']) ? '0.jpg' : $imagenInforme['nombre'] ?>" class="img-fluid imagen-ajustada" alt="">
+              <p class="m-0 bg-light text-secondary pt-1 pb-2" style="text-align:justify;padding-left:5px;"><?php echo ($imagenInforme['descripcion']); ?></p>
             </div>
           <?php endforeach; ?>
         </div>
@@ -330,7 +333,7 @@
         <!-- SOLICITUD DEL CLIENTE -->
         <div class="row p-1 mb-2 mt-2">
           <div class="col-12 mb-0 border-bottom bg-light">
-            <p class="mt-2 mb-2 fw-bold"><?php echo $NUMERO; ?>- SOLICITUD DEL CLIENTE</p>
+            <p class="mt-2 mb-2 fw-bold text-secondary"><?php echo $NUMERO; ?>- SOLICITUD DEL CLIENTE</p>
           </div>
           <div class="row p-1 m-0">
             <div class="col-12 mb-2 mt-2">
@@ -343,13 +346,13 @@
         <!-- ANTECEDENTES-->
         <div class="row p-1 mb-2 mt-2">
           <div class="col-12 mb-0 border-bottom bg-light">
-            <p class="mt-2 mb-2 fw-bold"><?php echo $NUMERO; ?>- ANTECEDENTES</p>
+            <p class="mt-2 mb-2 fw-bold text-secondary"><?php echo $NUMERO; ?>- ANTECEDENTES</p>
           </div>
           <div class="row p-1 m-0">
             <?php foreach($antecedentes as $antecedente) :?>
                 <div class="d-flex">
-                  <i class="fa fa-check" style="margin-right:10px; margin-top:4px"></i>
-                  <p class="m-0 mb-2 p-0" style="text-align: justify;"><?php echo $antecedente['actividad'];?></p>
+                  <i class="fa fa-check text-secondary" style="margin-right:10px; margin-top:4px"></i>
+                  <p class="m-0 mb-2 p-0 text-secondary" style="text-align: justify;"><?php echo $antecedente['actividad'];?></p>
                 </div>
             <?php endforeach ;?>
           </div>
@@ -359,7 +362,7 @@
         <!-- ACTIVIDADES -->
         <div class="row p-1 mb-2 mt-2">
           <div class="col-12 mb-0 border-bottom bg-light">
-            <p class="mt-2 mb-2 fw-bold"><?php echo $NUMERO; ?>- ACTIVIDADES</p>
+            <p class="mt-2 mb-2 fw-bold text-secondary"><?php echo $NUMERO; ?>- ACTIVIDADES</p>
           </div>
             <?php
               $html = FnGenerarInformeHtmlAcordeon($arbol, $imagenes,$NUMERO);
@@ -371,14 +374,14 @@
         <!-- CONCLUSIONES -->
         <div class="row p-1 mb-2 mt-2">
           <div class="col-12 mb-0 border-bottom bg-light">
-            <p class="mt-2 mb-2 fw-bold"><?php echo $NUMERO; ?>- CONCLUSIONES</p>
+            <p class="mt-2 mb-2 fw-bold text-secondary"><?php echo $NUMERO; ?>- CONCLUSIONES</p>
           </div>
           <div class="row p-1 m-0 border">
             <?php foreach($conclusiones as $conclusion) :?>
-                <div class="d-flex">
-                  <i class="fa fa-check" style="margin-right:10px; margin-top:4px"></i>
-                  <p class="m-0 mb-2 p-0" style="text-align: justify;"><?php echo $conclusion['actividad'];?></p>
-                </div>
+              <div class="d-flex">
+                <i class="fa fa-check text-secondary" style="margin-right:10px; margin-top:4px"></i>
+                <p class="m-0 mb-2 p-0" style="text-align: justify;"><?php echo $conclusion['actividad'];?></p>
+              </div>
             <?php endforeach ;?>
           </div>
         </div>
@@ -387,12 +390,12 @@
         <!-- RECOMENDACIONES -->
         <div class="row p-1 mb-2 mt-2">
           <div class="col-12 mb-0 border-bottom bg-light">
-            <p class="mt-2 mb-2 fw-bold"><?php echo $NUMERO; ?>- RECOMENDACIONES</p>
+            <p class="mt-2 mb-2 fw-bold text-secondary"><?php echo $NUMERO; ?>- RECOMENDACIONES</p>
           </div>
           <div class="row p-1 m-0">
             <?php foreach($recomendaciones as $recomendacion) :?>
               <div class="d-flex">
-                <i class="fa fa-check" style="margin-right:10px; margin-top:4px"></i> 
+                <i class="fa fa-check text-secondary" style="margin-right:10px; margin-top:4px"></i> 
                 <p class="m-0 mb-2 p-0" style="text-align: justify;"><?php echo $recomendacion['actividad'];?></p>
               </div>
             <?php endforeach ;?>
@@ -403,18 +406,15 @@
         <!-- ANEXOS -->
         <div class="row p-1 mb-2 mt-2">
           <div class="col-12 mb-0 border-bottom bg-light">
-            <p class="mt-2 mb-2 fw-bold"><?php echo $NUMERO; ?>- ANEXOS</p>
+            <p class="mt-2 mb-2 fw-bold text-secondary"><?php echo $NUMERO; ?>- ANEXOS</p>
           </div>
           <div class="row p-1 m-0">
-
-            <div class="row mt-2 mb-2 p-1">
+            <div class="mt-2 mb-2 p-1">
               <?php foreach($imagenAnexos as $imagenAnexo): ?>
-                <div class="mt-2">
-                  <div class="card p-0 h-100">
-                    <div class="card-header p-0 bg-transparent text-center"><?php echo ($imagenAnexo['titulo']); ?></div>
-                    <img src="/mycloud/gesman/files/<?php echo empty($imagenAnexo['nombre']) ? '0.jpg' : $imagenAnexo['nombre'] ?>" class="img-fluid" alt="">
-                    <div class="card-footer p-0 text-center"><?php echo ($imagenAnexo['descripcion']); ?></div>
-                  </div>
+                <div class="text-center border border-1 p-0">
+                  <p class="m-0 bg-light text-secondary pt-1 pb-2" style="text-align:justify;padding-left:5px;"><?php echo ($imagenAnexo['titulo']); ?></p>
+                  <img src="/mycloud/gesman/files/<?php echo empty($imagenAnexo['nombre']) ? '0.jpg' : $imagenAnexo['nombre'] ?>" class="img-fluid" alt="">
+                  <p class="m-0 bg-light text-secondary pt-1 pb-2" style="text-align:justify;padding-left:5px;"><?php echo ($imagenAnexo['descripcion']); ?></p>
                 </div>
               <?php endforeach; ?>
             </div>            
