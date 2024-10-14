@@ -72,12 +72,13 @@
     
     function FnModificarInformeEquipo($conmy, $informe) {
         try {    
-            $stmt = $conmy->prepare("UPDATE tblinforme SET equ_nombre = :EquNombre, equ_marca = :EquMarca, equ_modelo = :EquModelo, equ_serie = :EquSerie, equ_km = :EquKm, equ_hm = :EquHm, actualizacion = :Actualizacion WHERE id =:Id");
+            $stmt = $conmy->prepare("UPDATE tblinforme SET equ_nombre = :EquNombre, equ_marca = :EquMarca, equ_modelo = :EquModelo, equ_serie = :EquSerie, equ_datos = :EquDatos, equ_km = :EquKm, equ_hm = :EquHm, actualizacion = :Actualizacion WHERE id =:Id");
             $params = array(
                 ':EquNombre' => $informe->equnombre,
                 ':EquMarca' => $informe->equmarca,
                 ':EquModelo' => $informe->equmodelo,
                 ':EquSerie' => $informe->equserie,
+                ':EquDatos' => $informe->equdatos,
                 ':EquKm' => $informe->equkm,
                 ':EquHm' =>$informe->equhm,
                 ':Actualizacion' => $informe->actualizacion,

@@ -9,7 +9,7 @@ window.onload = function() {
 };
 
 // FUNCIÓN BUSCAR EQUIPO POR ID
-const fnBuscarEquipoPorId = async (id)=>{
+const FnModalInformeModificarEquipo = async (id)=>{
   modalEquipo.show();
 };
 
@@ -17,13 +17,14 @@ const fnBuscarEquipoPorId = async (id)=>{
 const FnModificarInformeEquipo = async () => {
   try {
     vgLoader.classList.remove('loader-full-hidden');
-    const id = document.getElementById('idInforme').value;
-    const equnombre = document.getElementById('txtEquNombre').value.trim();
-    const equmarca = document.getElementById('txtEquMarca').value.trim();
-    const equmodelo = document.getElementById('txtEquModelo').value.trim();
-    const equserie = document.getElementById('txtEquSerie').value.trim();
-    const equkm = document.getElementById('txtEquKm').value.trim();
-    const equhm = document.getElementById('txtEquHm').value.trim();
+    const id = document.getElementById('txtInformeId').value;
+    const equnombre = document.getElementById('txtEquNombre2').value;
+    const equmarca = document.getElementById('txtEquMarca2').value;
+    const equmodelo = document.getElementById('txtEquModelo2').value;
+    const equserie = document.getElementById('txtEquSerie2').value;
+    const equdatos = document.getElementById('txtEquDatos2').value;
+    const equkm = document.getElementById('txtEquKm2').value;
+    const equhm = document.getElementById('txtEquHm2').value;
 
     const formData = new FormData();
     formData.append('Id', id);
@@ -31,6 +32,7 @@ const FnModificarInformeEquipo = async () => {
     formData.append('EquMarca', equmarca);
     formData.append('EquModelo', equmodelo);
     formData.append('EquSerie', equserie);
+    formData.append('EquDatos', equdatos);
     formData.append('EquKm', equkm);
     formData.append('EquHm', equhm);
 
@@ -42,17 +44,19 @@ const FnModificarInformeEquipo = async () => {
       throw new Error(`Error: ${response.status} ${response.statusText}`);
     }
     const datos = await response.json();
+    console.log(datos);
     setTimeout(() => { vgLoader.classList.add('loader-full-hidden'); }, 300);
     if (!datos.res) {
       throw new Error(datos.msg);
     }
     // Actualizar los campos del equipo
-    document.querySelector('#nombreEquipo').textContent = equnombre;
-    document.querySelector('#marcaEquipo').textContent = equmarca;
-    document.querySelector('#modeloEquipo').textContent = equmodelo;
-    document.querySelector('#serieEquipo').textContent = equserie;
-    document.querySelector('#kilometrajeEquipo').textContent = equkm;
-    document.querySelector('#horasMotorEquipo').textContent = equhm;
+    document.querySelector('#txtEquNombre1').textContent = equnombre;
+    document.querySelector('#txtEquMarca1').textContent = equmarca;
+    document.querySelector('#txtEquModelo1').textContent = equmodelo;
+    document.querySelector('#txtEquSerie1').textContent = equserie;
+    document.querySelector('#txtEquDatos1').textContent = equdatos;
+    document.querySelector('#txtEquKm1').textContent = equkm;
+    document.querySelector('#txtEquHm1').textContent = equhm;
     // Mostrar el SweetAlert
     await Swal.fire({
       title: "Información de servidor",
@@ -73,12 +77,11 @@ const FnModificarInformeEquipo = async () => {
 };
 
 //ELIMINAR ARCHIVO
-const fnEliminarImagen = async (id) => {
+const FnEliminarInformeArchivo = async (id) => {
   try {
     vgLoader.classList.remove('loader-full-hidden');
     const formData = new FormData();
     formData.append('id', id);
-    
     const response = await fetch('/informes/delete/EliminarArchivo.php', {
       method: 'POST',
       body: formData,
@@ -121,7 +124,7 @@ const fnEliminarImagen = async (id) => {
 };
 
 // ABRIR MODAL PARA REGISTRAR IMAGEN
-const fnAbrirModalRegistrarImagen = () => {
+const FnModalInformeAgregarArchivo = () => {
   const modal = new bootstrap.Modal(document.getElementById('modalAgregarImagen'), { keyboard: false });
   modal.show();
 };
@@ -157,11 +160,9 @@ document.getElementById('fileImagen').addEventListener('change', function(event)
   if (file.type.startsWith('image/')) {
       displayImage(file);
   }
-
-  console.log('Nombre del archivo:', file.name);
-  console.log('Tipo del archivo:', file.type);
-  console.log('Tamaño del archivo:', file.size, 'bytes');
-
+  // console.log('Nombre del archivo:', file.name);
+  // console.log('Tipo del archivo:', file.type);
+  // console.log('Tamaño del archivo:', file.size, 'bytes');
   setTimeout(function() {
     vgLoader.classList.add('loader-full-hidden');
   }, 1000)
@@ -246,7 +247,7 @@ function calculateSize(img, maxWidth, maxHeight) {
   return [width, height];
 }
 
-async function FnAgregarImagen() {
+async function FnAgregarInformeArchivo() {
   try {
     vgLoader.classList.remove('loader-full-hidden');
     let archivo;
@@ -258,12 +259,11 @@ async function FnAgregarImagen() {
       throw new Error('No se reconoce el archivo');
     }
     const formData = new FormData();
-    formData.append('refid', document.getElementById('idInforme').value);
+    formData.append('refid', document.getElementById('txtInformeId').value);
     formData.append('titulo', document.getElementById('txtTitulo').value);
     formData.append('descripcion', document.getElementById('txtDescripcion').value);
     formData.append('archivo', archivo);
     formData.append('tabla', 'INFE');
-    //console.log('Datos enviados:', Object.fromEntries(formData.entries()));
     const response = await fetch('/informes/insert/AgregarArchivo.php', {
       method: 'POST',
       body: formData
@@ -292,7 +292,7 @@ async function FnAgregarImagen() {
 }
 
 function FnResumenInforme(){
-  id = document.getElementById('idInforme').value;
+  id = document.getElementById('txtInformeId').value;
   if(id > 0){
       window.location.href='/informes/Informe.php?id='+id;
   }

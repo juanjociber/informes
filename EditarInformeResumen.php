@@ -46,9 +46,6 @@
         }
       } 
     } 
-    // else {
-    //   throw new Exception('El ID es inválido.');
-    // }	
   } catch (PDOException $ex) {
       $errorMessage = $ex->getMessage();
       $conmy = null;
@@ -74,22 +71,24 @@
     <style>
       .input-grop-icons{ display: flex; justify-content: flex-end;}
       .bi-plus-lg::before{ font-weight:bold!important; }
+      @media(min-width:1400px){.small{ padding-left: 15px; padding-right: 15px;}}
+      #btn-antecedentes:hover, #btn-analisis:hover,#btn-conclusiones:hover, #btn-recomendaciones:hover { color:white !important; }      
     </style>
   </head>
   <body>
     <?php require_once $_SERVER['DOCUMENT_ROOT'].'/gesman/menu/sidebar.php';?>
   
-    <div class="container section-top">
+    <div class="container section-top mb-4">
       
       <div class="row mb-3">
-        <div class="col-12 btn-group" role="group" aria-label="Basic example">
+        <div class="col-12 btn-group p-0" role="group" aria-label="Basic example">
           <button type="button" class="btn btn-outline-primary fw-bold" onclick="FnListarInformes(); return false;"><i class="fas fa-list"></i><span class="d-none d-sm-block"> Informes</span></button>
           <button type="button" class="btn btn-outline-primary fw-bold <?php echo $claseHabilitado;?> <?php echo $atributoHabilitado;?>" onclick="FnResumenInforme(); return false;"><i class="fas fa-desktop"></i><span class="d-none d-sm-block"> Resúmen</span></button>
         </div>
       </div>
 
       <div class="row border-bottom mb-3 fs-5">
-        <div class="col-12 fw-bold d-flex justify-content-between">
+        <div class="col-12 fw-bold d-flex justify-content-between p-0">
           <p class="m-0 p-0 text-secondary"><?php echo $isAuthorized ? $_SESSION['CliNombre'] : 'UNKNOWN'; ?></p>
           <input type="text" class="d-none" id="txtIdInforme" value="<?php echo $ID; ?>" readonly/>
           <input type="text" class="d-none" id="txtIdtblDetalleInf">
@@ -99,7 +98,7 @@
 
       <?php if ($isAuthorized): ?>
         <div class="row">
-        <div class="col-12">
+        <div class="col-12 p-0">
           <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
             <ol class="breadcrumb">
               <li class="breadcrumb-item fw-bold"><a href="/informes/EditarInforme.php?id=<?php echo $ID ?>" class="text-decoration-none">INFORME</a></li>
@@ -112,85 +111,81 @@
         </div>
         </div>
         <!--RESUMEN-->
-        <div class="row" id="containerActividad">
-          <label class="bg-secondary bg-light fw-bold p-2 bg-primary d-flex justify-content-between align-items-center">ACTIVIDADES</label>
-          <!-- ITEM ACTIVIDADES -->
-          <div class="mt-1 p-2 d-flex justify-content-between align-items-center border border-opacity-0">
+        <div class="row border border-bottom-1 p-2" id="containerActividad">
+          <label class="text-secondary fw-bold p-0 d-flex justify-content-between">ACTIVIDAD: <small>EDITAR</small></label>
+          <!-- ACTIVIDAD -->
+          <div class="mt-1 p-2 d-flex justify-content-between align-items-center border border-1 bg-light">
             <p class="mb-0 text-secondary fw-bold" id="actividadId" style="text-align: justify;"><?php echo $informe->Actividad; ?></p>
-            <i class="fas fa-edit" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" onclick="fnEditarActividad(<?php echo $informe->Id; ?>)"></i>
+            <i class="fas fa-edit text-secondary" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" onclick="fnEditarActividad(<?php echo $informe->Id; ?>)"></i>
           </div>
         </div>      
         <!-- ITEM ANTECEDENTES -->
-        <div class="row mt-2">
-          <label class="p-2 mt-2 bg-light fw-bold d-flex justify-content-between align-items-center">ANTECEDENTES <i class="fas fa-plus fw-bold" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar" data-tipo="ant" onclick="abrirModalAgregar('ant')"></i></label>
-          <div class="mt-1 border border-opacity-50">
-            <?php foreach ($antecedentes as $antecedente) : ?>
-              <div class="d-flex justify-content-between align-items-start">
-                <div class="d-flex";>
-                  <i class="fas fa-check" style="margin-right:10px; margin-top:4px;"></i>
-                  <p class="mb-0 mb-2 text-secondary fw-bold" data-tipo="<?php echo $antecedente['tipo']; ?>" id="antecedenteId" style="text-align: justify;"><?php echo $antecedente['actividad']; ?></p>
-                </div>
-                <div class="input-grop-icons">
-                  <span class="input-group-text bg-white border border-0"><i class="fas fa-edit" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" data-tipo="<?php echo $antecedente['tipo']; ?>" onclick="abrirModalEditar(<?php echo $antecedente['id']; ?>, 'antecedente')"></i></span>
-                  <span class="input-group-text bg-white border border-0"><i class="fas fa-trash-alt" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar" onclick="abrirModalEliminar(<?php echo $antecedente['id']; ?>)"></i></span>
-                </div>
+        <div class="row mt-3">
+          <div class="fw-bold d-flex justify-content-between col-8 col-md-10 p-0" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar" data-tipo="ant" onclick="abrirModalAgregar('ant')"><button class="btn btn-outline-primary text-primary p-2 mb-1" style="width:190px; text-align:left;" id="btn-antecedentes"><i class="fas fa-plus" style="margin-right: 5px"></i> ANTECEDENTES</button></div>
+          <div class="fw-bold text-secondary d-flex justify-content-center align-items-center col-4 col-md-2 p-0"><small>EDITAR</small><small class="small" style="margin-left:5px !important; margin-right:5px; !important;" >|</small><small>ELIMINAR</small></div>
+          <?php foreach ($antecedentes as $antecedente) : ?>
+            <div class="row d-flex justify-content-between align-items-center border border-bottom m-0 mb-1" style="padding-left:0px; padding-right:0px;">
+              <div class="d-flex col-8 col-md-10";>
+                <span class="text-secondary" style="margin-right:10px;">&#x2713</span>
+                <p class="mb-0 mb-2 text-secondary" style="margin-bottom: 0 !important;" data-tipo="<?php echo $antecedente['tipo']; ?>" id="antecedenteId" style="text-align: justify;"><?php echo $antecedente['actividad']; ?></p>
               </div>
-            <?php endforeach ?>
-          </div>
+              <div class="input-grop-icons col-4 col-md-2 d-flex justify-content-around align-items-center">
+                <span class="input-group-text bg-white border border-0 text-secondary"><i class="fas fa-edit" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" data-tipo="<?php echo $antecedente['tipo']; ?>" onclick="abrirModalEditar(<?php echo $antecedente['id']; ?>, 'antecedente')"></i></span>
+                <span class="input-group-text bg-white border border-0 text-secondary"><i class="fas fa-trash-alt" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar" onclick="abrirModalEliminar(<?php echo $antecedente['id']; ?>)"></i></span>
+              </div>
+            </div>
+          <?php endforeach ?>
         </div>
         <!-- ITEM ANÁLISIS -->
-        <div class="row mt-2">
-          <label class="p-2 mt-2 bg-light fw-bold d-flex justify-content-between align-items-center">ANÁLISIS <i class="fas fa-plus fw-bold" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar" data-tipo="ana" onclick="abrirModalAgregar('ana')"></i></label>
-          <div class="mt-1 border border-opacity-50">
-            <?php foreach ($analisis as $analisi) : ?>
-              <div class="d-flex justify-content-between align-items-start">
-                <div class="d-flex";>
-                  <i class="fas fa-check" style="margin-right:10px; margin-top:4px;"></i>
-                  <p class="mb-0 mb-2 text-secondary fw-bold" data-tipo="<?php echo $analisi['tipo']; ?>" id="analisisId" style="text-align: justify;"><?php echo $analisi['actividad']; ?></p>
-                </div>
-                <div class="input-grop-icons">
-                  <span class="input-group-text bg-white border border-0"><i class="fas fa-edit" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" data-tipo="<?php echo $analisi['tipo']; ?>" onclick="abrirModalEditar(<?php echo $analisi['id']; ?>, 'analisis')"></i></span>
-                  <span class="input-group-text bg-white border border-0"><i class="fas fa-trash-alt" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar" onclick="abrirModalEliminar(<?php echo $analisi['id']; ?>)"></i></span>
-                </div>
+        <div class="row mt-3">
+          <div class="fw-bold d-flex justify-content-between col-8 col-md-10 p-0" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar" data-tipo="ana" onclick="abrirModalAgregar('ana')"><button class="btn btn-outline-primary text-primary p-2 mb-1 text-left" style="width:190px; text-align:left;" id="btn-analisis"><i class="fas fa-plus" style="margin-right: 5px"></i> ANÁLISIS</button></div>
+          <div class="fw-bold text-secondary d-flex justify-content-center align-items-center col-4 col-md-2 p-0"><small>EDITAR</small><small class="small" style="margin-left:5px !important; margin-right:5px; !important;" >|</small><small>ELIMINAR</small></div>
+          <?php foreach ($analisis as $analisi) : ?>
+            <div class="row d-flex justify-content-between align-items-center border border-bottom m-0 mb-1" style="padding-left:0px; padding-right:0px;">
+              <div class="d-flex col-8 col-md-10";>
+                <span class="text-secondary" style="margin-right:10px;">&#x2713</span>
+                <p class="mb-0 mb-2 text-secondary" style="margin-bottom: 0 !important;" data-tipo="<?php echo $analisi['tipo']; ?>" id="analisisId" style="text-align: justify;"><?php echo $analisi['actividad']; ?></p>
               </div>
-            <?php endforeach ?>
-          </div>
+              <div class="input-grop-icons col-4 col-md-2 d-flex justify-content-around align-items-center">
+                <span class="input-group-text bg-white border border-0 text-secondary"><i class="fas fa-edit" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" data-tipo="<?php echo $analisi['tipo']; ?>" onclick="abrirModalEditar(<?php echo $analisi['id']; ?>, 'analisis')"></i></span>
+                <span class="input-group-text bg-white border border-0 text-secondary"><i class="fas fa-trash-alt" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar" onclick="abrirModalEliminar(<?php echo $analisi['id']; ?>)"></i></span>
+              </div>
+            </div>
+          <?php endforeach ?>
         </div>
         <!-- ITEM CONCLUSION -->
-        <div class="row">
-          <label class="p-2 mt-2 bg-light fw-bold d-flex justify-content-between align-items-center">CONCLUSIONES <i class="fas fa-plus fw-bold" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar" data-tipo="con" onclick="abrirModalAgregar('con')"></i></label>
-          <div class="mt-1 border border-opacity-50">
+        <div class="row mt-3">
+          <div class="fw-bold d-flex justify-content-between col-8 col-md-10 p-0" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar" data-tipo="con" onclick="abrirModalAgregar('con')"><button class="btn btn-outline-primary text-primary p-2 mb-1" style="width:190px; text-align:left;" id="btn-conclusiones"><i class="fas fa-plus" style="margin-right: 5px"></i> CONCLUSIONES</button></div>
+          <div class="fw-bold text-secondary d-flex justify-content-center align-items-center col-4 col-md-2 p-0"><small>EDITAR</small><small class="small" style="margin-left:5px !important; margin-right:5px; !important;" >|</small><small>ELIMINAR</small></div>
             <?php foreach ($conclusiones as $conclusion) : ?>
-            <div class="d-flex justify-content-between align-items-start">
-              <div class="d-flex">
-                <i class="fas fa-check" style="margin-right:10px; margin-top:4px;"></i>
-                <p class="mb-0 mb-2 text-secondary fw-bold" data-tipo="<?php echo $conclusion['tipo']; ?>" id="conclusionId>" style="text-align: justify;"><?php echo $conclusion['actividad']; ?></p>
+            <div class="row d-flex justify-content-between align-items-center border border-bottom m-0 mb-1" style="padding-left:0px; padding-right:0px;">
+              <div class="d-flex col-8 col-md-10">
+                <span class="text-secondary" style="margin-right:10px;">&#x2713</span>
+                <p class="mb-0 mb-2 text-secondary" style="margin-bottom: 0 !important;" data-tipo="<?php echo $conclusion['tipo']; ?>" id="conclusionId>" style="text-align: justify;"><?php echo $conclusion['actividad']; ?></p>
               </div>
-              <div class="input-grop-icons">
-                <span class="input-group-text bg-white border border-0"><i class="fas fa-edit" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" data-tipo="<?php echo $conclusion['tipo']; ?>" onclick="abrirModalEditar(<?php echo $conclusion['id']; ?>, 'conclusion')"></i></span>
-                <span class="input-group-text bg-white border border-0"><i class="fas fa-trash-alt" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar" onclick="abrirModalEliminar(<?php echo $conclusion['id']; ?>)"></i></span>
+              <div class="input-grop-icons col-4 col-md-2 d-flex justify-content-around align-items-center">
+                <span class="input-group-text bg-white border border-0 text-secondary"><i class="fas fa-edit" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" data-tipo="<?php echo $conclusion['tipo']; ?>" onclick="abrirModalEditar(<?php echo $conclusion['id']; ?>, 'conclusion')"></i></span>
+                <span class="input-group-text bg-white border border-0 text-secondary"><i class="fas fa-trash-alt" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar" onclick="abrirModalEliminar(<?php echo $conclusion['id']; ?>)"></i></span>
               </div>
             </div>
             <?php endforeach ?>
-          </div>
         </div>
         <!-- ITEM RECOMENDACIÓN -->
-        <div class="row">
-          <label class="p-2 mt-2 bg-light fw-bold d-flex justify-content-between align-items-center">RECOMENDACIONES <i class="fas fa-plus fw-bold" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar" data-tipo="rec" onclick="abrirModalAgregar('rec')"></i></label>           
-          <div class="mt-1 border border-opacity-50">
+        <div class="row mt-3">
+          <div class="fw-bold d-flex justify-content-between col-8 col-md-10 p-0" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar" data-tipo="rec" onclick="abrirModalAgregar('rec')"><button class="btn btn-outline-primary text-primary p-2 mb-1" style="width:190px; text-align:left;" id="btn-recomendaciones"><i class="fas fa-plus" style="margin-right: 5px"></i> RECOMENDACIONES</button></div>
+          <div class="fw-bold text-secondary d-flex justify-content-center align-items-center col-4 col-md-2 p-0"><small>EDITAR</small><small class="small" style="margin-left:5px !important; margin-right:5px; !important;" >|</small><small>ELIMINAR</small></div>
             <?php foreach ($recomendaciones as $recomendacion) : ?>
-            <div class="d-flex justify-content-between align-items-start">
-              <div class="d-flex">
-                <i class="fas fa-check" style="margin-right:10px; margin-top:4px;"></i>
-                <p class="mb-0 mb-2 text-secondary fw-bold" data-tipo="<?php echo $recomendacion['tipo']; ?>" id="recomendacionId" style="text-align: justify;"><?php echo $recomendacion['actividad']; ?></p>
+              <div class="row d-flex justify-content-between align-items-center border border-bottom m-0 mb-1" style="padding-left:0px; padding-right:0px;">
+              <div class="d-flex col-8 col-md-10">
+                <span class="text-secondary" style="margin-right:10px;">&#x2713</span>
+                <p class="mb-0 mb-2 text-secondary" style="margin-bottom: 0 !important;" data-tipo="<?php echo $recomendacion['tipo']; ?>" id="recomendacionId" style="text-align: justify;"><?php echo $recomendacion['actividad']; ?></p>
               </div>
-              <div class="input-grop-icons">
-                <span class="input-group-text bg-white border border-0"><i class="fas fa-edit" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" data-tipo="<?php echo $recomendacion['tipo']; ?>" onclick="abrirModalEditar(<?php echo $recomendacion['id']; ?>, 'recomendacion')"></i></span>
-                <span class="input-group-text bg-white border border-0"><i class="fas fa-trash-alt" style="cursor: pointer;" onclick="abrirModalEliminar(<?php echo $recomendacion['id']; ?>)"></i></span>
+              <div class="input-grop-icons col-4 col-md-2 d-flex justify-content-around align-items-center">
+                <span class="input-group-text bg-white border border-0 text-secondary"><i class="fas fa-edit" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" data-tipo="<?php echo $recomendacion['tipo']; ?>" onclick="abrirModalEditar(<?php echo $recomendacion['id']; ?>, 'recomendacion')"></i></span>
+                <span class="input-group-text bg-white border border-0 text-secondary"><i class="fas fa-trash-alt" style="cursor: pointer;" onclick="abrirModalEliminar(<?php echo $recomendacion['id']; ?>)"></i></span>
               </div>
             </div>
             <?php endforeach ?>
-          </div>
         </div>
       <?php endif; ?>
     </div>

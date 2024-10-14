@@ -52,7 +52,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Editar Informe | GPEM SAC</title>
+    <title>Editar Informe | GPEM S.A.C</title>
     <link rel="shortcut icon" href="/mycloud/logos/favicon.ico">
     <link rel="stylesheet" href="/mycloud/library/fontawesome-free-5.9.0-web/css/all.css">
     <link rel="stylesheet" href="/mycloud/library/SweetAlert2/css/sweetalert2.min.css">
@@ -67,7 +67,7 @@
   <body>
     <?php require_once $_SERVER['DOCUMENT_ROOT'].'/gesman/menu/sidebar.php';?>
 
-    <div class="container section-top">
+    <div class="container section-top p-0">
       <div class="row mb-3">
           <div class="col-12 btn-group" role="group" aria-label="Basic example">
             <button type="button" class="btn btn-outline-primary fw-bold" onclick="FnListarInformes(); return false;"><i class="fas fa-list"></i><span class="d-none d-sm-block"> Informes</span></button>
@@ -87,23 +87,18 @@
       <?php if ($isAuthorized): ?>
         <div class="row">
           <div class="col-12">
-              <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
-                  <ol class="breadcrumb">                        
-                      <li class="breadcrumb-item active fw-bold" aria-current="page">INFORME</li>
-                      <li class="breadcrumb-item fw-bold"><a href="/informes/EditarInformeEquipo.php?id=<?php echo ($ID);?>" class="text-decoration-none">EQUIPO</a></li>
-                      <li class="breadcrumb-item fw-bold"><a href="/informes/EditarInformeResumen.php?id=<?php echo ($ID);?>" class="text-decoration-none">RESUMEN</a></li>
-                      <li class="breadcrumb-item fw-bold"><a href="/informes/EditarInformeActividad.php?id=<?php echo ($ID);?>" class="text-decoration-none">ACTIVIDAD</a></li>
-                      <li class="breadcrumb-item fw-bold"><a href="/informes/EditarInformeAnexo.php?id=<?php echo ($ID);?>" class="text-decoration-none">ANEXOS</a></li>
-                  </ol>
-              </nav>
+            <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+              <ol class="breadcrumb">                        
+                <li class="breadcrumb-item active fw-bold" aria-current="page">INFORME</li>
+                <li class="breadcrumb-item fw-bold"><a href="/informes/EditarInformeEquipo.php?id=<?php echo ($ID);?>" class="text-decoration-none">EQUIPO</a></li>
+                <li class="breadcrumb-item fw-bold"><a href="/informes/EditarInformeResumen.php?id=<?php echo ($ID);?>" class="text-decoration-none">RESUMEN</a></li>
+                <li class="breadcrumb-item fw-bold"><a href="/informes/EditarInformeActividad.php?id=<?php echo ($ID);?>" class="text-decoration-none">ACTIVIDAD</a></li>
+                <li class="breadcrumb-item fw-bold"><a href="/informes/EditarInformeAnexo.php?id=<?php echo ($ID);?>" class="text-decoration-none">ANEXOS</a></li>
+              </ol>
+            </nav>
           </div>
         </div>
         <div class="row g-3">
-          <!-- Nro. INFORME -->
-          <div class="col-6 col-md-4 col-lg-3">
-            <label for="nombreInformeInput" class="form-label mb-0">Nro. Informe</label>
-            <input type="text" class="form-control text-secondary text-uppercase fw-bold" id="nombreInformeInput" value="<?php echo ($informe->Nombre); ?>" disabled>
-          </div>
           <!-- FECHA -->
           <div class="col-6 col-md-4 col-lg-3">
             <label for="fechaInformeInput" class="form-label mb-0">Fecha</label>
@@ -114,13 +109,8 @@
             <label for="OrdenTrabajoInput" class="form-label mb-0">Orden de trabajo</label>
             <input type="text" class="form-control text-secondary text-uppercase fw-bold" id="OrdenTrabajoInput" value="<?php echo ($informe->OrdNombre); ?>" disabled>
           </div>
-          <!-- CLIENTE -->
-          <div class="col-6 col-md-6 col-lg-3">
-            <label for="nombreClienteInput" class="form-label mb-0">Cliente</label>
-            <input type="text" class="form-control text-secondary text-uppercase fw-bold" id="nombreClienteInput" value="<?php echo ($informe->CliNombre); ?>" disabled>
-          </div>
           <!-- CONTACTOS -->
-          <div class="custom-select-container col-md-6 col-lg-4">
+          <div class="custom-select-container col-6 col-md-4 col-lg-3">
             <label for="contactoInput" class="form-label mb-0">Contacto</label>
             <div class="custom-select-wrapper">
               <input type="text" id="contactoInput" class="custom-select-input text-secondary text-uppercase fw-bold" value="<?php echo ($informe->CliContacto); ?>" />
@@ -134,13 +124,8 @@
               </div>
             </div>
           </div>
-          <!-- LUGAR -->
-          <div class="col-md-6 col-lg-4">
-            <label for="ubicacionInput" class="form-label mb-0">Lugar</label>
-            <input type="text" class="form-control text-secondary text-uppercase fw-bold" id="ubicacionInput" value="<?php echo ($informe->CliDireccion); ?>" >
-          </div>      
           <!-- SUPERVISORES -->
-          <div class="custom-select-container col-md-6 col-lg-4">
+          <div class="custom-select-container col-6 col-lg-3">
             <label for="supervisorInput" class="form-label mb-0">Supervisor</label>
             <div class="custom-select-wrapper">
               <input type="text" class="custom-select-input text-secondary text-uppercase fw-bold" id="supervisorInput" value="<?php echo  ($supervisorInputValue);?>"/>
@@ -155,6 +140,11 @@
               </div>
             </div>
           </div>
+          <!-- LUGAR -->
+          <div class="col-12 col-md-6 col-lg-12">
+            <label for="ubicacionInput" class="form-label mb-0">Lugar</label>
+            <input type="text" class="form-control text-secondary text-uppercase fw-bold" id="ubicacionInput" value="<?php echo ($informe->CliDireccion); ?>" >
+          </div>      
         </div>
         <!-- BOTON GUARDAR -->
         <div class="row mt-4">

@@ -42,7 +42,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Datos del Equipo | GPEM SAC</title>
+    <title>Editar Equipo | GPEM S.A.C</title>
     <link rel="shortcut icon" href="/mycloud/logos/favicon.ico">
     <link rel="stylesheet" href="/mycloud/library/fontawesome-free-5.9.0-web/css/all.css">
     <link rel="stylesheet" href="/mycloud/library/SweetAlert2/css/sweetalert2.min.css">
@@ -56,17 +56,18 @@
       }
       @media(min-width:992px){.contenedor-imagen{grid-template-columns:1fr 1fr 1fr !important;}}
       @media(min-width:1200px){.contenedor-imagen{grid-template-columns:1fr 1fr 1fr 1fr !important;}}
-      .img-fluid{
-        object-fit: cover !important;
-        /* height: 310px !important; */
+      .imagen-ajustada {
+        width: auto !important;
+        height: 200px;
+        object-fit: contain; 
       }
-      
-
+      .contenedor-imagen{display:grid;grid-template-columns:1fr 1fr !important;gap:5px;}
+      @media(min-width:768px){.contenedor-imagen{grid-template-columns:1fr 1fr 1fr !important;}}
     </style>
   </head>
   <body>
     <?php require_once $_SERVER['DOCUMENT_ROOT'].'/gesman/menu/sidebar.php';?>
-    <div class="container section-top">
+    <div class="container section-top p-0">
       <div class="row mb-3">
         <div class="col-12 btn-group" role="group" aria-label="Basic example">
           <button type="button" class="btn btn-outline-primary fw-bold" onclick="FnListarInformes(); return false;"><i class="fas fa-list"></i><span class="d-none d-sm-block"> Informes</span></button>
@@ -76,7 +77,7 @@
       <div class="row border-bottom mb-3 fs-5">
         <div class="col-12 fw-bold d-flex justify-content-between">
           <p class="m-0 p-0 text-secondary"><?php echo $isAuthorized ? $_SESSION['CliNombre'] : 'UNKNOWN'; ?></p>
-          <input type="text" class="d-none" id="idInforme" value="<?php echo $ID; ?>" readonly/>
+          <input type="hidden" id="txtInformeId" value="<?php echo $ID; ?>" readonly/>
           <p class="m-0 p-0 text-center text-secondary"><?php echo $isAuthorized ? $Nombre : 'UNKNOWN'; ?></p>
         </div>
       </div>
@@ -96,56 +97,57 @@
           </div>
         </div>
         <!-- BOTON EDITAR -->
-        <div class="row mb-2">
-          <div class="col-12 col-md-3">
-            <button class="mt-2 btn btn-primary fw-bold col-12" onclick="fnBuscarEquipoPorId(<?php echo ($ID); ?>);">EDITAR<i class="fas fa-edit" style="cursor: pointer; margin-left:10px;"></i></button>
+        <div class="row">
+          <div class="d-flex justify-content-start align-items-center border-bottom pb-2">
+            <div class="">
+              <button class="btn btn-outline-primary" onclick="FnModalInformeModificarEquipo(<?php echo ($ID); ?>);"><i class="fas fa-edit" style="cursor: pointer; margin-left:10px;"></i> EDITAR</button>
+              <button class="btn btn-outline-secondary" onclick="FnModalInformeAgregarArchivo();"><i class="fas fa-paperclip" style="cursor: pointer; margin-left:10px;"></i> ADJUNTAR</buttom>
+            </div>
           </div>
         </div>
         <!--DATOS EQUIPOS-->
-        <div class="row border border-1 m-0">
-          <div class="col-6 col-lg-4 col-xl-3 mt-2">
+        <div class="row m-0 border-bottom pb-3">
+          <div class="col-6 col-md-4 mt-2">
             <label class="form-label mb-0">Nombre</label>
-            <p class="mb-0 text-secondary text-uppercase fw-bold" style="font-size:15px" id="nombreEquipo"><?php echo ($informe->EquNombre); ?></p>
+            <p class="mb-0 text-secondary fw-bold" style="font-size:15px" id="txtEquNombre1"><?php echo ($informe->EquNombre); ?></p>
           </div>
-          <div class="col-6 col-lg-4 col-xl-3 mt-2">
+          <div class="col-6 col-md-4 mt-2">
             <label class="form-label mb-0">Marca</label>
-            <p class="mb-0 text-secondary text-uppercase fw-bold" style="font-size:15px" id="marcaEquipo"><?php echo ($informe->EquMarca); ?></p>
+            <p class="mb-0 text-secondary fw-bold" style="font-size:15px" id="txtEquMarca1"><?php echo ($informe->EquMarca); ?></p>
           </div>
-          <div class="custom-select-container col-6 col-lg-4 col-xl-3 mt-2">
+          <div class="col-6 col-md-4 mt-2">
             <label class="form-label mb-0">Modelo</label>
-            <p class="mb-0 text-secondary text-uppercase fw-bold" style="font-size:15px" id="modeloEquipo"><?php echo ($informe->EquModelo); ?></p>
+            <p class="mb-0 text-secondary fw-bold" style="font-size:15px" id="txtEquModelo1"><?php echo ($informe->EquModelo); ?></p>
           </div>
-          <div class="col-6 col-lg-4 col-xl-3 mt-2">
+          <div class="col-6 col-md-4 mt-2">
             <label class="form-label mb-0">Serie</label>
-            <p class="mb-0 text-secondary text-uppercase fw-bold" style="font-size:15px" id="serieEquipo"><?php echo ($informe->EquSerie); ?></p>
+            <p class="mb-0 text-secondary fw-bold" style="font-size:15px" id="txtEquSerie1"><?php echo ($informe->EquSerie); ?></p>
           </div>
-          <div class="col-6 col-lg-4 col-xl-3 mt-2">
+          <div class="col-12 col-md-4 mt-2">
+            <label class="form-label mb-0" style="font-size: 15px;">Caraterísticas</label> 
+            <p class="m-0 text-secondary fw-bold" id="txtEquDatos1"><?php echo ($informe->EquDatos); ?></p>
+          </div>
+          <div class="col-6 col-md-4 mt-2">
             <label class="form-label mb-0">Kilometraje</label>
-            <p class="mb-0 text-secondary text-uppercase fw-bold" style="font-size:15px" id="kilometrajeEquipo"><?php echo ($informe->EquKm); ?></p>
+            <p class="mb-0 text-secondary fw-bold" style="font-size:15px" id="txtEquKm1"><?php echo ($informe->EquKm); ?></p>
           </div>
-          <div class="col-6 col-lg-5 col-xl-8 mt-2">
+          <div class="col-6 col-md-4 mt-2">
             <label class="form-label mb-0">Horas de motor</label>
-            <p class="mb-0 text-secondary text-uppercase fw-bold" style="font-size:15px" id="horasMotorEquipo"><?php echo ($informe->EquHm); ?></p>
-          </div>
-        </div>
-        <!-- BOTO AGREGAR -->
-        <div class="row mb-1 mt-4 mb-2">
-          <div class="col-12 col-md-3">
-            <button class="p-2 btn btn-light border border-1 fw-bold col-12 text-secondary" onclick="fnAbrirModalRegistrarImagen();">ARCHIVO <i class="fas fa-paperclip" style="cursor: pointer; margin-left:10px;"></i></button>
+            <p class="mb-0 text-secondary fw-bold" style="font-size:15px" id="txtEquHm1"><?php echo ($informe->EquHm); ?></p>
           </div>
         </div>
         <!-- ARCHIVOS (TÍTULOS-IMAGENES-DESCRIPCIÓN) -->
-        <div class="contenedor-imagen" style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+        <div class="row mb-2 contenedor-imagen p-3">
           <?php if ($isAuthorized): ?>
             <?php foreach($archivos as $archivo): ?>
               <?php if($archivo['tabla']==='INFE'): ?>
-                <div class="card p-0">
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="fnEliminarImagen(<?php echo ($archivo['id']); ?>)"></button>
-                    <div class="card-header bg-transparent border-success"><?php echo ($archivo['titulo']); ?></div>
-                    <!-- <div class="card-body"> -->
-                      <img src="/mycloud/gesman/files/<?php echo ($archivo['nombre']); ?>" class="img-fluid">
-                    <!-- </div> -->
-                    <div class="card-footer bg-transparent border-success"><?php echo ($archivo['descripcion']); ?></div>
+                <div class="text-center">
+                  <p onclick="FnEliminarInformeArchivo(<?php echo ($archivo['id']); ?>)" style="color:#aba8a8; font-size:25px; cursor:pointer; text-align:left; margin-bottom:0;">&#x2715</p>
+                  <div class="border border-1 mb-2">
+                    <p class="m-0 bg-light text-secondary pt-1 pb-2" style="text-align:justify;padding-left:5px;"><?php echo ($archivo['titulo']); ?></p>
+                    <img src="/mycloud/gesman/files/<?php echo ($archivo['nombre']); ?>" class="img-fluid imagen-ajustada">
+                    <p class="m-0 bg-light text-secondary pt-1 pb-2" style="text-align:justify;padding-left:5px;"><?php echo($archivo['descripcion']); ?></p>
+                  </div>
                 </div>
               <?php endif; ?>
             <?php endforeach; ?>
@@ -153,44 +155,45 @@
         </div>
       <?php endif; ?>
     </div>
-    
-
-  
   
     <!-- M O D A L   D A T O S  D E  E Q U I P O -->
     <div class="modal fade" id="modalEquipo" tabindex="-1" aria-labelledby="equipoModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header bg-primary text-white">
-            <h5 class="modal-title fs-5 fw-bold" id="equipoModalLabel">DATOS DEL EQUIPO</h5>
+            <h5 class="modal-title fs-5 fw-bold" id="equipoModalLabel">MODIFICAR</h5>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <!-- START MODAL-BODY -->
           <div class="modal-body mb-2" id='modal-body'>
             <div class="row">
-              <div class="col-md-12 mt-2">
+              <div class="col-12 col-md-6 mt-2">
                 <label for="" class="form-label mb-0">Nombre</label>
-                <input type="text" id="txtEquNombre" class="form-control text-secondary text-uppercase" value="<?php echo $informe->EquNombre;?>"/>
+                <input type="text" id="txtEquNombre2" class="form-control text-secondary" value="<?php echo $informe->EquNombre;?>"/>
               </div>
-              <div class ="col-md-12 mt-2">
+              <div class ="col-12 col-md-6 mt-2">
                 <label for="" class="form-label mb-0">Marca</label>
-                <input type="text" id="txtEquMarca" class="form-control text-secondary text-uppercase" value="<?php echo $informe->EquMarca;?>"/>
+                <input type="text" id="txtEquMarca2" class="form-control text-secondary" value="<?php echo $informe->EquMarca;?>"/>
               </div>
-              <div class="col-md-12 mt-2">
+              <div class="col-12 col-md-6 mt-2">
                 <label for="" class="form-label mb-0">Modelo</label>
-                <input type="text" id="txtEquModelo" class="form-control text-secondary text-uppercase" value="<?php echo $informe->EquModelo;?>"/>
+                <input type="text" id="txtEquModelo2" class="form-control text-secondary" value="<?php echo $informe->EquModelo;?>"/>
               </div>
-              <div class="col-md-12 mt-2">
+              <div class="col-12 col-md-6 mt-2">
                 <label for="" class="form-label mb-0">Serie</label>
-                <input type="text" id="txtEquSerie" class="form-control text-secondary text-uppercase" value="<?php echo $informe->EquSerie;?>"/>
+                <input type="text" id="txtEquSerie2" class="form-control text-secondary" value="<?php echo $informe->EquSerie;?>"/>
               </div>
-              <div class ="col-md-12 mt-2">
+              <div class ="col-12 mt-2">
+                <label for="" class="form-label mb-0">Características</label>
+                <input type="text" id="txtEquDatos2" class="form-control text-secondary" value="<?php echo $informe->EquDatos;?>"/>
+              </div>
+              <div class ="col-12 col-md-6 mt-2">
                 <label for="" class="form-label mb-0">Kilometraje</label>
-                <input type="number" id="txtEquKm" class="form-control text-secondary text-uppercase" value="<?php echo $informe->EquKm;?>"/>
+                <input type="number" id="txtEquKm2" class="form-control text-secondary" value="<?php echo $informe->EquKm;?>"/>
               </div>
-              <div class ="col-md-12 mt-2">
+              <div class ="col-12 col-md-6 mt-2">
                 <label for="" class="form-label mb-0">Horas de motor</label>
-                <input type="number" id="txtEquHm" class="form-control text-secondary text-uppercase" value="<?php echo $informe->EquHm;?>"/>
+                <input type="number" id="txtEquHm2" class="form-control text-secondary" value="<?php echo $informe->EquHm;?>"/>
               </div>
             </div>
           </div>
@@ -214,11 +217,11 @@
             <div class="row">
               <div class="col-12 mb-2">
                 <label class="form-label mb-0">Título</label>
-                <input type="text" class="form-control text-secondary text-uppercase" id="txtTitulo" <?php echo !$isAuthorized ? 'disabled' : ''; ?>>
+                <input type="text" class="form-control text-secondary" id="txtTitulo" <?php echo !$isAuthorized ? 'disabled' : ''; ?>>
               </div>
               <div class="col-12 mb-2">
                 <label class="form-label mb-0">Descripción</label>
-                <input type="text" class="form-control text-secondary text-uppercase" id="txtDescripcion" <?php echo !$isAuthorized ? 'disabled' : ''; ?>>
+                <input type="text" class="form-control text-secondary" id="txtDescripcion" <?php echo !$isAuthorized ? 'disabled' : ''; ?>>
               </div>                        
               <div class="col-12">
                 <label for="adjuntarImagenInput" class="form-label mb-0">Imagen</label>
@@ -231,14 +234,14 @@
           </div>
           <div id="msjAgregarImagen" class="modal-body pt-1"></div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary fw-bold pt-2 pb-2 col-12" onclick="FnAgregarImagen(); return false;"><i class="fas fa-save"></i>  GUARDAR</button>
+            <button type="button" class="btn btn-primary fw-bold pt-2 pb-2 col-12" onclick="FnAgregarInformeArchivo(); return false;"><i class="fas fa-save"></i>  GUARDAR</button>
           </div>
         </div>
       </div>
     </div><!-- END IMAGENES  -->
 
     <div class="container-loader-full">
-        <div class="loader-full"></div>
+      <div class="loader-full"></div>
     </div>
     
     <script src="/informes/js/EditarInformeEquipo.js"></script>
