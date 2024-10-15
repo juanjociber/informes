@@ -111,7 +111,7 @@
         </div>
         </div>
         <!--RESUMEN-->
-        <div class="row border border-bottom-1 p-2" id="containerActividad">
+        <div class="row p-2" id="containerActividad">
           <label class="text-secondary fw-bold p-0 d-flex justify-content-between">ACTIVIDAD: <small>EDITAR</small></label>
           <!-- ACTIVIDAD -->
           <div class="mt-1 p-2 d-flex justify-content-between align-items-center border border-1 bg-light">
@@ -127,7 +127,7 @@
             <div class="row d-flex justify-content-between align-items-center border border-bottom m-0 mb-1" style="padding-left:0px; padding-right:0px;">
               <div class="d-flex col-8 col-md-10";>
                 <span class="text-secondary" style="margin-right:10px;">&#x2713</span>
-                <p class="mb-0 mb-2 text-secondary" style="margin-bottom: 0 !important;" data-tipo="<?php echo $antecedente['tipo']; ?>" id="antecedenteId" style="text-align: justify;"><?php echo $antecedente['actividad']; ?></p>
+                <p class="mb-0 mb-2 text-secondary" style="margin-bottom: 0 !important; text-align:justify; line-height: 1.2;" data-tipo="<?php echo $antecedente['tipo']; ?>" id="antecedenteId" style="text-align: justify;"><?php echo $antecedente['actividad']; ?></p>
               </div>
               <div class="input-grop-icons col-4 col-md-2 d-flex justify-content-around align-items-center">
                 <span class="input-group-text bg-white border border-0 text-secondary"><i class="fas fa-edit" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" data-tipo="<?php echo $antecedente['tipo']; ?>" onclick="abrirModalEditar(<?php echo $antecedente['id']; ?>, 'antecedente')"></i></span>
@@ -144,7 +144,7 @@
             <div class="row d-flex justify-content-between align-items-center border border-bottom m-0 mb-1" style="padding-left:0px; padding-right:0px;">
               <div class="d-flex col-8 col-md-10";>
                 <span class="text-secondary" style="margin-right:10px;">&#x2713</span>
-                <p class="mb-0 mb-2 text-secondary" style="margin-bottom: 0 !important;" data-tipo="<?php echo $analisi['tipo']; ?>" id="analisisId" style="text-align: justify;"><?php echo $analisi['actividad']; ?></p>
+                <p class="mb-0 mb-2 text-secondary" style="margin-bottom: 0 !important; text-align:justify; line-height: 1.2;" data-tipo="<?php echo $analisi['tipo']; ?>" id="analisisId" style="text-align: justify;"><?php echo $analisi['actividad']; ?></p>
               </div>
               <div class="input-grop-icons col-4 col-md-2 d-flex justify-content-around align-items-center">
                 <span class="input-group-text bg-white border border-0 text-secondary"><i class="fas fa-edit" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" data-tipo="<?php echo $analisi['tipo']; ?>" onclick="abrirModalEditar(<?php echo $analisi['id']; ?>, 'analisis')"></i></span>
@@ -161,7 +161,7 @@
             <div class="row d-flex justify-content-between align-items-center border border-bottom m-0 mb-1" style="padding-left:0px; padding-right:0px;">
               <div class="d-flex col-8 col-md-10">
                 <span class="text-secondary" style="margin-right:10px;">&#x2713</span>
-                <p class="mb-0 mb-2 text-secondary" style="margin-bottom: 0 !important;" data-tipo="<?php echo $conclusion['tipo']; ?>" id="conclusionId>" style="text-align: justify;"><?php echo $conclusion['actividad']; ?></p>
+                <p class="mb-0 mb-2 text-secondary" style="margin-bottom: 0 !important; text-align:justify; line-height: 1.2;" data-tipo="<?php echo $conclusion['tipo']; ?>" id="conclusionId>" style="text-align: justify;"><?php echo $conclusion['actividad']; ?></p>
               </div>
               <div class="input-grop-icons col-4 col-md-2 d-flex justify-content-around align-items-center">
                 <span class="input-group-text bg-white border border-0 text-secondary"><i class="fas fa-edit" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" data-tipo="<?php echo $conclusion['tipo']; ?>" onclick="abrirModalEditar(<?php echo $conclusion['id']; ?>, 'conclusion')"></i></span>
@@ -178,7 +178,7 @@
               <div class="row d-flex justify-content-between align-items-center border border-bottom m-0 mb-1" style="padding-left:0px; padding-right:0px;">
               <div class="d-flex col-8 col-md-10">
                 <span class="text-secondary" style="margin-right:10px;">&#x2713</span>
-                <p class="mb-0 mb-2 text-secondary" style="margin-bottom: 0 !important;" data-tipo="<?php echo $recomendacion['tipo']; ?>" id="recomendacionId" style="text-align: justify;"><?php echo $recomendacion['actividad']; ?></p>
+                <p class="mb-0 mb-2 text-secondary" style="margin-bottom: 0 !important; text-align:justify; line-height: 1.2;" data-tipo="<?php echo $recomendacion['tipo']; ?>" id="recomendacionId" style="text-align: justify;"><?php echo $recomendacion['actividad']; ?></p>
               </div>
               <div class="input-grop-icons col-4 col-md-2 d-flex justify-content-around align-items-center">
                 <span class="input-group-text bg-white border border-0 text-secondary"><i class="fas fa-edit" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" data-tipo="<?php echo $recomendacion['tipo']; ?>" onclick="abrirModalEditar(<?php echo $recomendacion['id']; ?>, 'recomendacion')"></i></span>

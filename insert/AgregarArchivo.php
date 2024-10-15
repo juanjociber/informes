@@ -27,7 +27,7 @@
 
     $conmy->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     if (FnRegistrarImagen($conmy, $imagen)) {
-        $data['msg'] = "Ok.";
+        $data['msg'] = "Archivo cargado con éxito.";
         $data['res'] = true;        
     } else {
         $data['msg'] = "Error registrando el Archivo.";

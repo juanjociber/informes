@@ -20,13 +20,13 @@
     $conmy->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     if (is_numeric($ID) && $ID > 0) {
       $informe = FnBuscarInforme($conmy, $ID, $CLI_ID);
-      if ($informe && $informe->Estado !=3) {  
+      if ($informe && $informe->Estado !=3) {
         $isAuthorized = true;
         $Nombre = $informe->Nombre;
         $claseHabilitado = "btn-outline-primary";
-        $atributoHabilitado = ""; 
+        $atributoHabilitado = "";
         $archivos = FnBuscarArchivos($conmy, $ID);
-      } 
+      }
     }
   } catch (PDOException $e) {
       $errorMessage = $e->getMessage();
@@ -48,26 +48,26 @@
     <link rel="stylesheet" href="/mycloud/library/SweetAlert2/css/sweetalert2.min.css">
     <link rel="stylesheet" href="/mycloud/library/bootstrap-5.0.2-dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/mycloud/library/select-gpem-1.0/css/select-gpem-1.0.css">
-    <link rel="stylesheet" href="/mycloud/library/gpemsac/css/gpemsac.css"> 
+    <link rel="stylesheet" href="/mycloud/library/gpemsac/css/gpemsac.css">
     <link rel="stylesheet" href="/gesman/menu/sidebar.css">
     <style>
       #canvas{
         width:100%
       }
+
+      /* .contenedor-imagen{display:grid;grid-template-columns:50% 50% !important;gap:5px;}   */
+      @media(min-width:768px){.contenedor-imagen{display: grid; grid-template-columns:1fr 1fr !important; gap:10px;}}  
       @media(min-width:992px){.contenedor-imagen{grid-template-columns:1fr 1fr 1fr !important;}}
-      @media(min-width:1200px){.contenedor-imagen{grid-template-columns:1fr 1fr 1fr 1fr !important;}}
       .imagen-ajustada {
-        width: auto !important;
+        width: 100%;
         height: 200px;
-        object-fit: contain; 
+        object-fit: contain;
       }
-      .contenedor-imagen{display:grid;grid-template-columns:1fr 1fr !important;gap:5px;}
-      @media(min-width:768px){.contenedor-imagen{grid-template-columns:1fr 1fr 1fr !important;}}
     </style>
   </head>
   <body>
     <?php require_once $_SERVER['DOCUMENT_ROOT'].'/gesman/menu/sidebar.php';?>
-    <div class="container section-top p-0">
+    <div class="container section-top">
       <div class="row mb-3">
         <div class="col-12 btn-group" role="group" aria-label="Basic example">
           <button type="button" class="btn btn-outline-primary fw-bold" onclick="FnListarInformes(); return false;"><i class="fas fa-list"></i><span class="d-none d-sm-block"> Informes</span></button>
@@ -86,7 +86,7 @@
         <div class="row">
           <div class="col-12">
             <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
-              <ol class="breadcrumb">                        
+              <ol class="breadcrumb">
               <li class="breadcrumb-item fw-bold"><a href="/informes/EditarInforme.php?id=<?php echo ($ID) ?>" class="text-decoration-none">INFORME</a></li>
                 <li class="breadcrumb-item active fw-bold" aria-current="page">EQUIPO</li>
                 <li class="breadcrumb-item fw-bold"><a href="/informes/EditarInformeResumen.php?id=<?php echo ($ID) ?>" class="text-decoration-none">RESUMEN</a></li>
@@ -97,65 +97,67 @@
           </div>
         </div>
         <!-- BOTON EDITAR -->
-        <div class="row">
-          <div class="d-flex justify-content-start align-items-center border-bottom pb-2">
-            <div class="">
-              <button class="btn btn-outline-primary" onclick="FnModalInformeModificarEquipo(<?php echo ($ID); ?>);"><i class="fas fa-edit" style="cursor: pointer; margin-left:10px;"></i> EDITAR</button>
-              <button class="btn btn-outline-secondary" onclick="FnModalInformeAgregarArchivo();"><i class="fas fa-paperclip" style="cursor: pointer; margin-left:10px;"></i> ADJUNTAR</buttom>
-            </div>
+        <div class="row mb-3">
+          <div class="d-flex justify-content-start align-items-center">
+            <button class="btn btn-outline-primary" onclick="FnModalInformeModificarEquipo(<?php echo ($ID); ?>);" style="margin-right: 10px;"><i class="fas fa-edit" style="cursor: pointer; margin-left:10px;"></i> EDITAR</button>
+            <button class="btn btn-outline-secondary" onclick="FnModalInformeAgregarArchivo();"><i class="fas fa-paperclip" style="cursor: pointer; margin-left:10px;"></i> ADJUNTAR</buttom>
           </div>
         </div>
         <!--DATOS EQUIPOS-->
-        <div class="row m-0 border-bottom pb-3">
+        <div class="row border-top mb-3">
           <div class="col-6 col-md-4 mt-2">
-            <label class="form-label mb-0">Nombre</label>
+            <label class="form-label mb-0">Nombre :</label>
             <p class="mb-0 text-secondary fw-bold" style="font-size:15px" id="txtEquNombre1"><?php echo ($informe->EquNombre); ?></p>
           </div>
           <div class="col-6 col-md-4 mt-2">
-            <label class="form-label mb-0">Marca</label>
+            <label class="form-label mb-0">Marca :</label>
             <p class="mb-0 text-secondary fw-bold" style="font-size:15px" id="txtEquMarca1"><?php echo ($informe->EquMarca); ?></p>
           </div>
           <div class="col-6 col-md-4 mt-2">
-            <label class="form-label mb-0">Modelo</label>
+            <label class="form-label mb-0">Modelo :</label>
             <p class="mb-0 text-secondary fw-bold" style="font-size:15px" id="txtEquModelo1"><?php echo ($informe->EquModelo); ?></p>
           </div>
           <div class="col-6 col-md-4 mt-2">
-            <label class="form-label mb-0">Serie</label>
+            <label class="form-label mb-0">Serie :</label>
             <p class="mb-0 text-secondary fw-bold" style="font-size:15px" id="txtEquSerie1"><?php echo ($informe->EquSerie); ?></p>
           </div>
           <div class="col-12 col-md-4 mt-2">
-            <label class="form-label mb-0" style="font-size: 15px;">Caraterísticas</label> 
+            <label class="form-label mb-0" style="font-size: 15px;">Caraterísticas</label>
             <p class="m-0 text-secondary fw-bold" id="txtEquDatos1"><?php echo ($informe->EquDatos); ?></p>
           </div>
           <div class="col-6 col-md-4 mt-2">
-            <label class="form-label mb-0">Kilometraje</label>
+            <label class="form-label mb-0">Km :</label>
             <p class="mb-0 text-secondary fw-bold" style="font-size:15px" id="txtEquKm1"><?php echo ($informe->EquKm); ?></p>
           </div>
           <div class="col-6 col-md-4 mt-2">
-            <label class="form-label mb-0">Horas de motor</label>
+            <label class="form-label mb-0">Hm :</label>
             <p class="mb-0 text-secondary fw-bold" style="font-size:15px" id="txtEquHm1"><?php echo ($informe->EquHm); ?></p>
           </div>
         </div>
         <!-- ARCHIVOS (TÍTULOS-IMAGENES-DESCRIPCIÓN) -->
-        <div class="row mb-2 contenedor-imagen p-3">
+        <div class="row border-top contenedor-imagen pt-4">
           <?php if ($isAuthorized): ?>
             <?php foreach($archivos as $archivo): ?>
               <?php if($archivo['tabla']==='INFE'): ?>
-                <div class="text-center">
-                  <p onclick="FnEliminarInformeArchivo(<?php echo ($archivo['id']); ?>)" style="color:#aba8a8; font-size:25px; cursor:pointer; text-align:left; margin-bottom:0;">&#x2715</p>
-                  <div class="border border-1 mb-2">
-                    <p class="m-0 bg-light text-secondary pt-1 pb-2" style="text-align:justify;padding-left:5px;"><?php echo ($archivo['titulo']); ?></p>
-                    <img src="/mycloud/gesman/files/<?php echo ($archivo['nombre']); ?>" class="img-fluid imagen-ajustada">
+                <!-- <div class="text-center p-0"> -->
+            
+                  <div class="border border-1 m-0 mb-3 p-0">
+                    <div class="row bg-light text-secondary d-flex justify-content-between align-items-center m-0">
+                      <p class="col-10 m-0" style="text-align:justify;padding-left:5px;"><?php echo ($archivo['titulo']); ?></p>
+                      <p class="col-2 m-0" onclick="FnEliminarInformeArchivo(<?php echo ($archivo['id']); ?>)" style="color:#aba8a8; font-size:25px; cursor:pointer; text-align:left; margin-bottom:0;"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" enable-background="new 0 0 512 512" height="32px" id="Layer_1" version="1.1" viewBox="0 0 512 512" width="32px" xml:space="preserve"><g><path d="M392.809,100.086v345.269c0,9.748-7.868,17.645-17.616,17.645H136.78c-9.732,0-17.615-7.896-17.615-17.645V100.086" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="8"/><path d="    M223.007,65.614c0-9.732,7.899-17.614,17.614-17.614h32.888c9.715,0,17.611,7.882,17.611,17.614" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="8"/><line fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="8" x1="179.813" x2="179.813" y1="132.38" y2="424.835"/><line fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="8" x1="332.145" x2="332.145" y1="132.38" y2="424.835"/><line fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="8" x1="255.985" x2="255.985" y1="133.464" y2="425.892"/><line fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="8" x1="90.397" x2="421.605" y1="82.407" y2="82.407"/></g></svg></p>
+                    </div>
+                    
+                    <img src="/mycloud/gesman/files/<?php echo ($archivo['nombre']); ?>" class="imagen-ajustada" style="position-relative;">
                     <p class="m-0 bg-light text-secondary pt-1 pb-2" style="text-align:justify;padding-left:5px;"><?php echo($archivo['descripcion']); ?></p>
                   </div>
-                </div>
+                <!-- </div> -->
               <?php endif; ?>
             <?php endforeach; ?>
           <?php endif; ?>
         </div>
       <?php endif; ?>
     </div>
-  
+
     <!-- M O D A L   D A T O S  D E  E Q U I P O -->
     <div class="modal fade" id="modalEquipo" tabindex="-1" aria-labelledby="equipoModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -222,7 +224,7 @@
               <div class="col-12 mb-2">
                 <label class="form-label mb-0">Descripción</label>
                 <input type="text" class="form-control text-secondary" id="txtDescripcion" <?php echo !$isAuthorized ? 'disabled' : ''; ?>>
-              </div>                        
+              </div>
               <div class="col-12">
                 <label for="adjuntarImagenInput" class="form-label mb-0">Imagen</label>
                 <input id="fileImagen" type="file" accept="image/*,.pdf" class="form-control mb-2" <?php echo !$isAuthorized ? 'disabled' : ''; ?>/>
@@ -243,7 +245,7 @@
     <div class="container-loader-full">
       <div class="loader-full"></div>
     </div>
-    
+
     <script src="/informes/js/EditarInformeEquipo.js"></script>
     <script src="/mycloud/library/bootstrap-5.0.2-dist/js/bootstrap.min.js"></script>
     <script src="/mycloud/library/SweetAlert2/js/sweetalert2.all.min.js"></script>
