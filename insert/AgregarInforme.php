@@ -1,6 +1,5 @@
 <?php 
     session_start();
-
 	$res=false;
     $id=0;
 	$msg='Error general creando el Informe.';
@@ -10,7 +9,6 @@
 
     try {
         $conmy->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
         if(!isset($_SESSION)){throw new Exception("Se ha perdido la conexión.");}
 
         //if(empty($_POST['ordid']) || empty($_POST['fecha']) || empty($_POST['actividad'])){throw new Exception("La información esta incompleta.");} 
@@ -35,9 +33,10 @@
         }
     } catch(PDOException $ex){
         $msg=$ex->getMessage();
+        $conmy=null;
     } catch (Exception $ex) {
         $msg=$ex->getMessage();
+        $conmy=null;
     }
-    $conmy=null;
     echo json_encode(array('res'=>$res, 'id'=>$id, 'msg'=>$msg));
 ?>

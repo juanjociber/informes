@@ -66,7 +66,6 @@
   </style>
   <body>
     <?php require_once $_SERVER['DOCUMENT_ROOT'].'/gesman/menu/sidebar.php';?>
-
     <div class="container section-top p-0">
       <div class="row mb-3">
           <div class="col-12 btn-group" role="group" aria-label="Basic example">
@@ -74,15 +73,13 @@
             <button type="button" class="btn btn-outline-primary fw-bold <?php echo $claseHabilitado;?> <?php echo $atributoHabilitado;?>" onclick="FnResumenInforme(); return false;"><i class="fas fa-desktop"></i><span class="d-none d-sm-block"> Resúmen</span></button>
           </div>
       </div>
-
       <div class="row border-bottom mb-3 fs-5">
         <div class="col-12 fw-bold d-flex justify-content-between">
           <p class="m-0 p-0 text-secondary"><?php echo $isAuthorized ? $_SESSION['CliNombre'] : 'UNKNOWN'; ?></p>
-          <input type="text" class="d-none" id="idInforme" value="<?php echo $ID;?>" readonly/>
+          <input type="hidden" id="txtInformeId" value="<?php echo $ID;?>" readonly/>
           <p class="m-0 p-0 text-center text-secondary"><?php echo $isAuthorized ? $Nombre : 'UNKNOWN'; ?></p>
         </div>
       </div>
-      
       <!--DATOS GENERALES-->
       <?php if ($isAuthorized): ?>
         <div class="row">
@@ -101,20 +98,20 @@
         <div class="row g-3">
           <!-- FECHA -->
           <div class="col-6 col-md-4 col-lg-3">
-            <label for="fechaInformeInput" class="form-label mb-0">Fecha</label>
-            <input type="date" class="form-control text-secondary text-uppercase fw-bold" id="fechaInformeInput" value="<?php echo ($informe->Fecha); ?>">
+            <label for="dpfecha" class="form-label mb-0">Fecha :</label>
+            <input type="date" class="form-control text-secondary fw-bold" id="dpfecha" value="<?php echo ($informe->Fecha); ?>">
           </div>
           <!-- ORDEN DE TRABAJO -->
           <div class="col-6 col-md-4 col-lg-3">
-            <label for="OrdenTrabajoInput" class="form-label mb-0">Orden de trabajo</label>
-            <input type="text" class="form-control text-secondary text-uppercase fw-bold" id="OrdenTrabajoInput" value="<?php echo ($informe->OrdNombre); ?>" disabled>
+            <label for="txtOrdNombre" class="form-label mb-0">Orden de trabajo :</label>
+            <input type="text" class="form-control text-secondary fw-bold" id="txtOrdNombre" value="<?php echo ($informe->OrdNombre); ?>" disabled>
           </div>
           <!-- CONTACTOS -->
           <div class="custom-select-container col-6 col-md-4 col-lg-3">
-            <label for="contactoInput" class="form-label mb-0">Contacto</label>
+            <label for="cbCliContacto" class="form-label mb-0">Contacto :</label>
             <div class="custom-select-wrapper">
-              <input type="text" id="contactoInput" class="custom-select-input text-secondary text-uppercase fw-bold" value="<?php echo ($informe->CliContacto); ?>" />
-              <span class="custom-select-arrow text-secondary text-uppercase fw-bold"><i class="bi bi-chevron-down"></i></span>
+              <input type="text" id="cbCliContacto" class="custom-select-input text-secondary text-uppercase fw-bold" value="<?php echo ($informe->CliContacto); ?>" />
+              <span class="custom-select-arrow text-secondary fw-bold"><i class="bi bi-chevron-down"></i></span>
               <div id="contactoList" class="custom-select-list ">
                 <?php foreach ($contactos as $contacto): ?>
                   <div class="custom-select-item" data-value="<?php echo ($contacto['idsupervisor']); ?>">
@@ -126,9 +123,9 @@
           </div>
           <!-- SUPERVISORES -->
           <div class="custom-select-container col-6 col-lg-3">
-            <label for="supervisorInput" class="form-label mb-0">Supervisor</label>
+            <label for="cbSupervisor" class="form-label mb-0">Supervisor :</label>
             <div class="custom-select-wrapper">
-              <input type="text" class="custom-select-input text-secondary text-uppercase fw-bold" id="supervisorInput" value="<?php echo  ($supervisorInputValue);?>"/>
+              <input type="text" class="custom-select-input text-secondary fw-bold" id="cbSupervisor" value="<?php echo  ($supervisorInputValue);?>"/>
               <span class="custom-select-arrow"><i class="bi bi-chevron-down"></i></span>
               <div id="supervisorList" class="custom-select-list">
                 <!-- SUPERVISORES -->
@@ -142,14 +139,14 @@
           </div>
           <!-- LUGAR -->
           <div class="col-12 col-md-6 col-lg-12">
-            <label for="ubicacionInput" class="form-label mb-0">Lugar</label>
-            <input type="text" class="form-control text-secondary text-uppercase fw-bold" id="ubicacionInput" value="<?php echo ($informe->CliDireccion); ?>" >
+            <label for="txtCliDireccion" class="form-label mb-0">Lugar :</label>
+            <input type="text" class="form-control text-secondary fw-bold" id="txtCliDireccion" value="<?php echo ($informe->CliDireccion); ?>" >
           </div>      
         </div>
         <!-- BOTON GUARDAR -->
         <div class="row mt-4">
           <div class="col-12 mt-2">
-            <button id="guardarDataEquipo" class="btn btn-outline-primary pt-2 pb-2 col-12 fw-bold" onclick="fnGuardarDatosGenerales();"><i class="fas fa-save" style="margin-right:10px;"></i>GUARDAR</button>
+            <button id="guardarDataEquipo" class="btn btn-outline-primary pt-2 pb-2 col-12 fw-bold" onclick="FnAgregarInformeDatosGenerales();"><i class="fas fa-save" style="margin-right:10px;"></i>GUARDAR</button>
           </div>
         </div>
       <?php endif ?>
@@ -161,6 +158,5 @@
     <script src="/mycloud/library/bootstrap-5.0.2-dist/js/bootstrap.min.js"></script>
     <script src="/mycloud/library/SweetAlert2/js/sweetalert2.all.min.js"></script>
     <script src="/gesman/menu/sidebar.js"></script>
-
   </body>
 </html>

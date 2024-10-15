@@ -4,7 +4,6 @@
     header("location:/gesman");
     exit();
   }
-
   require_once $_SERVER['DOCUMENT_ROOT']."/gesman/connection/ConnGesmanDb.php";
   require_once $_SERVER['DOCUMENT_ROOT']."/informes/datos/InformesData.php";
 
@@ -32,7 +31,6 @@
         $recomendaciones=array();
         $antecedentes=array();
         $analisis=array();
-
         foreach($datos as $dato){
           if($dato['tipo']=='con'){
             $conclusiones[]=array('actividad'=>$dato['actividad'],'id'=>$dato['id'],'tipo'=>$dato['tipo']);
@@ -54,13 +52,12 @@
       $conmy = null;
   }
 ?>
-
 <!doctype html>
 <html lang="es">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Resumen | GPEM SAC</title>
+    <title>Editar Resumen | GPEM S.A.C</title>
     <link rel="shortcut icon" href="/mycloud/logos/favicon.ico">
     <link rel="stylesheet" href="/mycloud/library/fontawesome-free-5.9.0-web/css/all.css">
     <link rel="stylesheet" href="/mycloud/library/SweetAlert2/css/sweetalert2.min.css">
@@ -77,16 +74,13 @@
   </head>
   <body>
     <?php require_once $_SERVER['DOCUMENT_ROOT'].'/gesman/menu/sidebar.php';?>
-  
     <div class="container section-top mb-4">
-      
       <div class="row mb-3">
         <div class="col-12 btn-group p-0" role="group" aria-label="Basic example">
           <button type="button" class="btn btn-outline-primary fw-bold" onclick="FnListarInformes(); return false;"><i class="fas fa-list"></i><span class="d-none d-sm-block"> Informes</span></button>
           <button type="button" class="btn btn-outline-primary fw-bold <?php echo $claseHabilitado;?> <?php echo $atributoHabilitado;?>" onclick="FnResumenInforme(); return false;"><i class="fas fa-desktop"></i><span class="d-none d-sm-block"> Resúmen</span></button>
         </div>
       </div>
-
       <div class="row border-bottom mb-3 fs-5">
         <div class="col-12 fw-bold d-flex justify-content-between p-0">
           <p class="m-0 p-0 text-secondary"><?php echo $isAuthorized ? $_SESSION['CliNombre'] : 'UNKNOWN'; ?></p>
@@ -95,7 +89,6 @@
           <p class="m-0 p-0 text-center text-secondary"><?php echo $isAuthorized ? $Nombre : 'UNKNOWN'; ?></p>
         </div>
       </div>
-
       <?php if ($isAuthorized): ?>
         <div class="row">
         <div class="col-12 p-0">
@@ -111,78 +104,78 @@
         </div>
         </div>
         <!--RESUMEN-->
-        <div class="row p-2" id="containerActividad">
+        <div class="row border-bottom pb-3" id="containerActividad">
           <label class="text-secondary fw-bold p-0 d-flex justify-content-between">ACTIVIDAD: <small>EDITAR</small></label>
           <!-- ACTIVIDAD -->
           <div class="mt-1 p-2 d-flex justify-content-between align-items-center border border-1 bg-light">
             <p class="mb-0 text-secondary fw-bold" id="actividadId" style="text-align: justify;"><?php echo $informe->Actividad; ?></p>
-            <i class="fas fa-edit text-secondary" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" onclick="fnEditarActividad(<?php echo $informe->Id; ?>)"></i>
+            <i class="fas fa-edit text-secondary" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" onclick="FnModalModificarInformeActividad(<?php echo $informe->Id; ?>)"></i>
           </div>
         </div>      
         <!-- ITEM ANTECEDENTES -->
         <div class="row mt-3">
-          <div class="fw-bold d-flex justify-content-between col-8 col-md-10 p-0" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar" data-tipo="ant" onclick="abrirModalAgregar('ant')"><button class="btn btn-outline-primary text-primary p-2 mb-1" style="width:190px; text-align:left;" id="btn-antecedentes"><i class="fas fa-plus" style="margin-right: 5px"></i> ANTECEDENTES</button></div>
+          <div class="fw-bold d-flex justify-content-between col-8 col-md-10 p-0"><button class="bg-white text-primary p-2 mb-1" style="border:unset; cursor: pointer; width:190px; text-align:left;" data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar" data-tipo="ant" onclick="FnModalAgregarDetalleInforme('ant')" ><i class="fas fa-plus" style="margin-right: 5px"></i> ANTECEDENTES</button></div>
           <div class="fw-bold text-secondary d-flex justify-content-center align-items-center col-4 col-md-2 p-0"><small>EDITAR</small><small class="small" style="margin-left:5px !important; margin-right:5px; !important;" >|</small><small>ELIMINAR</small></div>
           <?php foreach ($antecedentes as $antecedente) : ?>
-            <div class="row d-flex justify-content-between align-items-center border border-bottom m-0 mb-1" style="padding-left:0px; padding-right:0px;">
+            <div class="row d-flex justify-content-between align-items-center border border-bottom m-0 mb-1 pt-1 pb-1" style="padding-left:0px; padding-right:0px;">
               <div class="d-flex col-8 col-md-10";>
                 <span class="text-secondary" style="margin-right:10px;">&#x2713</span>
                 <p class="mb-0 mb-2 text-secondary" style="margin-bottom: 0 !important; text-align:justify; line-height: 1.2;" data-tipo="<?php echo $antecedente['tipo']; ?>" id="antecedenteId" style="text-align: justify;"><?php echo $antecedente['actividad']; ?></p>
               </div>
               <div class="input-grop-icons col-4 col-md-2 d-flex justify-content-around align-items-center">
-                <span class="input-group-text bg-white border border-0 text-secondary"><i class="fas fa-edit" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" data-tipo="<?php echo $antecedente['tipo']; ?>" onclick="abrirModalEditar(<?php echo $antecedente['id']; ?>, 'antecedente')"></i></span>
-                <span class="input-group-text bg-white border border-0 text-secondary"><i class="fas fa-trash-alt" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar" onclick="abrirModalEliminar(<?php echo $antecedente['id']; ?>)"></i></span>
+                <span class="input-group-text bg-white border border-0 text-secondary"><i class="fas fa-edit" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" data-tipo="<?php echo $antecedente['tipo']; ?>" onclick="FnModalModificarDetalleInforme(<?php echo $antecedente['id']; ?>, 'antecedente')"></i></span>
+                <span class="input-group-text bg-white border border-0 text-secondary"><i class="fas fa-trash-alt" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar" onclick="FnModalEliminarDetalleInformeActividad(<?php echo $antecedente['id']; ?>)"></i></span>
               </div>
             </div>
           <?php endforeach ?>
         </div>
         <!-- ITEM ANÁLISIS -->
         <div class="row mt-3">
-          <div class="fw-bold d-flex justify-content-between col-8 col-md-10 p-0" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar" data-tipo="ana" onclick="abrirModalAgregar('ana')"><button class="btn btn-outline-primary text-primary p-2 mb-1 text-left" style="width:190px; text-align:left;" id="btn-analisis"><i class="fas fa-plus" style="margin-right: 5px"></i> ANÁLISIS</button></div>
+          <div class="fw-bold d-flex justify-content-between col-8 col-md-10 p-0"><button class="bg-white text-primary p-2 mb-1 text-left" style="border:unset; width:190px; text-align:left; cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar" data-tipo="ana" onclick="FnModalAgregarDetalleInforme('ana')"><i class="fas fa-plus" style="margin-right: 5px"></i> ANÁLISIS</button></div>
           <div class="fw-bold text-secondary d-flex justify-content-center align-items-center col-4 col-md-2 p-0"><small>EDITAR</small><small class="small" style="margin-left:5px !important; margin-right:5px; !important;" >|</small><small>ELIMINAR</small></div>
           <?php foreach ($analisis as $analisi) : ?>
-            <div class="row d-flex justify-content-between align-items-center border border-bottom m-0 mb-1" style="padding-left:0px; padding-right:0px;">
+            <div class="row d-flex justify-content-between align-items-center border border-bottom m-0 mb-1 pt-1 pb-1" style="padding-left:0px; padding-right:0px;">
               <div class="d-flex col-8 col-md-10";>
                 <span class="text-secondary" style="margin-right:10px;">&#x2713</span>
                 <p class="mb-0 mb-2 text-secondary" style="margin-bottom: 0 !important; text-align:justify; line-height: 1.2;" data-tipo="<?php echo $analisi['tipo']; ?>" id="analisisId" style="text-align: justify;"><?php echo $analisi['actividad']; ?></p>
               </div>
               <div class="input-grop-icons col-4 col-md-2 d-flex justify-content-around align-items-center">
-                <span class="input-group-text bg-white border border-0 text-secondary"><i class="fas fa-edit" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" data-tipo="<?php echo $analisi['tipo']; ?>" onclick="abrirModalEditar(<?php echo $analisi['id']; ?>, 'analisis')"></i></span>
-                <span class="input-group-text bg-white border border-0 text-secondary"><i class="fas fa-trash-alt" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar" onclick="abrirModalEliminar(<?php echo $analisi['id']; ?>)"></i></span>
+                <span class="input-group-text bg-white border border-0 text-secondary"><i class="fas fa-edit" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" data-tipo="<?php echo $analisi['tipo']; ?>" onclick="FnModalModificarDetalleInforme(<?php echo $analisi['id']; ?>, 'analisis')"></i></span>
+                <span class="input-group-text bg-white border border-0 text-secondary"><i class="fas fa-trash-alt" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar" onclick="FnModalEliminarDetalleInformeActividad(<?php echo $analisi['id']; ?>)"></i></span>
               </div>
             </div>
           <?php endforeach ?>
         </div>
         <!-- ITEM CONCLUSION -->
         <div class="row mt-3">
-          <div class="fw-bold d-flex justify-content-between col-8 col-md-10 p-0" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar" data-tipo="con" onclick="abrirModalAgregar('con')"><button class="btn btn-outline-primary text-primary p-2 mb-1" style="width:190px; text-align:left;" id="btn-conclusiones"><i class="fas fa-plus" style="margin-right: 5px"></i> CONCLUSIONES</button></div>
+          <div class="fw-bold d-flex justify-content-between col-8 col-md-10 p-0"><button class="bg-white text-primary p-2 mb-1" style="border:unset; width:190px; text-align:left; cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar" data-tipo="con" onclick="FnModalAgregarDetalleInforme('con')"><i class="fas fa-plus" style="margin-right: 5px"></i> CONCLUSIONES</button></div>
           <div class="fw-bold text-secondary d-flex justify-content-center align-items-center col-4 col-md-2 p-0"><small>EDITAR</small><small class="small" style="margin-left:5px !important; margin-right:5px; !important;" >|</small><small>ELIMINAR</small></div>
             <?php foreach ($conclusiones as $conclusion) : ?>
-            <div class="row d-flex justify-content-between align-items-center border border-bottom m-0 mb-1" style="padding-left:0px; padding-right:0px;">
+            <div class="row d-flex justify-content-between align-items-center border border-bottom m-0 mb-1 pt-1 pb-1" style="padding-left:0px; padding-right:0px;">
               <div class="d-flex col-8 col-md-10">
                 <span class="text-secondary" style="margin-right:10px;">&#x2713</span>
                 <p class="mb-0 mb-2 text-secondary" style="margin-bottom: 0 !important; text-align:justify; line-height: 1.2;" data-tipo="<?php echo $conclusion['tipo']; ?>" id="conclusionId>" style="text-align: justify;"><?php echo $conclusion['actividad']; ?></p>
               </div>
               <div class="input-grop-icons col-4 col-md-2 d-flex justify-content-around align-items-center">
-                <span class="input-group-text bg-white border border-0 text-secondary"><i class="fas fa-edit" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" data-tipo="<?php echo $conclusion['tipo']; ?>" onclick="abrirModalEditar(<?php echo $conclusion['id']; ?>, 'conclusion')"></i></span>
-                <span class="input-group-text bg-white border border-0 text-secondary"><i class="fas fa-trash-alt" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar" onclick="abrirModalEliminar(<?php echo $conclusion['id']; ?>)"></i></span>
+                <span class="input-group-text bg-white border border-0 text-secondary"><i class="fas fa-edit" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" data-tipo="<?php echo $conclusion['tipo']; ?>" onclick="FnModalModificarDetalleInforme(<?php echo $conclusion['id']; ?>, 'conclusion')"></i></span>
+                <span class="input-group-text bg-white border border-0 text-secondary"><i class="fas fa-trash-alt" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar" onclick="FnModalEliminarDetalleInformeActividad(<?php echo $conclusion['id']; ?>)"></i></span>
               </div>
             </div>
             <?php endforeach ?>
         </div>
         <!-- ITEM RECOMENDACIÓN -->
         <div class="row mt-3">
-          <div class="fw-bold d-flex justify-content-between col-8 col-md-10 p-0" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar" data-tipo="rec" onclick="abrirModalAgregar('rec')"><button class="btn btn-outline-primary text-primary p-2 mb-1" style="width:190px; text-align:left;" id="btn-recomendaciones"><i class="fas fa-plus" style="margin-right: 5px"></i> RECOMENDACIONES</button></div>
+          <div class="fw-bold d-flex justify-content-between col-8 col-md-10 p-0"><button class="bg-white text-primary p-2 mb-1" style="border:unset; width:190px; text-align:left; cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar" data-tipo="rec" onclick="FnModalAgregarDetalleInforme('rec')"><i class="fas fa-plus" style="margin-right: 5px"></i> RECOMENDACIONES</button></div>
           <div class="fw-bold text-secondary d-flex justify-content-center align-items-center col-4 col-md-2 p-0"><small>EDITAR</small><small class="small" style="margin-left:5px !important; margin-right:5px; !important;" >|</small><small>ELIMINAR</small></div>
             <?php foreach ($recomendaciones as $recomendacion) : ?>
-              <div class="row d-flex justify-content-between align-items-center border border-bottom m-0 mb-1" style="padding-left:0px; padding-right:0px;">
+              <div class="row d-flex justify-content-between align-items-center border border-bottom m-0 mb-1 pt-1 pb-1" style="padding-left:0px; padding-right:0px;">
               <div class="d-flex col-8 col-md-10">
                 <span class="text-secondary" style="margin-right:10px;">&#x2713</span>
                 <p class="mb-0 mb-2 text-secondary" style="margin-bottom: 0 !important; text-align:justify; line-height: 1.2;" data-tipo="<?php echo $recomendacion['tipo']; ?>" id="recomendacionId" style="text-align: justify;"><?php echo $recomendacion['actividad']; ?></p>
               </div>
               <div class="input-grop-icons col-4 col-md-2 d-flex justify-content-around align-items-center">
-                <span class="input-group-text bg-white border border-0 text-secondary"><i class="fas fa-edit" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" data-tipo="<?php echo $recomendacion['tipo']; ?>" onclick="abrirModalEditar(<?php echo $recomendacion['id']; ?>, 'recomendacion')"></i></span>
-                <span class="input-group-text bg-white border border-0 text-secondary"><i class="fas fa-trash-alt" style="cursor: pointer;" onclick="abrirModalEliminar(<?php echo $recomendacion['id']; ?>)"></i></span>
+                <span class="input-group-text bg-white border border-0 text-secondary"><i class="fas fa-edit" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" data-tipo="<?php echo $recomendacion['tipo']; ?>" onclick="FnModalModificarDetalleInforme(<?php echo $recomendacion['id']; ?>, 'recomendacion')"></i></span>
+                <span class="input-group-text bg-white border border-0 text-secondary"><i class="fas fa-trash-alt" style="cursor: pointer;" onclick="FnModalEliminarDetalleInformeActividadActividad(<?php echo $recomendacion['id']; ?>)"></i></span>
               </div>
             </div>
             <?php endforeach ?>
@@ -205,7 +198,7 @@
               <textarea type="text" class="form-control text-secondary d-none" id="trabajoModalInput" name="trabajos" rows="3"></textarea>
               <textarea type="text" class="form-control text-secondary d-none" id="observacionModalInput" name="observaciones" rows="3"></textarea>
               <div class="modal-footer">
-                <button type="button" class="btn btn-primary fw-bold" id="modalGuardarBtn" onclick="fnModificarActividadInforme()"><i class="fas fa-save"></i> GUARDAR</button>
+                <button type="button" class="btn btn-primary fw-bold" id="modalGuardarBtn" onclick="FnModificarInformeActividad()"><i class="fas fa-save"></i> GUARDAR</button>
               </div>
             </form>
           </div>
@@ -228,7 +221,7 @@
               <textarea type="text" class="form-control text-secondary d-none" id="registroTrabajoInput" name="trabajos" rows="3"></textarea>
               <textarea type="text" class="form-control text-secondary d-none" id="registroObservacionInput" name="observaciones" rows="3"></textarea>
               <div class="modal-footer">
-                <button type="button" class="btn btn-primary fw-bold" id="modalGuardarBtn" onclick="fnRegistrarActividadDetalle()"><i class="fas fa-save"></i> GUARDAR</button>
+                <button type="button" class="btn btn-primary fw-bold" id="modalGuardarBtn" onclick="FnAgregarDetalleInformeActividad()"><i class="fas fa-save"></i> GUARDAR</button>
               </div>
             </form>
           </div>
@@ -251,7 +244,7 @@
               <textarea type="text" class="form-control text-secondary d-none" id="trabajoModalInput" name="trabajos" rows="3" placeholder=""></textarea>
               <textarea type="text" class="form-control text-secondary d-none" id="observacionModalInput" name="observaciones" rows="3" placeholder=""></textarea>
               <div class="modal-footer">
-                <button type="button" class="btn btn-primary fw-bold" id="modalGuardarBtn" onclick="FnModificarActividad()"><i class="fas fa-save"></i> GUARDAR</button>
+                <button type="button" class="btn btn-primary fw-bold" id="modalGuardarBtn" onclick="FnModificarDetalleInformeActividad()"><i class="fas fa-save"></i> GUARDAR</button>
               </div>
             </form>
           </div>
@@ -260,7 +253,7 @@
     </div>
 
     <div class="container-loader-full">
-        <div class="loader-full"></div>
+      <div class="loader-full"></div>
     </div>
     
     <script src="/informes/js/EditarInformeResumen.js"></script>

@@ -9,15 +9,15 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 //FUNCIÓN CREA ACTIVIDAD
-const fnCrearActividad = async () => {
+const FnAgregarDetalleInformeTipoActividad = async () => {
   const formData = new FormData();
-  formData.append('infid', document.getElementById('guardarActividadInput').value);
-  formData.append('actividad', document.getElementById('guardarNombreActividadInput').value.trim());
-  formData.append('diagnostico', document.getElementById('guardarDiagnosticoInput').value.trim());
-  formData.append('trabajos', document.getElementById('guardarTrabajoInput').value.trim());
-  formData.append('observaciones', document.getElementById('guardarObservacionInput').value.trim());
+  formData.append('infid', document.getElementById('txtActividadInfid1').value);
+  formData.append('actividad', document.getElementById('txtActividad1').value.trim());
+  formData.append('diagnostico', document.getElementById('txtDiagnostico1').value.trim());
+  formData.append('trabajos', document.getElementById('txtTrabajo1').value.trim());
+  formData.append('observaciones', document.getElementById('txtObservacion1').value.trim());
   try {
-    const response = await fetch('/informes/insert/AgregarActividad.php', {
+    const response = await fetch('/informes/insert/AgregarDetalleInformeTipoActividad.php', {
         method: 'POST',
         body: formData
     });
@@ -54,23 +54,23 @@ const fnCrearActividad = async () => {
 };
 
 // CREAR SUBACTIVIDAD
-const fnCrearSubActividad = async (id) => {
+const FnModalAgregarDetalleInformeSubActividad = async (id) => {
   const modal = new bootstrap.Modal(document.getElementById('modalNuevaSubActividad'), { keyboard: false });
   modal.show();
-  document.getElementById('cabeceraIdInput').value = id;
+  document.getElementById('txtActividadOwnid').value = id;
 };
 
 // GUARDAR SUB-ACTIVIDAD
-const fnGuardarSubActividad = async () =>{
+const FnAgregarDetalleInformeSubActividad = async () =>{
   const formData = new FormData();
-  formData.append('infid', document.getElementById('guardarSubActividadInput').value);
-  formData.append('ownid', document.getElementById('cabeceraIdInput').value);
-  formData.append('actividad', document.getElementById('guardarNombreSubActividadInput').value.trim());
-  formData.append('diagnostico', document.getElementById('guardarDiagnosticoSubActividadInput').value.trim());
-  formData.append('trabajos', document.getElementById('guardarTrabajoSubActividadInput').value.trim());
-  formData.append('observaciones', document.getElementById('guardarObservacionSubActividadInput').value.trim());
+  formData.append('infid', document.getElementById('txtActividadInfid2').value);
+  formData.append('ownid', document.getElementById('txtActividadOwnid').value);
+  formData.append('actividad', document.getElementById('txtActividad2').value.trim());
+  formData.append('diagnostico', document.getElementById('txtDiagnostico2').value.trim());
+  formData.append('trabajos', document.getElementById('txtTrabajo2').value.trim());
+  formData.append('observaciones', document.getElementById('txtObservacion2').value.trim());
   try {
-    const response = await fetch('/informes/insert/AgregarActividad.php', {
+    const response = await fetch('/informes/insert/AgregarDetalleInformeTipoActividad.php', {
       method: 'POST',
       body: formData
     });
@@ -106,12 +106,12 @@ const fnGuardarSubActividad = async () =>{
 };
 
 //BUSCAR ACTIVIDAD
-const fnEditarActividad = async (id) => {
+const FnModalModificarDetalleInformeActividad = async (id) => {
   modalEditarActividad.show();
   const formData = new FormData();
   formData.append('id', id);
   try {
-    const response = await fetch('/informes/search/BuscarActividad.php', {
+    const response = await fetch('/informes/search/BuscarDetalleInformeActividad.php', {
         method: 'POST',
         body: formData
     });
@@ -122,11 +122,11 @@ const fnEditarActividad = async (id) => {
     if (!datos.res) {
         throw new Error(datos.msg);
     }
-    document.getElementById('editarActividadInput').value = datos.data.id;
-    document.getElementById('editarNombreActividadInput').value = datos.data.actividad;
-    document.getElementById('editarDiagnosticoInput').value = datos.data.diagnostico;
-    document.getElementById('editarTrabajoInput').value = datos.data.trabajos;
-    document.getElementById('editarObservacionInput').value = datos.data.observaciones;
+    document.getElementById('txtActividadId').value = datos.data.id;
+    document.getElementById('txtactividad3').value = datos.data.actividad;
+    document.getElementById('txtDiagnostico3').value = datos.data.diagnostico;
+    document.getElementById('txtTrabajo3').value = datos.data.trabajos;
+    document.getElementById('txtObservacion3').value = datos.data.observaciones;
   } catch (error) {
     Swal.fire({
         title: 'Error',
@@ -139,18 +139,18 @@ const fnEditarActividad = async (id) => {
 };
 
 //MODIFICAR ACTIVIDAD
-const FnModificarActividad = async () => {
-  vgLoader.classList.remove('loader-full-hidden');
-
-  const formData = new FormData();
-  formData.append('id', document.getElementById('editarActividadInput').value);
-  formData.append('actividad', document.getElementById('editarNombreActividadInput').value);
-  formData.append('diagnostico', document.getElementById('editarDiagnosticoInput').value);
-  formData.append('trabajos', document.getElementById('editarTrabajoInput').value);
-  formData.append('observaciones', document.getElementById('editarObservacionInput').value);
-
+const FnModificarDetalleInformeActividad = async () => {
   try {
-    const response = await fetch('/informes/update/ModificarActividad.php', {
+    vgLoader.classList.remove('loader-full-hidden');
+
+    const formData = new FormData();
+    formData.append('id', document.getElementById('txtActividadId').value);
+    formData.append('actividad', document.getElementById('txtactividad3').value);
+    formData.append('diagnostico', document.getElementById('txtDiagnostico3').value);
+    formData.append('trabajos', document.getElementById('txtTrabajo3').value);
+    formData.append('observaciones', document.getElementById('txtObservacion3').value);
+
+    const response = await fetch('/informes/update/ModificarDetalleInformeActividad.php', {
       method: 'POST',
       body: formData
     });
@@ -169,10 +169,10 @@ const FnModificarActividad = async () => {
 };
 
 // ABRIR MODAL REGISTRAR IMAGEN
-const fnAbrirModalRegistrarImagen = (id) => {
+const FnModalAgregarArchivo = (id) => {
   var modal = new bootstrap.Modal(document.getElementById('modalAgregarImagen'), { keyboard: false });
   modal.show();
-  document.getElementById('cabeceraIdInput').value = id;
+  document.getElementById('txtActividadOwnid').value = id;
 };
 
 /**================================
@@ -296,7 +296,7 @@ function calculateSize(img, maxWidth, maxHeight) {
   return [width, height];
 }
 
-async function FnAgregarImagen(){
+async function FnAgregarArchivo(){
   vgLoader.classList.remove('loader-full-hidden');
   try {
       var archivo;
@@ -308,7 +308,7 @@ async function FnAgregarImagen(){
           throw new Error('No se reconoce el archivo');
       }
       const formData = new FormData();
-      formData.append('refid', document.getElementById('cabeceraIdInput').value);
+      formData.append('refid', document.getElementById('txtActividadOwnid').value);
       formData.append('titulo', document.getElementById('txtTitulo').value);
       formData.append('descripcion', document.getElementById('txtDescripcion').value);
       formData.append('archivo', archivo);
@@ -329,7 +329,7 @@ async function FnAgregarImagen(){
 }
 
 //ELIMINAR ARCHIVO
-const fnEliminarImagen = async (id) => {
+const FnEliminarArchivo = async (id) => {
   vgLoader.classList.remove('loader-full-hidden');
   const formData = new FormData();
   formData.append('id', id);
@@ -369,11 +369,11 @@ const fnEliminarImagen = async (id) => {
 };
 
 // FUNCIÓN ELIMINAR ACTIVIDAD
-const fnEliminarActividad = async (id) => {
+const FnEliminarDetalleInformeActividad = async (id) => {
   const formData = new FormData();
   formData.append('id', id);
   try {
-    const response = await fetch('/informes/delete/EliminarActividad.php', {
+    const response = await fetch('/informes/delete/EliminarDetalleInformeActividad.php', {
       method: 'POST',
       body: formData
     });
@@ -428,7 +428,7 @@ mostrarTitulo('trabajo');
 mostrarTitulo('observacion');
 
 function FnResumenInforme(){
-  id = document.getElementById('idInforme').value;
+  id = document.getElementById('txtInformeId').value;
   console.log(0, id)
   if(id > 0){
       window.location.href='/informes/Informe.php?id='+id;

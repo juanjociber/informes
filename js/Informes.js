@@ -208,7 +208,7 @@ async function FnAgregarInforme() {
     formData.append('equkm', document.getElementById('txtKm').value);
     formData.append('equhm', document.getElementById('txtHm').value);
 
-    const response = await fetch("/informes/insert/AgregarNuevoInforme.php", {
+    const response = await fetch("/informes/insert/AgregarInforme2.php", {
         method: "POST",
         body: formData
     });

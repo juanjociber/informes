@@ -26,7 +26,7 @@
     $imagen->tipo = 'IMG';
 
     $conmy->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    if (FnRegistrarImagen($conmy, $imagen)) {
+    if (FnRegistrarArchivo($conmy, $imagen)) {
         $data['msg'] = "Archivo cargado con éxito.";
         $data['res'] = true;        
     } else {

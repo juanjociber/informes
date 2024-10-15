@@ -1,14 +1,11 @@
 <?php
   session_start();
-
   if(!isset($_SESSION['UserName']) || !isset($_SESSION['CliId'])){
     header("location:/gesman");
     exit();
   }
-
   $ID = empty($_GET['id'])?0:$_GET['id'];
   $CLI_ID = $_SESSION['CliId'];
-
   require_once $_SERVER['DOCUMENT_ROOT']."/gesman/connection/ConnGesmanDb.php";
   require_once $_SERVER['DOCUMENT_ROOT']."/informes/datos/InformesData.php";
 
@@ -21,7 +18,6 @@
 
   try {
     $conmy->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
     if (is_numeric($ID) && $ID > 0) {
       $informe = FnBuscarInforme($conmy, $ID, $CLI_ID);
       if ($informe && $informe->Estado !=3) {
@@ -41,7 +37,6 @@
       $errorMessage = $ex->getMessage();
       $conmy = null;
   } 
-
 ?>
 
 <!doctype html>
@@ -49,7 +44,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Anexos | GPEM SAC</title>
+    <title>Editar Anexos | GPEM S.A.C</title>
     <link rel="shortcut icon" href="/mycloud/logos/favicon.ico">
     <link rel="stylesheet" href="/mycloud/library/fontawesome-free-5.9.0-web/css/all.css">
     <link rel="stylesheet" href="/mycloud/library/SweetAlert2/css/sweetalert2.min.css">
@@ -108,7 +103,7 @@
           <?php foreach($archivos as $archivo): ?>
             <?php if ($archivo['tabla'] ==='INFA'): ?>
             <div class="card p-0" id="<?php echo ($archivo['id']); ?>">
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="fnEliminarAnexo(<?php echo ($archivo['id']); ?>)"></button>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="FnEliminarArchivo(<?php echo ($archivo['id']); ?>)"></button>
                 <div class="card-header bg-transparent border-success"><?php echo ($archivo['titulo']); ?></div>
                 <img src="/mycloud/gesman/files/<?php echo ($archivo['nombre']); ?>" class="img-fluid" alt="">
                 <div class="card-footer bg-transparent border-success"><?php echo ($archivo['descripcion']); ?></div>
@@ -148,7 +143,7 @@
           </div>
           <div id="msjAgregarImagen" class="modal-body pt-1"></div>
           <div class="col-12 modal-footer">
-            <button type="button" class="btn btn-primary fw-bold pt-2 pb-2 col-12 w-100" onclick="FnAgregarImagen();" <?php echo !$isAuthorized ? 'disabled' : ''; ?>><i class="fas fa-save"></i>  GUADAR</button>
+            <button type="button" class="btn btn-primary fw-bold pt-2 pb-2 col-12 w-100" onclick="FnAgregarArchivo();" <?php echo !$isAuthorized ? 'disabled' : ''; ?>><i class="fas fa-save"></i>  GUADAR</button>
           </div>
         </div>
       </div>

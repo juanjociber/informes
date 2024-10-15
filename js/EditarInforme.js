@@ -1,26 +1,21 @@
-const vgLoader = document.querySelector('.container-loader-full');
-
+const vgLoader = document.querySelector('.container-loader-full')
 window.onload = function() {
   document.getElementById('MenuInformes').classList.add('menu-activo','fw-bold');
   vgLoader.classList.add('loader-full-hidden');
 };
-
 // FUNCIÓN SELECT PERSONALIZADO
 const cargaSelect = () => {
   const initCustomSelect = (inputId, listId) => {
     const selectInput = document.getElementById(inputId);
     const selectList = document.getElementById(listId);
-
     if (!selectInput || !selectList) {
       return;
     }
-
     const selectItems = selectList.getElementsByClassName('custom-select-item');
     // MOSTRAR / OCULTAR LISTA AL HACER CLIC EN INPUT
     selectInput.addEventListener('click', function() {
       selectList.style.display = selectList.style.display === 'block' ? 'none' : 'block';
     });
-
     // SELECCIONAR UN ELEMENTO DE LA LISTA
     Array.from(selectItems).forEach(item => {
       item.addEventListener('click', function() {
@@ -30,14 +25,12 @@ const cargaSelect = () => {
         selectList.style.display = 'none';
       });
     });
-
     // OCULTAR LISTA SI SE HACE CLIC FUERA DE LISTA
     document.addEventListener('click', function(event) {
       if (!event.target.closest('.custom-select-wrapper')) {
         selectList.style.display = 'none';
       }
     });
-
     // FILTRAR ELEMENTOS DE LA LISTA AL ESCRIBIR EN EL INPUT
     selectInput.addEventListener('input', function() {
       const filter = selectInput.value.toLowerCase();
@@ -64,25 +57,24 @@ const cargaSelect = () => {
     });
   };
   // INICIALIZANDO SELECT
-  initCustomSelect('contactoInput', 'contactoList');
-  initCustomSelect('supervisorInput', 'supervisorList');
+  initCustomSelect('cbCliContacto', 'contactoList');
+  initCustomSelect('cbSupervisor', 'supervisorList');
 };
-
 // LLAMANDO FUNCIÓN CARGA DE SELECT
 document.addEventListener('DOMContentLoaded', cargaSelect);
 
 // FUNCIÓN GUARDAR DATOS GENERALES
-const fnGuardarDatosGenerales = async () => {
+const FnAgregarInformeDatosGenerales = async () => {
   try {
     vgLoader.classList.remove('loader-full-hidden');
     const formData = new FormData();      
-    formData.append('id', document.querySelector('#idInforme').value);
-    formData.append('fecha', document.querySelector('#fechaInformeInput').value.trim());
-    formData.append('clicontacto', document.querySelector('#contactoInput').value.trim()); 
-    formData.append('clidireccion', document.querySelector('#ubicacionInput').value.trim()); 
-    formData.append('supervisor', document.querySelector('#supervisorInput').value.trim());
+    formData.append('id', document.querySelector('#txtInformeId').value);
+    formData.append('fecha', document.querySelector('#dpfecha').value.trim());
+    formData.append('clicontacto', document.querySelector('#cbCliContacto').value.trim()); 
+    formData.append('clidireccion', document.querySelector('#txtCliDireccion').value.trim()); 
+    formData.append('supervisor', document.querySelector('#cbSupervisor').value.trim());
     
-    const response = await fetch('/informes/update/ModificarDatosGenerales.php', {
+    const response = await fetch('/informes/update/ModificarInformeDatosGenerales.php', {
       method: 'POST',
       body: formData
     });
@@ -112,9 +104,8 @@ const fnGuardarDatosGenerales = async () => {
   }
 }
 
-
 function FnResumenInforme(){
-  id = document.getElementById('idInforme').value;
+  id = document.getElementById('txtInformeId').value;
   if(id > 0){
       window.location.href='/informes/Informe.php?id='+id;
   }

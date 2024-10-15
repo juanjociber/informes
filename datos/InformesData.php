@@ -352,7 +352,7 @@
         }
     }
     
-    function FnRegistrarImagen($conmy, $imagen) {
+    function FnRegistrarArchivo($conmy, $imagen) {
         try {
             $stmt = $conmy->prepare("INSERT INTO tblarchivos (refid, tabla, nombre, titulo, descripcion, tipo, actualizacion) 
                                       VALUES (:RefId, :Tabla, :Nombre, :Titulo, :Descripcion, :Tipo, :Actualizacion);");

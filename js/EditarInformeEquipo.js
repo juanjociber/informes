@@ -36,7 +36,7 @@ const FnModificarInformeEquipo = async () => {
     formData.append('EquKm', equkm);
     formData.append('EquHm', equhm);
 
-    const response = await fetch('/informes/update/ModificarInformeEquipo.php', {
+    const response = await fetch('/informes/update/ModificarInformeDatosEquipo.php', {
       method: 'POST',
       body: formData
     });
@@ -91,7 +91,6 @@ const FnEliminarInformeArchivo = async (id) => {
     });
     const result = await response.json();
     setTimeout(() => { vgLoader.classList.add('loader-full-hidden'); }, 300);
-
     if (result.res) {
       const elemento = document.getElementById(id);
       if (elemento) {
@@ -146,19 +145,19 @@ document.getElementById('fileImagen').addEventListener('change', function(event)
   const file = event.target.files[0];
 
   if (!isValidFileType(file)) {
-      //console.log('El archivo', file.name, 'Tipo de archivo no permitido.');
+    //console.log('El archivo', file.name, 'Tipo de archivo no permitido.');
   }
 
   if (!isValidFileSize(file)) {
-      //console.log('El archivo', file.name, 'El tamaño del archivo excede los 3MB.');
+    //console.log('El archivo', file.name, 'El tamaño del archivo excede los 3MB.');
   }
 
   while ($divImagen.firstChild) {
-      $divImagen.removeChild($divImagen.firstChild);
+    $divImagen.removeChild($divImagen.firstChild);
   }
 
   if (file.type.startsWith('image/')) {
-      displayImage(file);
+    displayImage(file);
   }
   // console.log('Nombre del archivo:', file.name);
   // console.log('Tipo del archivo:', file.type);

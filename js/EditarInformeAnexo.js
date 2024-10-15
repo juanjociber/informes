@@ -1,13 +1,12 @@
 const vgLoader = document.querySelector('.container-loader-full');
-
 window.onload = function() {
   document.getElementById('MenuInformes').classList.add('menu-activo','fw-bold');
   vgLoader.classList.add('loader-full-hidden');
 };
-
-/**================================
- FUNCIONES PARA CARGA DE IMÁGENES
-===================================* 
+/*
+===================================
+ CARGA DE IMÁGENES
+===================================
 */
 const MAX_WIDTH = 1080;
 const MAX_HEIGHT = 720;
@@ -126,7 +125,7 @@ function calculateSize(img, maxWidth, maxHeight) {
   return [width, height];
 }
 
-async function FnAgregarImagen() {
+async function FnAgregarArchivo() {
   try {
     vgLoader.classList.remove('loader-full-hidden');
     var archivo;
@@ -167,7 +166,7 @@ async function FnAgregarImagen() {
 }
 
 //ELIMINAR ARCHIVO
-const fnEliminarAnexo = async (id) => {
+const FnEliminarArchivo = async (id) => {
   try {
     vgLoader.classList.remove('loader-full-hidden');
     const formData = new FormData();

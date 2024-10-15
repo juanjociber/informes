@@ -11,12 +11,12 @@ document.addEventListener('DOMContentLoaded', () => {
   vgLoader.classList.add('loader-full-hidden');
 });
 
-const fnEditarActividad = async (id) => {
+const FnModalModificarInformeActividad = async (id) => {
   modalEditarActividad.show();
 };
 
 //MODIFICAR ACTIVIDAD
-const fnModificarActividadInforme = async () => {
+const FnModificarInformeActividad = async () => {
   try {
     vgLoader.classList.remove('loader-full-hidden');
     const id = document.getElementById('txtIdInforme').value;
@@ -28,7 +28,7 @@ const fnModificarActividadInforme = async () => {
     const formData = new FormData();
     formData.append('id', id);
     formData.append('actividad', actividad);
-    const response = await fetch('/informes/update/ModificarActividadInforme.php', {
+    const response = await fetch('/informes/update/ModificarInformeActividad.php', {
       method: 'POST',
       body: formData
     });
@@ -77,11 +77,10 @@ const fnModificarActividadInforme = async () => {
 
 /**------------------------------------------------------------
  * FUNCIONES : ANTECEDENTES - CONCLUSIONES - RECOMENDACIONES
- * ------------------------------------------------------------
- */
+ * ------------------------------------------------------------*/
 let tipoSeleccionado = '';
 // FUNCIÓN AGREGAR
-const abrirModalAgregar = async (tipo) => {
+const FnModalAgregarDetalleInforme = async (tipo) => {
   tipoSeleccionado = tipo;
   const modal = new bootstrap.Modal(document.getElementById('agregarActividadModal'), { keyboard: false });
   modal.show();
@@ -89,23 +88,23 @@ const abrirModalAgregar = async (tipo) => {
   const modalTitle = document.getElementById('cabeceraRegistrarModal');
   switch(tipo) {
     case 'ant':
-      modalTitle.textContent = 'Registrar Antecedente';
+      modalTitle.textContent = 'Agregar Antecedente';
       break;
     case 'ana':
-      modalTitle.textContent = 'Registrar Análisis';
+      modalTitle.textContent = 'Agregar Análisis';
       break;
     case 'con':
-      modalTitle.textContent = 'Registrar Conclusión';
+      modalTitle.textContent = 'Agregar Conclusión';
       break;
     case 'rec':
-      modalTitle.textContent = 'Registrar Recomendación';
+      modalTitle.textContent = 'Agregar Recomendación';
       break;
     default:
-      modalTitle.textContent = 'Registrar';
+      modalTitle.textContent = 'Agregar';
   }
 }
 
-const fnRegistrarActividadDetalle = async () => {
+const FnAgregarDetalleInformeActividad = async () => {
   try {
     vgLoader.classList.remove('loader-full-hidden');
     const formData = new FormData();
@@ -113,7 +112,7 @@ const fnRegistrarActividadDetalle = async () => {
     formData.append('actividad', document.getElementById('registroActividadInput').value.trim());
     formData.append('tipo', tipoSeleccionado);
 
-    const response = await fetch('/informes/insert/AgregarActividadDetalle.php', {
+    const response = await fetch('/informes/insert/AgregarDetalleInformeActividad.php', {
       method: 'POST',
       body: formData
     });
@@ -151,9 +150,8 @@ const fnRegistrarActividadDetalle = async () => {
   }
 };
 
-
 // FUNCIÓN ABRIR MODAL Y BUSCA DATA ENVIADA POR EL SERVIDOR
-const abrirModalEditar = async (id, cabecera) => {
+const FnModalModificarDetalleInforme = async (id, cabecera) => {
   const modal = new bootstrap.Modal(document.getElementById('modalGeneral'), {keyboard: false});
   modal.show();
   document.getElementById('txtIdtblDetalleInf').value = id;
@@ -161,7 +159,7 @@ const abrirModalEditar = async (id, cabecera) => {
   const formData = new FormData();
   formData.append('id', id);
   try {
-    const response = await fetch('/informes/search/BuscarActividad.php', {
+    const response = await fetch('/informes/search/BuscarDetalleInformeActividad.php', {
       method: 'POST',
       body: formData
     });
@@ -169,6 +167,7 @@ const abrirModalEditar = async (id, cabecera) => {
       throw new Error(response.status + ' ' + response.statusText); 
     }
     const datos = await response.json();
+    console.log(datos);
     if (!datos.res) { 
       throw new Error(datos.msg); 
     }
@@ -209,14 +208,14 @@ const abrirModalEditar = async (id, cabecera) => {
 }
 
 // FUNCIÓN MODIFICAR ACTIVIDAD DETALLE
-const FnModificarActividad = async () => {
+const FnModificarDetalleInformeActividad = async () => {
   try {
     vgLoader.classList.remove('loader-full-hidden');
     const formData = new FormData();
     formData.append('id', document.getElementById('txtIdtblDetalleInf').value);
     formData.append('actividad', document.getElementById('actividadModalInput').value.trim());
 
-    const response = await fetch('/informes/update/ModificarActividad.php', {
+    const response = await fetch('/informes/update/ModificarDetalleInformeActividad.php', {
       method: 'POST',
       body: formData
     });
@@ -262,12 +261,12 @@ const FnModificarActividad = async () => {
 
 
 // FUNCIÓN ELIMINAR
-const abrirModalEliminar = async (id) => {
+const FnModalEliminarDetalleInformeActividad = async (id) => {
   try {
     vgLoader.classList.remove('loader-full-hidden');
     const formData = new FormData();
     formData.append('id', id);
-    const response = await fetch('/informes/delete/EliminarActividad.php', {
+    const response = await fetch('/informes/delete/EliminarDetalleInformeActividad.php', {
       method: 'POST',
       body: formData
     });
