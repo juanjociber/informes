@@ -72,7 +72,7 @@
                 $html.='
                 <div class=" text-center m-1 p-0 border border-1" id="archivo-'.$elemento['id'].'">
                   <p class="bg-light text-secondary m-0 pt-1 pb-2" style="text-align:justify;padding-left:5px;">'.$elemento['titulo'].'</p>
-                    <img src="/mycloud/gesman/files/'.$elemento['nombre'].'" class="img-fluid imagen-ajustada" alt="">
+                    <img src="/mycloud/gesman/files/'.$elemento['nombre'].'" class=" imagen-ajustada" alt="">
                   <p class="bg-light text-secondary mb-0 pt-1 pb-2" style="text-align:justify;padding-left:5px;">'.$elemento['descripcion'].'</p>
                 </div>  
                 ';
@@ -192,12 +192,11 @@
     <style>
       .hijos p:first-child{ padding-top: 10px;}
       .imagen-ajustada {
-        width: auto !important;
-        height: 150px;
-        object-fit: contain; 
+        width: 100%;
+        height: 200px;
+        object-fit: contain;
       }
-      @media(min-width:576px){ .imagen-ajustada { width: auto !important;height: 200px; object-fit: contain;}
-      }
+    
       .contenedor-imagen{display:grid;grid-template-columns:1fr 1fr !important;gap:5px;}
       @media(min-width:768px){.contenedor-imagen{grid-template-columns:1fr 1fr 1fr !important;}}
       .contenedor-imagenes{display: grid; grid-template-columns:1fr 1fr}
@@ -323,9 +322,24 @@
           <?php foreach($imagenInformes as $imagenInforme): ?>
             <div class="text-center border border-1 p-0">
               <p class="m-0 bg-light text-secondary pt-1 pb-2" style="text-align:justify;padding-left:5px;"><?php echo ($imagenInforme['titulo']); ?></p>
-              <img src="/mycloud/gesman/files/<?php echo empty($imagenInforme['nombre']) ? '0.jpg' : $imagenInforme['nombre'] ?>" class="img-fluid imagen-ajustada" alt="">
+              <img src="/mycloud/gesman/files/<?php echo empty($imagenInforme['nombre']) ? '0.jpg' : $imagenInforme['nombre'] ?>" class=" imagen-ajustada" alt="">
               <p class="m-0 bg-light text-secondary pt-1 pb-2" style="text-align:justify;padding-left:5px;"><?php echo ($imagenInforme['descripcion']); ?></p>
             </div>
+
+            <div class="card text-center">
+              <div class="card-header">
+                Featured
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">Special title treatment</h5>
+                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+              </div>
+              <div class="card-footer text-muted">
+                2 days ago
+              </div>
+            </div>
+
           <?php endforeach; ?>
         </div>
         <?php $NUMERO+=1; ?>
@@ -413,7 +427,7 @@
               <?php foreach($imagenAnexos as $imagenAnexo): ?>
                 <div class="text-center border border-1 p-0">
                   <p class="m-0 bg-light text-secondary pt-1 pb-2" style="text-align:justify;padding-left:5px;"><?php echo ($imagenAnexo['titulo']); ?></p>
-                  <img src="/mycloud/gesman/files/<?php echo empty($imagenAnexo['nombre']) ? '0.jpg' : $imagenAnexo['nombre'] ?>" class="img-fluid" alt="">
+                  <img src="/mycloud/gesman/files/<?php echo empty($imagenAnexo['nombre']) ? '0.jpg' : $imagenAnexo['nombre'] ?>" class="" alt="">
                   <p class="m-0 bg-light text-secondary pt-1 pb-2" style="text-align:justify;padding-left:5px;"><?php echo ($imagenAnexo['descripcion']); ?></p>
                 </div>
               <?php endforeach; ?>

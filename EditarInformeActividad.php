@@ -41,7 +41,7 @@
 			$html.='<div class="accordion-item" id="'.$nodo['id'].'">';
 			$html.='
 				<div class="accordion-header" id="accordion-header-'.$nodo['id'].'">
-          <div class="contenedor-actividades mb-2 border border-primary" style="margin:0 auto;">
+          <div class="contenedor-actividades mb-2" style="margin:0 auto; border: 0.5px solid #9b9b9b59">
             <div class="grid-actividad d-flex p-1">
               <span class="text-secondary" style="font-size:17px !important">'.$indiceActual. '</span><span>&nbsp;-</span>
               <div class="accordion-button p-0" data-bs-toggle="collapse" style="cursor:pointer; background-color:white !important; border: unset; box-shadow: none; font-size:17px !important;" data-bs-target="#collapse-accordion-'.$nodo['id'].'" aria-expanded="true" aria-controls="collapse-accordion-'.$contador.'"><span>&nbsp;</span>'.$nodo['actividad'].'</div>
@@ -70,7 +70,8 @@
                 <p class="mb-1 text-secondary observacion" style="font-size=15px; text-align:justify; line-height: 1.2;" id="observacion-'.$nodo['id'].'">'.$nodo['observaciones'].'</p>
               </div>
 						</div>
-						<div class="contenedor-imagen mb-4" style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;" id="'.$nodo['id'].'">';
+
+            <div class="contenedor-imagen mb-4" style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;" id="'.$nodo['id'].'">';
 							if(isset($imagenes[$nodo['id']])){
 								foreach($imagenes[$nodo['id']] as $elemento){
 									$html.='
@@ -82,7 +83,7 @@
                 </div>';
               }
             }
-            $html.='</div>';
+        $html.='</div>';
 			if (!empty($nodo['hijos'])) {
 				$html.='<div class="accordion" id="accordion-container-'.$nodo['id'].'">';
 				$html.=FnGenerarInformeHtmlAcordeon($nodo['hijos'], $imagenes, $nivel+1, $indiceActual );

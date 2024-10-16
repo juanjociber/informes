@@ -427,6 +427,32 @@ mostrarTitulo('diagnostico');
 mostrarTitulo('trabajo');
 mostrarTitulo('observacion');
 
+
+
+function editarTitulo(id) {
+  const titulo = document.getElementById(`titulo-${id}`).innerText;
+  // Aquí podrías agregar lógica para guardar el nuevo título, por ejemplo, enviarlo a un servidor
+  console.log("Nuevo título:", titulo);
+}
+
+function editarDescripcion(id) {
+  const descripcion = document.getElementById(`descripcion-${id}`).innerText;
+  // Aquí podrías agregar lógica para guardar la nueva descripción
+  console.log("Nueva descripción:", descripcion);
+}
+
+function editarImagen(id) {
+  const nuevaImagen = prompt("Introduce la URL de la nueva imagen:");
+  if (nuevaImagen) {
+      document.getElementById(`imagen-${id}`).src = nuevaImagen;
+      // Aquí podrías agregar lógica para guardar la nueva imagen en el servidor
+      console.log("Nueva imagen:", nuevaImagen);
+  }
+}
+
+
+
+
 function FnResumenInforme(){
   id = document.getElementById('txtInformeId').value;
   console.log(0, id)
