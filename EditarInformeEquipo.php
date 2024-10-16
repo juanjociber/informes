@@ -66,7 +66,7 @@
   </head>
   <body>
     <?php require_once $_SERVER['DOCUMENT_ROOT'].'/gesman/menu/sidebar.php';?>
-    <div class="container section-top p-0">
+    <div class="container section-top">
       <div class="row mb-3">
         <div class="col-12 btn-group" role="group" aria-label="Basic example">
           <button type="button" class="btn btn-outline-primary fw-bold" onclick="FnListarInformes(); return false;"><i class="fas fa-list"></i><span class="d-none d-sm-block"> Informes</span></button>
@@ -138,13 +138,15 @@
           <?php if ($isAuthorized): ?>
             <?php foreach($archivos as $archivo): ?>
               <?php if($archivo['tabla']==='INFE'): ?>
-                <div class="border border-1 m-0 mb-3 p-0">
-                  <div class="row bg-light text-secondary d-flex justify-content-between align-items-center m-0">
-                    <p class="col-10 m-0" style="text-align:justify; padding-left:5px;"><?php echo ($archivo['titulo']); ?></p>
-                    <p class="col-2 m-0 text-center" onclick="FnEliminarInformeArchivo(<?php echo ($archivo['id']); ?>)" style="color:#aba8a8; font-size:25px; cursor:pointer; text-align:left; margin-bottom:0;"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" enable-background="new 0 0 512 512" height="30px" id="Layer_1" version="1.1" viewBox="0 0 512 512" width="30px" xml:space="preserve"><g><path d="M392.809,100.086v345.269c0,9.748-7.868,17.645-17.616,17.645H136.78c-9.732,0-17.615-7.896-17.615-17.645V100.086" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="8"/><path d="    M223.007,65.614c0-9.732,7.899-17.614,17.614-17.614h32.888c9.715,0,17.611,7.882,17.611,17.614" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="8"/><line fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="8" x1="179.813" x2="179.813" y1="132.38" y2="424.835"/><line fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="8" x1="332.145" x2="332.145" y1="132.38" y2="424.835"/><line fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="8" x1="255.985" x2="255.985" y1="133.464" y2="425.892"/><line fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="8" x1="90.397" x2="421.605" y1="82.407" y2="82.407"/></g></svg></p>
+                <div class="d-flex flex-column">
+                  <span class="text-secondary" onclick="FnEliminarInformeArchivo(<?php echo ($archivo['id']); ?>)" style="font-size:25px; cursor:pointer;">&#x2715</span>
+                  <div class="card text-center p-0 mb-4">
+                    <div class="card-header text-secondary" style="text-align:justify;padding-left:5px;"><?php echo ($archivo['titulo']); ?></div>
+                    <div class="card-body p-0">
+                    <img src="/mycloud/gesman/files/<?php echo ($archivo['nombre']); ?>" class="imagen-ajustada" alt="">
+                    </div>
+                    <div class="card-footer text-secondary" style="text-align:justify;padding-left:5px;"><?php echo($archivo['descripcion']); ?></div>
                   </div>
-                  <img src="/mycloud/gesman/files/<?php echo ($archivo['nombre']); ?>" class="imagen-ajustada" style="position-relative;">
-                  <p class="m-0 bg-light text-secondary pt-1 pb-2" style="text-align:justify;padding-left:5px;"><?php echo($archivo['descripcion']); ?></p>
                 </div>
               <?php endif; ?>
             <?php endforeach; ?>

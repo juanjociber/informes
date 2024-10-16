@@ -49,10 +49,10 @@
 		foreach ($arbol as $key=>$nodo) {
 			$indiceActual = $nivel==0?$contador++:$indice.'.'.($key+1);
 			$html.='
-        <div class="col-12 mb-0 border-bottom bg-light">
+        <div class=" col-12 mb-0 border-bottom bg-light">
           <p class="mt-2 mb-2 fw-bold text-secondary" style="padding-left: 10px;">'.$numero.'.'.$indiceActual.' - '.$nodo['actividad'].'</p>
         </div>
-        <div class="row p-1 m-0 border border-opacity-10">
+        <div class="row p-1 m-0 ">
           <div class="col-12 mb-1">
             <p class="mb-0 text-secondary fw-lights">Diagnóstico</p>
             <p class="mb-0 diagnostico text-secondary fw-bold" style="font-size=15px" id="diagnostico-'.$nodo['id'].'">'.$nodo['diagnostico'].'</p>
@@ -70,11 +70,13 @@
               $html.='<div class="contenedor-imagenes">';
               foreach($imagenes[$nodo['id']] as $elemento){
                 $html.='
-                <div class=" text-center m-1 p-0 border border-1" id="archivo-'.$elemento['id'].'">
-                  <p class="bg-light text-secondary m-0 pt-1 pb-2" style="text-align:justify;padding-left:5px;">'.$elemento['titulo'].'</p>
-                    <img src="/mycloud/gesman/files/'.$elemento['nombre'].'" class=" imagen-ajustada" alt="">
-                  <p class="bg-light text-secondary mb-0 pt-1 pb-2" style="text-align:justify;padding-left:5px;">'.$elemento['descripcion'].'</p>
-                </div>  
+                <div class="card text-center p-0" id="archivo-'.$elemento['id'].'">
+                  <div class="card-header text-secondary" style="text-align:justify;padding-left:5px;">'.$elemento['titulo'].'</div>
+                  <div class="card-body p-0">
+                  <img src="/mycloud/gesman/files/'.$elemento['nombre'].'" class="imagen-ajustada" alt="">
+                  </div>
+                  <div class="card-footer text-secondary" style="text-align:justify;padding-left:5px;">'.$elemento['descripcion'].'</div>
+                </div>
                 ';
               }
               $html.='</div>';
@@ -82,7 +84,7 @@
 			    $html.='
           </div>';
 			if (!empty($nodo['hijos'])) {
-				$html.='<div class="p-0 hijos">';
+				$html.='<div class=" p-0 hijos">';
 				$html.=FnGenerarInformeHtmlAcordeon($nodo['hijos'], $imagenes,$numero, $nivel+1, $indiceActual);
 				$html.='</div>';
 			}
@@ -196,10 +198,12 @@
         height: 200px;
         object-fit: contain;
       }
-    
       .contenedor-imagen{display:grid;grid-template-columns:1fr 1fr !important;gap:5px;}
-      @media(min-width:768px){.contenedor-imagen{grid-template-columns:1fr 1fr 1fr !important;}}
-      .contenedor-imagenes{display: grid; grid-template-columns:1fr 1fr}
+      @media(min-width:768px){.contenedor-imagen{gap:15px !important;} .contenedor-imagenes{gap:15px !important;}}
+      .contenedor-imagenes{display: grid; grid-template-columns:1fr 1fr; ;gap:5px;}
+      .accordion .accordion-item { border: none; }
+      .accordion .accordion-header { border: none; }
+      .accordion .accordion-body { border: none; padding:0}
     </style>
   </head>
   <body>
@@ -320,26 +324,13 @@
         </div>
         <div class="row mt-1 mb-2 contenedor-imagen">
           <?php foreach($imagenInformes as $imagenInforme): ?>
-            <div class="text-center border border-1 p-0">
-              <p class="m-0 bg-light text-secondary pt-1 pb-2" style="text-align:justify;padding-left:5px;"><?php echo ($imagenInforme['titulo']); ?></p>
+            <div class="card text-center p-0">
+              <div class="card-header text-secondary" style="text-align:justify;padding-left:5px;"><?php echo ($imagenInforme['titulo']); ?></div>
+              <div class="card-body p-0">
               <img src="/mycloud/gesman/files/<?php echo empty($imagenInforme['nombre']) ? '0.jpg' : $imagenInforme['nombre'] ?>" class=" imagen-ajustada" alt="">
-              <p class="m-0 bg-light text-secondary pt-1 pb-2" style="text-align:justify;padding-left:5px;"><?php echo ($imagenInforme['descripcion']); ?></p>
+              </div>
+              <div class="card-footer text-secondary" style="text-align:justify;padding-left:5px;"><?php echo ($imagenInforme['descripcion']); ?></div>
             </div>
-
-            <div class="card text-center">
-              <div class="card-header">
-                Featured
-              </div>
-              <div class="card-body">
-                <h5 class="card-title">Special title treatment</h5>
-                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
-              </div>
-              <div class="card-footer text-muted">
-                2 days ago
-              </div>
-            </div>
-
           <?php endforeach; ?>
         </div>
         <?php $NUMERO+=1; ?>
@@ -390,7 +381,7 @@
           <div class="col-12 mb-0 border-bottom bg-light">
             <p class="mt-2 mb-2 fw-bold text-secondary"><?php echo $NUMERO; ?>- CONCLUSIONES</p>
           </div>
-          <div class="row p-1 m-0 border">
+          <div class="row p-1 m-0">
             <?php foreach($conclusiones as $conclusion) :?>
               <div class="d-flex">
                 <i class="fa fa-check text-secondary" style="margin-right:10px; margin-top:4px"></i>
