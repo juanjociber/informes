@@ -12,7 +12,6 @@
 <?php
   require_once $_SERVER['DOCUMENT_ROOT']."/gesman/connection/ConnGesmanDb.php";
   require_once $_SERVER['DOCUMENT_ROOT']."/informes/datos/InformesData.php";
-
   $isAuthorized = false;
   $errorMessage = ''; 
   $Estado=0;
@@ -53,33 +52,62 @@
           <p class="mt-2 mb-2 fw-bold text-secondary" style="padding-left: 10px;">'.$numero.'.'.$indiceActual.' - '.$nodo['actividad'].'</p>
         </div>
         <div class="row p-1 m-0 ">
-          <div class="col-12 mb-1">
-            <p class="mb-0 text-secondary fw-lights">Diagnóstico</p>
-            <p class="mb-0 diagnostico text-secondary fw-bold" style="font-size=15px" id="diagnostico-'.$nodo['id'].'">'.$nodo['diagnostico'].'</p>
+          <div class="col-12">
+            <p class="m-0 text-secondary fw-bold">Diagnóstico :</p>
+            <p class="mb-0 diagnostico text-secondary" style="font-size=15px; text-align:justify;" id="diagnostico-'.$nodo['id'].'">'.$nodo['diagnostico'].'</p>
           </div>
-          <div class="col-12 mb-1">
-            <p class="text-secondary fw-light mb-0">Trabajos</p>
-            <p class="mb-0 trabajo text-secondary fw-bold" style="font-size=15px" id="trabajo-'.$nodo['id'].'">'.$nodo['trabajos'].'</p>
+          <div class="col-12">
+            <p class="m-0 text-secondary fw-bold">Trabajos :</p>
+            <p class="mb-0 trabajo text-secondary" style="font-size=15px; text-align:justify;" id="trabajo-'.$nodo['id'].'">'.$nodo['trabajos'].'</p>
           </div>
-          <div class="col-12 mb-1">
-            <p class="text-secondary fw-light mb-0">Observaciones</p>
-            <p class="mb-0 observacion text-secondary fw-bold" style="font-size=15px" id="observacion-'.$nodo['id'].'">'.$nodo['observaciones'].'</p>
+          <div class="col-12">
+            <p class="m-0 text-secondary fw-bold">Observaciones :</p>
+            <p class="mb-0 observacion text-secondary" style="font-size=15px; text-align:justify;" id="observacion-'.$nodo['id'].'">'.$nodo['observaciones'].'</p>
           </div>
           <div class="row m-0 mt-2 mb-2 p-0 d-flex justify-content-center" id="'.$nodo['id'].'">';
             if(isset($imagenes[$nodo['id']])){
-              $html.='<div class="contenedor-imagenes">';
-              foreach($imagenes[$nodo['id']] as $elemento){
-                $html.='
-                <div class="card text-center p-0" id="archivo-'.$elemento['id'].'">
-                  <div class="card-header text-secondary" style="text-align:justify;padding-left:5px;">'.$elemento['titulo'].'</div>
-                  <div class="card-body p-0">
-                  <img src="/mycloud/gesman/files/'.$elemento['nombre'].'" class="imagen-ajustada" alt="">
-                  </div>
-                  <div class="card-footer text-secondary" style="text-align:justify;padding-left:5px;">'.$elemento['descripcion'].'</div>
+              $html.='        
+              <div id="carouselImages" class="carousel slide d-md-none" data-bs-interval="false">
+                <div class="carousel-inner">';
+                  foreach($imagenes[$nodo['id']] as $key => $elemento){
+                    $html .= 
+                    '<div class="carousel-item '.($key === 0 ? 'active' : '').'">
+                      <div class="card text-center p-0" id="archivo-'.$elemento['id'].'">
+                        <div class="card-header text-secondary" style="text-align:justify;padding-left:5px;">'.$elemento['titulo'].'</div>
+                          <div class="card-body p-0">
+                            <img src="/mycloud/gesman/files/'.$elemento['nombre'].'" class="imagen-ajustada" alt="">
+                          </div>
+                        <div class="card-footer text-secondary" style="text-align:justify;padding-left:5px;">'.$elemento['descripcion'].'</div>
+                      </div>
+                    </div>';
+                  }
+                  $html.='
                 </div>
-                ';
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselImages" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselImages" data-bs-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Next</span>
+                </button>
+              </div>
+
+              <!-- Diseño de dos columnas para pantallas grandes -->
+              <div class="row d-none d-md-flex">';               
+              foreach($imagenes[$nodo['id']] as $elemento){
+                $html .= '<div class="col-md-6 mb-2">
+                  <div class="card text-center p-0" id="archivo-'.$elemento['id'].'">
+                    <div class="card-header text-secondary" style="text-align:justify;padding-left:5px;">'.$elemento['titulo'].'</div>
+                    <div class="card-body p-0">
+                      <img src="/mycloud/gesman/files/'.$elemento['nombre'].'" class="imagen-ajustada" alt="">
+                    </div>
+                    <div class="card-footer text-secondary" style="text-align:justify;padding-left:5px;">'.$elemento['descripcion'].'</div>
+                  </div>
+                </div>';
               }
-              $html.='</div>';
+              $html.='
+              </div>';
             }
 			    $html.='
           </div>';
@@ -124,7 +152,6 @@
               $antecedentes[] = array('actividad' => $dato['actividad']);
             }    
           };
-          
           foreach ($archivos as $archivo) {
             if ($archivo['tabla'] == "INFE") {
               $imagenInformes[] = array(
@@ -141,7 +168,6 @@
             }
           };
           $arbol = construirArbol($actividades);
-
           $ids = array_map(function($elemento) {
             return $elemento['id'];
           }, $actividades);
@@ -193,13 +219,11 @@
     <link rel="stylesheet" href="/gesman/menu/sidebar.css">
     <style>
       .hijos p:first-child{ padding-top: 10px;}
-      .imagen-ajustada {
-        width: 100%;
-        height: 200px;
-        object-fit: contain;
-      }
-      .contenedor-imagen{display:grid;grid-template-columns:1fr 1fr !important;gap:5px;}
-      @media(min-width:768px){.contenedor-imagen{gap:15px !important;} .contenedor-imagenes{gap:15px !important;}}
+      .imagen-ajustada { width: 100%; height: 200px; object-fit: contain;}
+      /* .contenedor-imagen{display:grid;grid-template-columns:1fr 1fr !important;column-gap:5px; row-gap: 15px;} */
+      @media(min-width:768px){.contenedor-imagen{display:grid;grid-template-columns:1fr 1fr !important; gap:30px !important;} .contenedor-imagenes{gap:30px !important;}}
+      @media(min-width:992px){.contenedor-imagen, .contenedor-imagenes{padding:0 50px;}}
+      @media(min-width:1200px){.contenedor-imagen, .contenedor-imagenes{padding:0 200px;}}
       .contenedor-imagenes{display: grid; grid-template-columns:1fr 1fr; ;gap:5px;}
       .accordion .accordion-item { border: none; }
       .accordion .accordion-header { border: none; }
@@ -235,34 +259,34 @@
           <div class="row p-1 m-0">
             <div class="col-6 col-sm-4 col-lg-4 mb-1">
               <p class="m-0 text-secondary" style="font-size: 15px;">Nombre</p> 
-              <p class="m-0"><?php echo  $informe->Nombre  ; ?></p>
+              <p class="m-0 text-secondary fw-bold"><?php echo  $informe->Nombre  ; ?></p>
             </div>
             <div class="col-6 col-sm-4 col-lg-4 mb-1">
               <p class="m-0 text-secondary" style="font-size: 15px;">Fecha</p> 
-              <p class="m-0"><?php echo   $informe->Fecha  ; ?></p>
+              <p class="m-0 text-secondary fw-bold"><?php echo   $informe->Fecha  ; ?></p>
             </div>
             <div class="col-6 col-sm-4 col-lg-4 mb-1">
               <p class="m-0 text-secondary" style="font-size: 15px;">OT N°</p> 
-              <p class="m-0"><?php echo  $informe->OrdNombre  ; ?></p>
+              <p class="m-0 text-secondary fw-bold"><?php echo  $informe->OrdNombre  ; ?></p>
             </div>
             <div class="col-6 col-sm-4 col-lg-4 mb-1">
               <p class="m-0 text-secondary" style="font-size: 15px;">Cliente:</p> 
-              <p class="m-0"><?php echo  $informe->CliNombre  ; ?></p>
+              <p class="m-0 text-secondary fw-bold"><?php echo  $informe->CliNombre  ; ?></p>
             </div>
             <div class="col-6 col-sm-4 col-lg-4 mb-1">
               <p class="m-0 text-secondary" style="font-size: 15px;">Contacto</p> 
-              <p class="m-0"><?php echo  $informe->CliContacto  ; ?></p>
+              <p class="m-0 text-secondary fw-bold"><?php echo  $informe->CliContacto  ; ?></p>
             </div>
             <div class="col-6 col-sm-4 col-lg-4 mb-1">
               <p class="m-0 text-secondary" style="font-size: 15px;">Dirección</p> 
-              <p class="m-0"><?php echo  $informe->CliDireccion  ; ?></p>
+              <p class="m-0 text-secondary fw-bold"><?php echo  $informe->CliDireccion  ; ?></p>
             </div>
             <div class="col-6 col-sm-8 col-lg-4 mb-1">
               <p class="m-0 text-secondary" style="font-size: 15px;">Supervisor</p> 
-              <p class="m-0"><?php echo  $informe->Supervisor  ; ?></p>
+              <p class="m-0 text-secondary fw-bold"><?php echo  $informe->Supervisor  ; ?></p>
             </div>
             <div class="col-6 col-sm-4 mb-1">
-              <p class="m-0 text-secondary" style="font-size: 12px;">Estado</p>
+              <p class="m-0 text-secondary" style="font-size: 15px;">Estado</p>
               <?php
                 switch ($informe->Estado){
                   case 1:
@@ -290,51 +314,78 @@
         </div>
         <div class="row p-1 m-0">
           <div class="col-6 col-sm-4 col-lg-4 mb-1">
-            <p class="m-0 text-secondary fw-light" style="font-size: 15px;">Activo</p>
-            <p class="m-0"><?php echo  $informe->EquCodigo;?></p>              
+            <p class="m-0 text-secondary" style="font-size: 15px;">Activo</p>
+            <p class="m-0 text-secondary fw-bold"><?php echo  $informe->EquCodigo;?></p>              
           </div>
           <div class="col-6 col-sm-4 col-lg-4 mb-1">
-            <p class="m-0 text-secondary fw-light" style="font-size: 15px;">Nombre Equipo</p>
-            <p class="m-0"><?php echo  $informe->EquNombre  ; ?></p>              
+            <p class="m-0 text-secondary" style="font-size: 15px;">Nombre Equipo</p>
+            <p class="m-0 text-secondary fw-bold"><?php echo  $informe->EquNombre  ; ?></p>              
           </div>
           <div class="col-6 col-sm-4 col-lg-4 mb-1">
-            <p class="m-0 text-secondary fw-light" style="font-size: 15px;">Modelo Equipo</p> 
-            <p class="m-0"><?php echo  $informe->EquModelo   ?></p>
+            <p class="m-0 text-secondary" style="font-size: 15px;">Modelo Equipo</p> 
+            <p class="m-0 text-secondary fw-bold"><?php echo  $informe->EquModelo   ?></p>
           </div>
           <div class="col-6 col-sm-4 col-lg-4 mb-1">
-            <p class="m-0 text-secondary fw-light" style="font-size: 15px;">Serie Equipo</p> 
-            <p class="m-0"><?php echo  $informe->EquSerie  ; ?></p>
+            <p class="m-0 text-secondary" style="font-size: 15px;">Serie Equipo</p> 
+            <p class="m-0 text-secondary fw-bold"><?php echo  $informe->EquSerie  ; ?></p>
           </div>
           <div class="col-6 col-sm-4 col-lg-4 mb-1">
-            <p class="m-0 text-secondary fw-light" style="font-size: 15px;">Marca Equipo</p> 
-            <p class="m-0"><?php echo  $informe->EquMarca  ; ?></p>
+            <p class="m-0 text-secondary " style="font-size: 15px;">Marca Equipo</p> 
+            <p class="m-0 text-secondary fw-bold"><?php echo  $informe->EquMarca  ; ?></p>
           </div>
           <div class="col-6 col-sm-4 col-lg-4 mb-1">
-            <p class="m-0 text-secondary fw-light" style="font-size: 15px;">Kilometraje</p> 
-            <p class="m-0"><?php echo  $informe->EquKm  ; ?></p>
+            <p class="m-0 text-secondary" style="font-size: 15px;">Kilometraje</p> 
+            <p class="m-0 text-secondary fw-bold"><?php echo  $informe->EquKm  ; ?></p>
           </div>
           <div class="col-6 col-sm-4 col-lg-4 mb-1">
-            <p class="m-0 text-secondary fw-light" style="font-size: 15px;">Horas Motor</p> 
-            <p class="m-0"><?php echo  $informe->EquHm ; ?></p>
+            <p class="m-0 text-secondary" style="font-size: 15px;">Horas Motor</p> 
+            <p class="m-0 text-secondary fw-bold"><?php echo  $informe->EquHm ; ?></p>
           </div>
           <div class="col-12 col-lg-6 mb-1">
-            <p class="m-0 text-secondary fw-light" style="font-size: 15px;">Caraterísticas</p> 
-            <p class="m-0"><?php echo  $informe->EquDatos  ; ?></p>
+            <p class="m-0 text-secondary" style="font-size: 15px;">Caraterísticas</p> 
+            <p class="m-0 text-secondary fw-bold"><?php echo  $informe->EquDatos  ; ?></p>
           </div>
         </div>
-        <div class="row mt-1 mb-2 contenedor-imagen">
-          <?php foreach($imagenInformes as $imagenInforme): ?>
-            <div class="card text-center p-0">
-              <div class="card-header text-secondary" style="text-align:justify;padding-left:5px;"><?php echo ($imagenInforme['titulo']); ?></div>
-              <div class="card-body p-0">
-              <img src="/mycloud/gesman/files/<?php echo empty($imagenInforme['nombre']) ? '0.jpg' : $imagenInforme['nombre'] ?>" class=" imagen-ajustada" alt="">
+        <!-- Carrusel para pantallas pequeñas -->
+        <div id="carouselExample" class="carousel slide d-md-none" data-bs-ride="carousel" data-bs-interval="false">
+          <div class="carousel-inner">
+            <?php foreach($imagenInformes as $key => $imagenInforme): ?>
+              <div class="carousel-item <?php echo $key === 0 ? 'active' : ''; ?>">
+                <div class="card text-center p-0">
+                  <div class="card-header text-secondary" style="text-align:justify;padding-left:5px; line-height: 1.2"><?php echo ($imagenInforme['titulo']); ?></div>
+                  <div class="card-body p-0">
+                    <img src="/mycloud/gesman/files/<?php echo empty($imagenInforme['nombre']) ? '0.jpg' : $imagenInforme['nombre'] ?>" class="imagen-ajustada" alt="">
+                  </div>
+                  <div class="card-footer text-secondary" style="text-align:justify;padding-left:5px;"><?php echo ($imagenInforme['descripcion']); ?></div>
+                </div>
               </div>
-              <div class="card-footer text-secondary" style="text-align:justify;padding-left:5px;"><?php echo ($imagenInforme['descripcion']); ?></div>
+            <?php endforeach; ?>
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+        <!-- Diseño de dos columnas para pantallas grandes -->
+        <div class="row d-none d-md-flex">
+          <?php foreach($imagenInformes as $imagenInforme): ?>
+            <div class="col-md-6 mb-2">
+              <div class="card text-center p-0">
+                <div class="card-header text-secondary" style="text-align:justify;padding-left:5px; line-height: 1.2"><?php echo ($imagenInforme['titulo']); ?></div>
+                <div class="card-body p-0">
+                  <img src="/mycloud/gesman/files/<?php echo empty($imagenInforme['nombre']) ? '0.jpg' : $imagenInforme['nombre'] ?>" class="imagen-ajustada" alt="">
+                </div>
+                <div class="card-footer text-secondary" style="text-align:justify;padding-left:5px;"><?php echo ($imagenInforme['descripcion']); ?></div>
+              </div>
             </div>
           <?php endforeach; ?>
         </div>
-        <?php $NUMERO+=1; ?>
 
+        <?php $NUMERO+=1; ?>
         <!-- SOLICITUD DEL CLIENTE -->
         <div class="row p-1 mb-2 mt-2">
           <div class="col-12 mb-0 border-bottom bg-light">
@@ -356,7 +407,7 @@
           <div class="row p-1 m-0">
             <?php foreach($antecedentes as $antecedente) :?>
                 <div class="d-flex">
-                  <i class="fa fa-check text-secondary" style="margin-right:10px; margin-top:4px"></i>
+                  <span class="text-secondary" style="margin-right:10px;">&#x2713</span>
                   <p class="m-0 mb-2 p-0 text-secondary" style="text-align: justify;"><?php echo $antecedente['actividad'];?></p>
                 </div>
             <?php endforeach ;?>
@@ -384,7 +435,7 @@
           <div class="row p-1 m-0">
             <?php foreach($conclusiones as $conclusion) :?>
               <div class="d-flex">
-                <i class="fa fa-check text-secondary" style="margin-right:10px; margin-top:4px"></i>
+                <span class="text-secondary" style="margin-right:10px;">&#x2713</span>
                 <p class="m-0 mb-2 p-0" style="text-align: justify;"><?php echo $conclusion['actividad'];?></p>
               </div>
             <?php endforeach ;?>
@@ -400,7 +451,7 @@
           <div class="row p-1 m-0">
             <?php foreach($recomendaciones as $recomendacion) :?>
               <div class="d-flex">
-                <i class="fa fa-check text-secondary" style="margin-right:10px; margin-top:4px"></i> 
+                <span class="text-secondary" style="margin-right:10px;">&#x2713</span> 
                 <p class="m-0 mb-2 p-0" style="text-align: justify;"><?php echo $recomendacion['actividad'];?></p>
               </div>
             <?php endforeach ;?>
