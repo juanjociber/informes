@@ -46,7 +46,6 @@
   }
   $supervisorInputValue = $supervisorValido ? $informe->Supervisor : '';
 ?>
-
 <!doctype html>
 <html lang="es">
   <head>
@@ -63,6 +62,9 @@
   </head>
   <style>
     .custom-select-arrow { top: 20%; right: 10px; }
+    #guardarInforme:hover svg g {
+      stroke: #FFFFFF; 
+    }
   </style>
   <body>
     <?php require_once $_SERVER['DOCUMENT_ROOT'].'/gesman/menu/sidebar.php';?>
@@ -95,58 +97,67 @@
             </nav>
           </div>
         </div>
-        <div class="row g-3">
-          <!-- FECHA -->
-          <div class="col-6 col-md-4 col-lg-3">
-            <label for="dpfecha" class="form-label mb-0">Fecha :</label>
-            <input type="date" class="form-control text-secondary fw-bold" id="dpfecha" value="<?php echo ($informe->Fecha); ?>">
-          </div>
-          <!-- ORDEN DE TRABAJO -->
-          <div class="col-6 col-md-4 col-lg-3">
-            <label for="txtOrdNombre" class="form-label mb-0">Orden de trabajo :</label>
-            <input type="text" class="form-control text-secondary fw-bold" id="txtOrdNombre" value="<?php echo ($informe->OrdNombre); ?>" disabled>
-          </div>
-          <!-- CONTACTOS -->
-          <div class="custom-select-container col-6 col-md-4 col-lg-3">
-            <label for="cbCliContacto" class="form-label mb-0">Contacto :</label>
-            <div class="custom-select-wrapper">
-              <input type="text" id="cbCliContacto" class="custom-select-input text-secondary text-uppercase fw-bold" value="<?php echo ($informe->CliContacto); ?>" />
-              <span class="custom-select-arrow text-secondary fw-bold"><i class="bi bi-chevron-down"></i></span>
-              <div id="contactoList" class="custom-select-list ">
-                <?php foreach ($contactos as $contacto): ?>
-                  <div class="custom-select-item" data-value="<?php echo ($contacto['idsupervisor']); ?>">
-                    <?php echo ($contacto['supervisor']); ?>
-                  </div>
-                <?php endforeach; ?>
+
+        <?php
+          $html=''; 
+          $html.='
+          <div class="row g-3">
+            <!-- FECHA -->
+            <div class="col-6 col-md-4 col-lg-3">
+              <label for="dpfecha" class="form-label mb-0">Fecha :</label>
+              <input type="date" class="form-control text-secondary fw-bold" id="dpfecha" value="'.$informe->Fecha.'">
+            </div>
+            <!-- ORDEN DE TRABAJO -->
+            <div class="col-6 col-md-4 col-lg-3">
+              <label for="txtOrdNombre" class="form-label mb-0">Orden de trabajo :</label>
+              <input type="text" class="form-control text-secondary fw-bold" id="txtOrdNombre" value="'.$informe->OrdNombre.'" disabled>
+            </div>
+            <!-- CONTACTOS -->
+            <div class="custom-select-container col-6 col-md-4 col-lg-3">
+              <label for="cbCliContacto" class="form-label mb-0">Contacto :</label>
+              <div class="custom-select-wrapper">
+                <input type="text" id="cbCliContacto" class="custom-select-input text-secondary text-uppercase fw-bold" value="'.$informe->CliContacto.'" />
+                <span class="custom-select-arrow text-secondary fw-bold"><i class="bi bi-chevron-down"></i></span>
+                <div id="contactoList" class="custom-select-list ">';
+                  foreach ($contactos as $contacto){
+                    $html.='<div class="custom-select-item" data-value="<'.$contacto['idsupervisor'].'">'.$contacto['supervisor'].'</div>';
+                  }
+                $html.='</div>
               </div>
             </div>
-          </div>
-          <!-- SUPERVISORES -->
-          <div class="custom-select-container col-6 col-lg-3">
-            <label for="cbSupervisor" class="form-label mb-0">Supervisor :</label>
-            <div class="custom-select-wrapper">
-              <input type="text" class="custom-select-input text-secondary fw-bold" id="cbSupervisor" value="<?php echo  ($supervisorInputValue);?>"/>
-              <span class="custom-select-arrow"><i class="bi bi-chevron-down"></i></span>
-              <div id="supervisorList" class="custom-select-list">
-                <!-- SUPERVISORES -->
-                <?php foreach ($supervisores as $supervisor): ?>
-                  <div class="custom-select-item" data-value="<?php echo ($supervisor['idsupervisor']); ?>">
-                    <?php echo ($supervisor['supervisor']); ?>
-                  </div>
-                <?php endforeach; ?>
+            <!-- SUPERVISORES -->
+            <div class="custom-select-container col-6 col-lg-3">
+              <label for="cbSupervisor" class="form-label mb-0">Supervisor :</label>
+              <div class="custom-select-wrapper">
+                <input type="text" class="custom-select-input text-secondary fw-bold" id="cbSupervisor" value="'.$supervisorInputValue.'"/>
+                <span class="custom-select-arrow"><i class="bi bi-chevron-down"></i></span>
+                <div id="supervisorList" class="custom-select-list">';
+                  foreach ($supervisores as $supervisor){
+                    $html.='<div class="custom-select-item" data-value="'.$supervisor['idsupervisor'].'">'.$supervisor['supervisor'].'</div>';
+                  }
+                $html.='</div>
               </div>
             </div>
-          </div>
-          <!-- LUGAR -->
-          <div class="col-12 col-md-6 col-lg-12">
-            <label for="txtCliDireccion" class="form-label mb-0">Lugar :</label>
-            <input type="text" class="form-control text-secondary fw-bold" id="txtCliDireccion" value="<?php echo ($informe->CliDireccion); ?>" >
-          </div>      
-        </div>
+            <!-- DIRECCIÓN -->
+            <div class="col-12 col-md-6 col-lg-12">
+              <label for="txtCliDireccion" class="form-label mb-0">Lugar :</label>
+              <input type="text" class="form-control text-secondary fw-bold" id="txtCliDireccion" value="'.$informe->CliDireccion.'" >
+            </div>      
+          </div>';
+          echo $html;
+        ?>
         <!-- BOTON GUARDAR -->
         <div class="row mt-4">
           <div class="col-12 mt-2">
-            <button id="guardarDataEquipo" class="btn btn-outline-primary pt-2 pb-2 col-12 fw-bold" onclick="FnAgregarInformeDatosGenerales();"><i class="fas fa-save" style="margin-right:10px;"></i>GUARDAR</button>
+            <button id="guardarInforme" class="btn btn-outline-primary pt-2 pb-2 col-12 fw-bold" onclick="FnAgregarInformeDatosGenerales();">
+              <svg id="editarInforme" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="28px" height="33px">
+                <g data-name="Layer 24" id="Layer_24">
+                  <path fill="#0d6efd" d="M26.72,10.79a.49.49,0,0,0-.15-.34L21.32,5.19A.5.5,0,0,0,21,5H6.78a1.5,1.5,0,0,0-1.5,1.5V25.46A1.5,1.5,0,0,0,6.78,27H25.22a1.5,1.5,0,0,0,1.5-1.5V10.8ZM18,6V8.17a.5.5,0,0,0,1,0V6h.92V8.39A1.91,1.91,0,0,1,18,10.3H14a1.91,1.91,0,0,1-1.91-1.91V6ZM10.71,26V21.21a1.5,1.5,0,0,1,1.5-1.5h7.58a1.5,1.5,0,0,1,1.5,1.5V26Zm14.51,0H22.29V21.21a2.5,2.5,0,0,0-2.5-2.5H12.21a2.5,2.5,0,0,0-2.5,2.5V26H6.78a.5.5,0,0,1-.5-.5V6.54a.5.5,0,0,1,.5-.5h4.3V8.39A2.91,2.91,0,0,0,14,11.3h4a2.91,2.91,0,0,0,2.91-2.91V6.19L25.72,11V25.46A.5.5,0,0,1,25.22,26Z"/>
+                  <path fill="#0d6efd" d="M18.75,22.33h-5.5a.5.5,0,1,0,0,1h5.5a.5.5,0,0,0,0-1Z"/><path fill="#0d6efd" d="M18.75,24.33h-5.5a.5.5,0,1,0,0,1h5.5a.5.5,0,0,0,0-1Z"/><path fill="#0d6efd" d="M18.75,20.33h-5.5a.5.5,0,1,0,0,1h5.5a.5.5,0,0,0,0-1Z"/>
+                </g>
+              </svg>
+              GUARDAR
+            </button>
           </div>
         </div>
       <?php endif ?>

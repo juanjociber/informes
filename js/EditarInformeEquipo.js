@@ -303,4 +303,12 @@ function FnListarInformes(){
   return false;
 }
 
+document.getElementById('editarInformeEquipo').addEventListener('click', function() {
+  document.getElementById('editarDatoEquipo').querySelector('g').setAttribute('stroke', '#0d6efd');
+});
+
+document.getElementById('adjuntarInformeEquipoArchivo').addEventListener('click', function() {
+  document.getElementById('Archivo').setAttribute('stroke', '#6c757d');
+});
+
 

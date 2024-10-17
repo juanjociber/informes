@@ -116,3 +116,7 @@ function FnListarInformes(){
   window.location.href='/informes/Informes.php';
   return false;
 }
+
+document.getElementById('guardarInforme').addEventListener('click', function() {
+  document.getElementById('editarInforme').querySelector('g').setAttribute('stroke', '#FFFFFF');
+});

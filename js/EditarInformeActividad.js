@@ -299,11 +299,11 @@ async function FnAgregarArchivo(){
   try {
     var archivo;
     if(document.getElementById('canvas')){
-        archivo = document.querySelector("#canvas").toDataURL("image/jpeg");
+      archivo = document.querySelector("#canvas").toDataURL("image/jpeg");
     }else if(document.getElementById('fileImagen').files.length == 1){
-        archivo = fileOrCanvasData = document.getElementById('fileImagen').files[0];
+      archivo = fileOrCanvasData = document.getElementById('fileImagen').files[0];
     }else{
-        throw new Error('No se reconoce el archivo');
+      throw new Error('No se reconoce el archivo');
     }
     const formData = new FormData();
     formData.append('refid', document.getElementById('txtActividadOwnid').value);
@@ -313,8 +313,8 @@ async function FnAgregarArchivo(){
     formData.append('tabla', 'INFD');
 
     const response = await fetch('/informes/insert/AgregarArchivo.php', {
-        method:'POST',
-        body: formData
+      method:'POST',
+      body: formData
     });
     if(!response.ok){throw new Error(`${response.status} ${response.statusText}`);}
     const datos = await response.json();
@@ -332,58 +332,62 @@ const FnModalModificarArchivoTituloDescripcion = async (id)=>{
   formData.append('id', id);
   try {
     const response = await fetch('/informes/search/BuscarArchivoTituloDescripcion.php', {
-        method: 'POST',
-        body: formData
+      method: 'POST',
+      body: formData
     });
     if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+      throw new Error(`HTTP error! Status: ${response.status}`);
     }
     const datos = await response.json();
     if (!datos.res) {
-        throw new Error(datos.msg);
+      throw new Error(datos.msg);
     }
     document.getElementById('txtTitulo2').value = datos.data.titulo;
     document.getElementById('txtDescripcion2').value = datos.data.descripcion;
+    document.getElementById('divImagen2').innerHTML = datos.data.nombre;
   } catch (error) {
     Swal.fire({
-        title: 'Error',
-        text: error.message,
-        icon: 'error',
-        confirmButtonText: 'OK',
-        // timer:1000
+      title: 'Error',
+      text: error.message,
+      icon: 'error',
+      timer:2000
     });
   }
   const modalModificarArchivoTituloDescripcion = new bootstrap.Modal(document.getElementById('modalModificarArchivoTituloDescripcion'), {keyboard: false}).show();
   return false;
 }
 
-const FnModificarArchivoTituloDescripcion = async ()=>{
+const FnModificarArchivoTituloDescripcion = async () => {
   try {
     vgLoader.classList.remove('loader-full-hidden');
     const formData = new FormData();
     formData.append('id', document.getElementById('txtArchivoId').value);
     formData.append('titulo', document.getElementById('txtTitulo2').value);
     formData.append('descripcion', document.getElementById('txtDescripcion2').value);
-   
+    // AGREGAR ARCHIVO SI SE HA CARGADO
+    const fileInput = document.getElementById('fileImagen2');
+    if (fileInput.files.length === 1) {
+      formData.append('archivo', fileInput.files[0]); 
+    }
     const response = await fetch('/informes/update/ModificarArchivoTituloDescripcion.php', {
       method: 'POST',
       body: formData
     });
-
-    if (!response.ok) {throw new Error(`${response.status} ${response.statusText}`);}
-
+    if (!response.ok) {
+      throw new Error(`${response.status} ${response.statusText}`);
+    }
     const datos = await response.json();
-    console.log(datos);
-    if (!datos.res) {throw new Error(datos.msg);}
-    setTimeout(function() {location.reload();}, 500)
-    setTimeout(function(){vgLoader.classList.add('loader-full-hidden');}, 500);
-    Swal.fire({title:'Éxito', text:datos.msg, icon:'success', confirmButtonText:'OK'});
+    if (!datos.res) {
+      throw new Error(datos.msg);
+    }
+    setTimeout(() => { vgLoader.classList.add('loader-full-hidden'); }, 500);
+    Swal.fire({ title: 'Éxito', text: datos.msg, icon: 'success', timer:2000 });
+    setTimeout(() => { location.reload(); }, 1000);
   } catch (error) {
-    Swal.fire({title: 'Error', text: error.message, icon: 'error', confirmButtonText: 'OK', timer:1000});
-    setTimeout(function(){vgLoader.classList.add('loader-full-hidden');}, 500);
+    Swal.fire({ title: 'Error', text: error.message, icon: 'error', timer: 2000 });
+    setTimeout(() => { vgLoader.classList.add('loader-full-hidden'); }, 500);
   }
 }
-
 
 //ELIMINAR ARCHIVO
 const FnEliminarArchivo = async (id) => {

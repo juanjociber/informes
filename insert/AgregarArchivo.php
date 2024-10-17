@@ -7,7 +7,6 @@
   try {
     if(empty($_SESSION['CliId']) && empty($_SESSION['UserName'])){throw new Exception("Usuario no tiene Autorización.");}
     $tabla = $_POST['tabla'];
-
     if (!in_array($tabla, array('INFE', 'INFA', 'INFD'))) {throw new Exception('Tabla no válida.');}
 
     $USUARIO = date('Ymd-His (').$_SESSION['UserName'].')';
@@ -27,16 +26,17 @@
 
     $conmy->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     if (FnRegistrarArchivo($conmy, $imagen)) {
-        $data['msg'] = "Archivo cargado con éxito.";
+        $data['msg'] = "Registro existoso.";
         $data['res'] = true;        
     } else {
-        $data['msg'] = "Error registrando el Archivo.";
+        $data['msg'] = "Error al procesar la solicitud.";
     }
   } catch (PDOException $ex) {
-    $msg = $ex->getMessage();
+    $data['msg'] = $ex->getMessage();
+    $conmy = null;
   } catch (Exception $ex) {
-    $msg = $ex->getMessage();
+    $data['msg'] = $ex->getMessage();
+    $conmy = null;
   }
-  $conmy = null;
   echo json_encode($data);
 ?>

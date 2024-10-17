@@ -1,24 +1,19 @@
 <?php 
-session_start();
-require_once $_SERVER['DOCUMENT_ROOT']."/gesman/connection/ConnGesmanDb.php";
-require_once $_SERVER['DOCUMENT_ROOT']."/informes/datos/InformesData.php";
+  session_start();
+  require_once $_SERVER['DOCUMENT_ROOT']."/gesman/connection/ConnGesmanDb.php";
+  require_once $_SERVER['DOCUMENT_ROOT']."/informes/datos/InformesData.php";
+  $data = array('id'=>0,'res' => false, 'msg' => 'Error general.');
 
-$data = array('id'=>0,'res' => false, 'msg' => 'Error general.');
-
-try {
-    $conmy->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    if (empty($_SESSION['CliId']) || empty($_SESSION['UserName'])) {
-        throw new Exception("Usuario no autorizado.");
+  try {
+    if (empty($_SESSION['CliId']) || empty($_SESSION['UserName'])) {throw new Exception("Usuario no autorizado.");}
+    
+    if (empty($_POST['actividad']) || empty($_POST['fecha']) || empty($_POST['supervisor']) || empty($_POST['equ_codigo']) || empty($_POST['id'])) {
+      throw new Exception("Todos los campos obligatorios deben estar completos.");
     }
     $usuario = date('Ymd-His').'('.$_SESSION['UserName'].')';
-
-    if (empty($_POST['actividad']) || empty($_POST['fecha']) || empty($_POST['supervisor']) || empty($_POST['equ_codigo']) || empty($_POST['id'])) {
-        throw new Exception("Todos los campos obligatorios deben estar completos.");
-    }
     $id = $_POST['id'];
     $equkm = $_POST['equkm'];
     $equhm = $_POST['equhm'];
-
     // CREANDO OBJETOS
     $orden = new stdClass();
     $orden->id = 0;
@@ -42,22 +37,22 @@ try {
     $cliente->id = $_SESSION['CliId']; 
     $cliente->nombre = $_SESSION['CliNombre'] ;
 
+    $conmy->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $informeId = FnRegistrarInforme($conmy, $orden, $cliente, $equipo, $_POST['fecha'], $_POST['actividad'], $usuario);
     if ($informeId) {
-        $data['msg'] = "Ok.";
-        $data['res'] = true;
-        $data['id'] = $informeId;
+      $data['msg'] = "Registro existoso.";
+      $data['res'] = true;
+      $data['id'] = $informeId;
     } else {
-        throw new Exception("Error al registrar el informe.");
+      throw new Exception("Error al procesar la solicitud.");
     }
-} catch(PDOException $ex){
-    $data['msg']=$ex->getMessage();
-    $conmy=null;
-} catch (Exception $ex) {
-    $data['msg']=$ex->getMessage();
-    $conmy=null;
-}
-
-echo json_encode($data);
+  } catch(PDOException $ex){
+      $data['msg']=$ex->getMessage();
+      $conmy=null;
+  } catch (Exception $ex) {
+      $data['msg']=$ex->getMessage();
+      $conmy=null;
+  }
+  echo json_encode($data);
 ?>
 

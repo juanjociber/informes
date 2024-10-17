@@ -51,8 +51,7 @@ async function FnFinalizarInforme() {
     if (!datos.res) {
       throw new Error(datos.msg);
     }
-    
-    setTimeout(() => location.reload(), 500);
+    setTimeout(() => location.reload(), 1000);
   } catch (ex) {
       showToast(ex.message, 'bg-danger');
   } finally {

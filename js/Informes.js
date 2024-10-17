@@ -198,6 +198,7 @@ async function FnBuscarPrimero() {
 
 async function FnAgregarInforme() {
   try {
+    vgLoader.classList.remove('loader-full-hidden');
     const formData = new FormData();
     formData.append('fecha', document.getElementById('txtFechaInforme').value);
     const actividad = document.getElementById('txtActividadInforme').value;
@@ -209,21 +210,28 @@ async function FnAgregarInforme() {
     formData.append('equhm', document.getElementById('txtHm').value);
 
     const response = await fetch("/informes/insert/AgregarInforme2.php", {
-        method: "POST",
-        body: formData
+      method: "POST",
+      body: formData
     });
     if (!response.ok) {
-        throw new Error(`${response.status} ${response.statusText}`);
+      throw new Error(`${response.status} ${response.statusText}`);
     }
     const datos = await response.json();
-    //console.log(datos);
     if (!datos.res) {
-        throw new Error(datos.msg);
+      throw new Error(datos.msg);
     }
+    setTimeout(() => { vgLoader.classList.add('loader-full-hidden'); }, 300);
+    await Swal.fire({
+      title: "Aviso",
+      text: datos.msg,
+      icon: "success",
+      timer: 2000
+    });
     setTimeout(() => {
-        window.location.href = '/informes/EditarInforme.php?id=' + datos.id;
+      window.location.href = '/informes/EditarInforme.php?id=' + datos.id;
     }, 1000);
   } catch (error) {
+      setTimeout(() => { vgLoader.classList.add('loader-full-hidden'); }, 300);
       document.getElementById('msjAgregarInforme').innerHTML = `<div class="alert alert-danger mb-2 p-1 text-center" role="alert">${error.message}</div>`;
   }
 }

@@ -167,7 +167,6 @@ const FnModalModificarDetalleInforme = async (id, cabecera) => {
       throw new Error(response.status + ' ' + response.statusText); 
     }
     const datos = await response.json();
-    console.log(datos);
     if (!datos.res) { 
       throw new Error(datos.msg); 
     }

@@ -26,9 +26,10 @@
     }
   } catch (PDOException $ex) {
       $data['msg'] = $ex->getMessage();
+      $conmy = null;
   } catch (Exception $ex) {
       $data['msg'] = $ex->getMessage();
+      $conmy = null;
   } 
-  $conmy = null;
   echo json_encode($data);
 ?>

@@ -3,14 +3,12 @@
 	$res=false;
     $id=0;
 	$msg='Error general creando el Informe.';
-
     require_once $_SERVER['DOCUMENT_ROOT']."/gesman/connection/ConnGesmanDb.php";
     require_once $_SERVER['DOCUMENT_ROOT']."/informes/datos/InformesData.php";
 
     try {
         $conmy->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         if(!isset($_SESSION)){throw new Exception("Se ha perdido la conexión.");}
-
         //if(empty($_POST['ordid']) || empty($_POST['fecha']) || empty($_POST['actividad'])){throw new Exception("La información esta incompleta.");} 
 
         $orden=FnBuscarOrden($conmy, $_POST['ordid']);

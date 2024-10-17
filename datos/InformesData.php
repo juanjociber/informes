@@ -387,7 +387,7 @@
    */
   function FnBuscarArchivoTituloDescripcion($conmy, $id) {
     try {
-      $stmt = $conmy->prepare("SELECT id, titulo, descripcion, estado FROM tblarchivos WHERE id = :Id");
+      $stmt = $conmy->prepare("SELECT id, titulo, descripcion, nombre, estado FROM tblarchivos WHERE id = :Id");
       $stmt->execute(array(':Id' => $id));
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
       if ($row) {
@@ -395,15 +395,17 @@
         $archivo->id = $row['id'];
         $archivo->titulo = $row['titulo'];
         $archivo->descripcion = $row['descripcion'];
+        $archivo->nombre = $row['nombre'];
         $archivo->estado = $row['estado'];
         return $archivo; 
       }
       return null; 
     } catch (PDOException $e) {
-        throw new Exception($e->getMessage());
+      throw new Exception($e->getMessage());
     }
   }
 
+  
   function FnBuscarArchivos($conmy, $id) {
     try {
       $stmt = $conmy->prepare("SELECT id, refid, tabla, nombre, descripcion, tipo, estado, titulo FROM tblarchivos WHERE refid=:Id");
@@ -434,25 +436,35 @@
     } 
   }
 
-  function FnEditarArchivoTituloDescripcion($conmy, $archivo){
+  function FnModificarArchivoTituloDescripcion($conmy, $archivo) {
     try {
-      $stmt = $conmy->prepare("UPDATE tblarchivos SET descripcion= :Descripcion, titulo= :Titulo, actualizacion = :Actualizacion WHERE id= :Id");
+      $query = "UPDATE tblarchivos SET descripcion = :Descripcion, titulo = :Titulo, actualizacion = :Actualizacion";
+      if (!empty($archivo->nombre)) {
+        $query.=", nombre = :Nombre";
+      }
+      $query.=" WHERE id = :Id";
+      $stmt = $conmy->prepare($query);
       $params = array(
-        ':Descripcion' => $archivo->Descricion,
+        ':Descripcion' => $archivo->Descripcion,
         ':Titulo' => $archivo->Titulo,
         ':Actualizacion' => $archivo->Usuario,
         ':Id' => $archivo->Id,
       );
+      // AGREGAR NUEVO NOMBRE
+      if (!empty($archivo->nombre)) {
+        $params[':Nombre'] = $archivo->nombre;
+      }
+      // EJECUTAR CONSULTA
       $result = $stmt->execute($params);
       if ($stmt->rowCount() == 0) {
-          throw new Exception('Cambios no realizados.');
+        throw new Exception('Cambios no realizados.');
       }
       return $result;
     } catch (PDOException $e) {
       throw new Exception($e->getMessage());
     }
   }
-    
+
   function FnEliminarArchivo($conmy, $id) {
     try {
       $res = false;

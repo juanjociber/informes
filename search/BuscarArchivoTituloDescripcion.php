@@ -15,7 +15,7 @@
       $data['msg'] = 'Ok.';
       $data['data'] = $archivo;
     } else {
-      $data['msg'] = 'No existen datos de archivo.';
+      $data['msg'] = 'No existen registros en la base de datos.';
     }
 
   } catch(PDOException $ex){

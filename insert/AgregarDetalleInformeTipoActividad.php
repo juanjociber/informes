@@ -2,7 +2,6 @@
   session_start();
   require_once $_SERVER['DOCUMENT_ROOT']."/gesman/connection/ConnGesmanDb.php";
   require_once $_SERVER['DOCUMENT_ROOT']."/informes/datos/InformesData.php";
-  
   $data = array('res' => false, 'msg' => 'Error general.');
   
   try {
@@ -22,16 +21,17 @@
 
     $conmy->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     if (FnRegistrarActividad($conmy, $actividad)) {
-      $data['msg'] = "Se registró la Actividad.";
+      $data['msg'] = "Registro exitoso.";
       $data['res'] = true;
     } else {
-      $data['msg'] = "Error registrando la Actividad.";
+      $data['msg'] = "Error al procesar la solicitud.";
     }
   } catch (PDOException $ex) {
     $data['msg'] = $ex->getMessage();
+    $conmy = null;
   } catch (Exception $ex) {
     $data['msg'] = $ex->getMessage();
+    $conmy = null;
   } 
-  $conmy = null;
   echo json_encode($data);
 ?>

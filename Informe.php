@@ -83,16 +83,15 @@
                   }
                   $html.='
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselImages" data-bs-slide="prev">
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselImages" data-bs-slide="prev" style="background-color: #1b2346c7; width:25px; height: 45px; margin-top:25%;margin-left: 12px">
                   <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                   <span class="visually-hidden">Previous</span>
                 </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselImages" data-bs-slide="next">
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselImages" data-bs-slide="next" style="background-color: #1b2346c7; width:25px; height: 45px; margin-top:25%;margin-right: 12px">
                   <span class="carousel-control-next-icon" aria-hidden="true"></span>
                   <span class="visually-hidden">Next</span>
                 </button>
               </div>
-
               <!-- Diseño de dos columnas para pantallas grandes -->
               <div class="row d-none d-md-flex">';               
               foreach($imagenes[$nodo['id']] as $elemento){
@@ -191,11 +190,11 @@
     }
     $conmy = null;
   } catch (PDOException $ex) {
-      $errorMessage = $ex->getMessage();
-      $conmy = null;
-  } catch (Exception $e) {
-      $errorMessage = $e->getMessage();
-      $conmy = null;
+    $errorMessage = $ex->getMessage();
+    $conmy = null;
+  } catch (Exception $ex) {
+    $errorMessage = $ex->getMessage();
+    $conmy = null;
   }
 
   $claseHabilitado = "btn-outline-secondary";
@@ -347,43 +346,56 @@
           </div>
         </div>
         <!-- Carrusel para pantallas pequeñas -->
-        <div id="carouselExample" class="carousel slide d-md-none" data-bs-ride="carousel" data-bs-interval="false">
-          <div class="carousel-inner">
-            <?php foreach($imagenInformes as $key => $imagenInforme): ?>
-              <div class="carousel-item <?php echo $key === 0 ? 'active' : ''; ?>">
-                <div class="card text-center p-0">
-                  <div class="card-header text-secondary" style="text-align:justify;padding-left:5px; line-height: 1.2"><?php echo ($imagenInforme['titulo']); ?></div>
-                  <div class="card-body p-0">
-                    <img src="/mycloud/gesman/files/<?php echo empty($imagenInforme['nombre']) ? '0.jpg' : $imagenInforme['nombre'] ?>" class="imagen-ajustada" alt="">
+        <?php
+          $html='';
+          $html.=
+          '<div id="carouselExample" class="carousel slide d-md-none" data-bs-ride="carousel" data-bs-interval="false">
+            <div class="carousel-inner">';
+              foreach ($imagenInformes as $key => $imagenInforme) {
+                $activeClass = $key === 0 ? 'active' : '';
+                $nombreImagen = !empty($imagenInforme['nombre']) ? $imagenInforme['nombre'] : '0.jpg';
+                $html .= '
+                <div class="carousel-item ' . $activeClass . '">
+                  <div class="card text-center p-0">
+                    <div class="card-header text-secondary" style="text-align:justify;padding-left:5px; line-height: 1.2">' . $imagenInforme['titulo'] . '</div>
+                    <div class="card-body p-0">
+                      <img src="/mycloud/gesman/files/' . $nombreImagen . '" class="imagen-ajustada" alt="">
+                    </div>
+                    <div class="card-footer text-secondary" style="text-align:justify;padding-left:5px;">' . $imagenInforme['descripcion'] . '</div>
                   </div>
-                  <div class="card-footer text-secondary" style="text-align:justify;padding-left:5px;"><?php echo ($imagenInforme['descripcion']); ?></div>
-                </div>
-              </div>
-            <?php endforeach; ?>
-          </div>
-          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-          </button>
-          <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </button>
-        </div>
-        <!-- Diseño de dos columnas para pantallas grandes -->
-        <div class="row d-none d-md-flex">
-          <?php foreach($imagenInformes as $imagenInforme): ?>
-            <div class="col-md-6 mb-2">
-              <div class="card text-center p-0">
-                <div class="card-header text-secondary" style="text-align:justify;padding-left:5px; line-height: 1.2"><?php echo ($imagenInforme['titulo']); ?></div>
-                <div class="card-body p-0">
-                  <img src="/mycloud/gesman/files/<?php echo empty($imagenInforme['nombre']) ? '0.jpg' : $imagenInforme['nombre'] ?>" class="imagen-ajustada" alt="">
-                </div>
-                <div class="card-footer text-secondary" style="text-align:justify;padding-left:5px;"><?php echo ($imagenInforme['descripcion']); ?></div>
-              </div>
+                </div>';
+              }
+            $html.='
             </div>
-          <?php endforeach; ?>
-        </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev" style="background-color: #1b2346c7; width:25px; height: 45px; margin-top:25%;">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next" style="background-color: #1b2346c7; width:25px; height: 45px; margin-top:25%;">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>';
+          echo $html;
+        ?>
+        <!-- Diseño de dos columnas para pantallas grandes -->
+        <?php
+        $html=''; 
+        $html.='<div class="row d-none d-md-flex">';
+          foreach($imagenInformes as $imagenInforme){
+            $html.='<div class="col-md-6 mb-2">
+              <div class="card text-center p-0">
+                <div class="card-header text-secondary" style="text-align:justify;padding-left:5px; line-height: 1.2">'.$imagenInforme['titulo'].'</div>
+                <div class="card-body p-0">
+                  <img src="/mycloud/gesman/files/'.$imagenInforme['nombre'].'" class="imagen-ajustada" alt="">
+                </div>
+                <div class="card-footer text-secondary" style="text-align:justify;padding-left:5px;">'.$imagenInforme['descripcion'].'</div>
+              </div>
+            </div>';
+          }
+        $html.='</div>';
+        echo $html;
+        ?>
 
         <?php $NUMERO+=1; ?>
         <!-- SOLICITUD DEL CLIENTE -->
@@ -404,17 +416,24 @@
           <div class="col-12 mb-0 border-bottom bg-light">
             <p class="mt-2 mb-2 fw-bold text-secondary"><?php echo $NUMERO; ?>- ANTECEDENTES</p>
           </div>
-          <div class="row p-1 m-0">
-            <?php foreach($antecedentes as $antecedente) :?>
+          <?php
+            $html=''; 
+            $html.='
+            <div class="row p-1 m-0">';
+              foreach($antecedentes as $antecedente){
+                $html.='
                 <div class="d-flex">
                   <span class="text-secondary" style="margin-right:10px;">&#x2713</span>
-                  <p class="m-0 mb-2 p-0 text-secondary" style="text-align: justify;"><?php echo $antecedente['actividad'];?></p>
-                </div>
-            <?php endforeach ;?>
-          </div>
+                  <p class="m-0 mb-2 p-0 text-secondary" style="text-align: justify;">'.$antecedente['actividad'].'</p>
+                </div>';
+              }
+            $html.='
+            </div>';
+            echo $html;
+          ?>
         </div>
+        
         <?php $NUMERO+=1; ?>
-    
         <!-- ACTIVIDADES -->
         <div class="row p-1 mb-2 mt-2">
           <div class="col-12 mb-0 border-bottom bg-light">
@@ -425,21 +444,28 @@
               echo $html;
             ?>
         </div>
+        
         <?php $NUMERO+=1; ?>
-
         <!-- CONCLUSIONES -->
         <div class="row p-1 mb-2 mt-2">
           <div class="col-12 mb-0 border-bottom bg-light">
             <p class="mt-2 mb-2 fw-bold text-secondary"><?php echo $NUMERO; ?>- CONCLUSIONES</p>
           </div>
-          <div class="row p-1 m-0">
-            <?php foreach($conclusiones as $conclusion) :?>
-              <div class="d-flex">
-                <span class="text-secondary" style="margin-right:10px;">&#x2713</span>
-                <p class="m-0 mb-2 p-0" style="text-align: justify;"><?php echo $conclusion['actividad'];?></p>
-              </div>
-            <?php endforeach ;?>
-          </div>
+          <?php
+            $html=''; 
+            $html.='
+            <div class="row p-1 m-0">';
+              foreach($conclusiones as $conclusion){
+                $html.='
+                <div class="d-flex">
+                  <span class="text-secondary" style="margin-right:10px;">&#x2713</span>
+                  <p class="m-0 mb-2 p-0" style="text-align: justify;">'.$conclusion['actividad'].'</p>
+                </div>';
+              }
+            $html.='
+            </div>';
+            echo $html;
+          ?>
         </div>
         <?php $NUMERO+=1; ?>
 
@@ -448,32 +474,47 @@
           <div class="col-12 mb-0 border-bottom bg-light">
             <p class="mt-2 mb-2 fw-bold text-secondary"><?php echo $NUMERO; ?>- RECOMENDACIONES</p>
           </div>
-          <div class="row p-1 m-0">
-            <?php foreach($recomendaciones as $recomendacion) :?>
-              <div class="d-flex">
-                <span class="text-secondary" style="margin-right:10px;">&#x2713</span> 
-                <p class="m-0 mb-2 p-0" style="text-align: justify;"><?php echo $recomendacion['actividad'];?></p>
-              </div>
-            <?php endforeach ;?>
-          </div>
+          <?php 
+            $html='';
+            $html.='
+            <div class="row p-1 m-0">';
+              foreach($recomendaciones as $recomendacion){
+                $html.='
+                <div class="d-flex">
+                  <span class="text-secondary" style="margin-right:10px;">&#x2713</span> 
+                  <p class="m-0 mb-2 p-0" style="text-align: justify;">'.$recomendacion['actividad'].'</p>
+                </div>';
+              }
+            $html.='
+            </div>';
+            echo $html;
+          ?>
         </div>
+        
         <?php $NUMERO+=1; ?>
-
         <!-- ANEXOS -->
         <div class="row p-1 mb-2 mt-2">
           <div class="col-12 mb-0 border-bottom bg-light">
             <p class="mt-2 mb-2 fw-bold text-secondary"><?php echo $NUMERO; ?>- ANEXOS</p>
           </div>
           <div class="row p-1 m-0">
-            <div class="mt-2 mb-2 p-1">
-              <?php foreach($imagenAnexos as $imagenAnexo): ?>
-                <div class="text-center border border-1 p-0">
-                  <p class="m-0 bg-light text-secondary pt-1 pb-2" style="text-align:justify;padding-left:5px;"><?php echo ($imagenAnexo['titulo']); ?></p>
-                  <img src="/mycloud/gesman/files/<?php echo empty($imagenAnexo['nombre']) ? '0.jpg' : $imagenAnexo['nombre'] ?>" class="" alt="">
-                  <p class="m-0 bg-light text-secondary pt-1 pb-2" style="text-align:justify;padding-left:5px;"><?php echo ($imagenAnexo['descripcion']); ?></p>
-                </div>
-              <?php endforeach; ?>
-            </div>            
+            <?php $html=''; 
+              $html.='
+              <div class="mt-2 mb-2 p-1">';
+                foreach($imagenAnexos as $imagenAnexo){
+                  $html.='
+                  <div class="card text-center p-0 mb-4">
+                    <div class="card-header text-secondary" style="text-align:justify;padding-left:5px; line-height: 1.2">'.$imagenAnexo['titulo'].'</div>
+                    <div class="card-body p-0">
+                      <img src="/mycloud/gesman/files/'.$imagenAnexo['nombre'].'" class="img-fluid" alt="">
+                    </div>
+                    <div class="card-footer text-secondary" style="text-align:justify;padding-left:5px;">'.$imagenAnexo['descripcion'].'</div>
+                  </div>';
+                }
+              $html.='
+              </div>';
+              echo $html;
+            ?>
           </div>
         </div>
 
@@ -508,16 +549,4 @@
     <script src="/mycloud/library/bootstrap-5-alerta-1.0/js/bootstrap-5-alerta-1.0.js"></script>
     <script src="/gesman/menu/sidebar.js"></script>
   </body>
-    <?php if ($errorMessage): ?>
-      <script>
-        document.addEventListener('DOMContentLoaded', function() {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: '<?php echo addslashes($errorMessage); ?>',
-            timer: 1000,
-          });
-        });
-      </script>
-    <?php endif; ?>
 </html>

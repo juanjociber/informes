@@ -30,6 +30,5 @@
     $data['msg'] = $ex->getMessage();
     $conmy = null;
   }     
-
   echo json_encode($data);
 ?>
