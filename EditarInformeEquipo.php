@@ -54,7 +54,7 @@
         width:100%
       }
       @media(min-width:768px){.contenedor-imagen{display: grid; grid-template-columns:1fr 1fr !important; gap:10px;}}  
-      @media(min-width:992px){.contenedor-imagen{grid-template-columns:1fr 1fr 1fr !important;}}
+      /* @media(min-width:992px){.contenedor-imagen{grid-template-columns:1fr 1fr 1fr !important;}} */
       .imagen-ajustada {
         width: 100%;
         height: 200px;
@@ -184,7 +184,7 @@
                         </g>
                       </svg>
                     </span>
-                    <div class="card text-center p-0 mb-4">
+                    <div class="card text-center p-0 mb-2">
                       <div class="card-header text-secondary" style="text-align:justify;padding-left:5px;">'.$archivo['titulo'].'</div>
                       <div class="card-body p-0">
                         <img src="/mycloud/gesman/files/'.$archivo['nombre'].'" class="imagen-ajustada" alt="">

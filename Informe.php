@@ -23,7 +23,6 @@
   $antecedentes = array();
   $arbol=array();
   $imagenes = array();
-
   $imagenInformes = array();
   $imagenAnexos = array();
 
@@ -44,7 +43,7 @@
 	function FnGenerarInformeHtmlAcordeon($arbol, $imagenes,$numero, $nivel = 0, $indice ='1') {
 		$html='';
 		$contador=1;		
-
+    $contar=0;
 		foreach ($arbol as $key=>$nodo) {
 			$indiceActual = $nivel==0?$contador++:$indice.'.'.($key+1);
 			$html.='
@@ -66,12 +65,12 @@
           </div>
           <div class="row m-0 mt-2 mb-2 p-0 d-flex justify-content-center" id="'.$nodo['id'].'">';
             if(isset($imagenes[$nodo['id']])){
-              $html.='        
-              <div id="carouselImages" class="carousel slide d-md-none" data-bs-interval="false">
+              $html.='
+              <div id="carouselImages'.$nodo['id'].'" class="carousel slide d-md-none" data-bs-interval="false">
                 <div class="carousel-inner">';
                   foreach($imagenes[$nodo['id']] as $key => $elemento){
-                    $html .= 
-                    '<div class="carousel-item '.($key === 0 ? 'active' : '').'">
+                    $html.='
+                    <div class="carousel-item '.($key === 0 ? 'active' : '').'">
                       <div class="card text-center p-0" id="archivo-'.$elemento['id'].'">
                         <div class="card-header text-secondary" style="text-align:justify;padding-left:5px;">'.$elemento['titulo'].'</div>
                           <div class="card-body p-0">
@@ -83,17 +82,18 @@
                   }
                   $html.='
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselImages" data-bs-slide="prev" style="background-color: #1b2346c7; width:25px; height: 45px; margin-top:25%;margin-left: 12px">
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselImages'.$nodo['id'].'" data-bs-slide="prev" style="background-color: #1b2346c7; width:25px; height: 45px; margin-top:25%;margin-left: 12px">
                   <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                   <span class="visually-hidden">Previous</span>
                 </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselImages" data-bs-slide="next" style="background-color: #1b2346c7; width:25px; height: 45px; margin-top:25%;margin-right: 12px">
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselImages'.$nodo['id'].'" data-bs-slide="next" style="background-color: #1b2346c7; width:25px; height: 45px; margin-top:25%;margin-right: 12px">
                   <span class="carousel-control-next-icon" aria-hidden="true"></span>
                   <span class="visually-hidden">Next</span>
                 </button>
               </div>
+
               <!-- Diseño de dos columnas para pantallas grandes -->
-              <div class="row d-none d-md-flex">';               
+              <div class="row d-none d-md-flex caja-imagenes">';               
               foreach($imagenes[$nodo['id']] as $elemento){
                 $html .= '<div class="col-md-6 mb-2">
                   <div class="card text-center p-0" id="archivo-'.$elemento['id'].'">
@@ -219,14 +219,12 @@
     <style>
       .hijos p:first-child{ padding-top: 10px;}
       .imagen-ajustada { width: 100%; height: 200px; object-fit: contain;}
-      /* .contenedor-imagen{display:grid;grid-template-columns:1fr 1fr !important;column-gap:5px; row-gap: 15px;} */
-      @media(min-width:768px){.contenedor-imagen{display:grid;grid-template-columns:1fr 1fr !important; gap:30px !important;} .contenedor-imagenes{gap:30px !important;}}
-      @media(min-width:992px){.contenedor-imagen, .contenedor-imagenes{padding:0 50px;}}
-      @media(min-width:1200px){.contenedor-imagen, .contenedor-imagenes{padding:0 200px;}}
-      .contenedor-imagenes{display: grid; grid-template-columns:1fr 1fr; ;gap:5px;}
       .accordion .accordion-item { border: none; }
       .accordion .accordion-header { border: none; }
       .accordion .accordion-body { border: none; padding:0}
+      @media(min-width:1200px){.caja-imagenes{padding:0 80px;}}
+      @media(min-width:1400px){.caja-imagenes{padding:0 150px;}}
+      @media(min-width:992px){.caja-anexos{width: 60%; margin:0 auto;}}
     </style>
   </head>
   <body>
@@ -381,7 +379,7 @@
         <!-- Diseño de dos columnas para pantallas grandes -->
         <?php
         $html=''; 
-        $html.='<div class="row d-none d-md-flex">';
+        $html.='<div class="row d-none d-md-flex caja-imagenes mt-4">';
           foreach($imagenInformes as $imagenInforme){
             $html.='<div class="col-md-6 mb-2">
               <div class="card text-center p-0">
@@ -500,7 +498,7 @@
           <div class="row p-1 m-0">
             <?php $html=''; 
               $html.='
-              <div class="mt-2 mb-2 p-1">';
+              <div class="mt-2 mb-2 p-1 caja-anexos">';
                 foreach($imagenAnexos as $imagenAnexo){
                   $html.='
                   <div class="card text-center p-0 mb-4">
