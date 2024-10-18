@@ -32,11 +32,11 @@
 
       return $id;
     } catch (PDOException $e) {
-      throw new Exception("Error de registro: ".$e->getMessage());//sera propagado al catch(Exception $ex) del nivel superior.
+      throw new Exception($e->getMessage());
     }
   }
 
-  function FnModificarActividadInforme($conmy, $actividad) {
+  function FnModificarInformeActividad($conmy, $actividad) {
     try {
       $stmt = $conmy->prepare("UPDATE tblinforme SET actividad = :Actividad, actualizacion=:Actualizacion WHERE id = :Id");
       $params = array(':Actividad' => $actividad->actividad,':Actualizacion'=>$actividad->usuario,':Id' => $actividad->id);
@@ -79,7 +79,7 @@
           );
         }
         $informes['pag']=$n;
-      }            
+      }
       return $informes;
     } catch (PDOException $e) {
       throw new Exception($e->getMessage().$msg);
@@ -120,9 +120,9 @@
       throw new Exception($e->getMessage());
     }
   }
-    
-  function FnModificarInformeEquipo($conmy, $informe) {
-    try {    
+
+  function FnModificarInformeDatosEquipo($conmy, $informe) {
+    try {
       $stmt = $conmy->prepare("UPDATE tblinforme SET equ_nombre = :EquNombre, equ_marca = :EquMarca, equ_modelo = :EquModelo, equ_serie = :EquSerie, equ_datos = :EquDatos, equ_km = :EquKm, equ_hm = :EquHm, actualizacion = :Actualizacion WHERE id =:Id");
       $params = array(
         ':EquNombre' => $informe->equnombre,
@@ -143,7 +143,7 @@
       throw new Exception($ex->getMessage());
     }
   }
-  
+
   function FnBuscarInforme($conmy, $id, $cliid) {
     try {
       $stmt = $conmy->prepare("SELECT id, ordid, equid, cliid, numero, nombre, fecha, ord_nombre, cli_nombre, cli_contacto, cli_direccion, supervisor, equ_codigo, equ_nombre, equ_marca, equ_modelo, equ_serie, equ_datos, equ_km, equ_hm, actividad, estado FROM tblinforme WHERE id = :Id AND cliid = :Cliid");
@@ -174,94 +174,18 @@
         $informe->Actividad = $row['actividad'];
         $informe->Estado = $row['estado'];
         return $informe;
-      } else {
-        throw new Exception('Informe no disponible para el cliente.');
-      }
+      } 
     } catch (PDOException $ex) {
       throw new Exception($ex->getMessage());
     } catch (Exception $ex) {
       throw new Exception($ex->getMessage());
     }
   }
-  
-  /**
-   * TABLA : Supervisores
-   */
-  function FnBuscarSupervisores($comy) {
-    try {
-      $stmt = $comy->prepare("SELECT idsupervisor, idcliente, supervisor FROM cli_supervisores WHERE idcliente = 1");
-      $stmt->execute(); 
-      $supervisores = $stmt->fetchAll(PDO::FETCH_ASSOC);
-      return $supervisores;
-    } catch (PDOException $e) {
-      throw new Exception($e->getMessage());
-    }
-  }
-    
-  function FnBuscarContacto($comy, $id) {
-    try {
-      $stmt = $comy->prepare("SELECT idsupervisor, idcliente, supervisor FROM cli_supervisores WHERE idcliente=:Id");
-      $stmt->execute(array(':Id'=>$id));
-      $supervisores = $stmt->fetchAll(PDO::FETCH_ASSOC);
-      return $supervisores;
-    } catch (PDOException $e) {
-      throw new Exception($e->getMessage());
-    }
-  }
 
-  /**
-   * TABLA : man_activos
-   */
-  function FnBuscarEquipo($conmy, $id) {
-    try {
-      $stmt = $conmy->prepare("select idactivo, codigo, activo, grupo, marca, modelo, serie, anio, fabricante, procedencia, caracteristicas, cli_direccion from man_activos where idactivo=:Id;");
-      $stmt->execute(array(':Id'=>$id));
-      $equipo = new stdClass();
-      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-          $equipo->id = $row['idactivo'];
-          $equipo->codigo = $row['codigo'];
-          $equipo->nombre = $row['activo'];
-          $equipo->flota = $row['grupo'];
-          $equipo->marca = $row['marca'];
-          $equipo->modelo = $row['modelo'];
-          $equipo->serie = $row['serie'];
-          $equipo->anio = $row['anio'];
-          $equipo->fabricante = $row['fabricante'];
-          $equipo->procedencia = $row['procedencia'];
-          $equipo->datos = $row['caracteristicas'];
-          $equipo->cli_direccion = $row['cli_direccion'];
-      }
-      return $equipo;
-    } catch (PDOException $e) {
-      throw new Exception($e->getMessage());
-    }
-  }
-
-  function FnBuscarEquipos($conmy, $nombre, $cliId) {
-    try {
-      $stmt = $conmy->prepare("SELECT idactivo, activo FROM man_activos WHERE idcliente = :CliId AND activo LIKE :Nombre LIMIT 10;");
-      $stmt->execute(array(':CliId'=>$cliId, ':Nombre'=>"%$nombre%"));
-      return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch (PDOException $e) {
-      throw new Exception($e);
-    }     
-  }
-
-  function FnBuscarEquiposPorCliente($conmy, $id) {
-    try {
-      $stmt = $conmy->prepare("SELECT idactivo, idcliente, codigo, activo FROM man_activos WHERE idcliente = :Cliid;");
-      $stmt->execute(['Cliid' => $id]);
-      $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
-      return $resultados;
-    } catch (PDOException $ex) {
-      return null;
-    }
-  }
-   
   /**
    * TABLA : tbldetalleinforme
    */
-  function FnBuscarActividad($conmy, $id) {
+  function FnBuscarDetalleInformeActividad($conmy, $id) {
     try {
       $stmt = $conmy->prepare("SELECT id, infid, ownid, tipo, actividad, diagnostico, trabajos, observaciones, estado FROM tbldetalleinforme WHERE id = :Id;");
       $stmt->execute(array(':Id' => $id));
@@ -283,7 +207,7 @@
     }
   }
 
-  function FnBuscarActividades($conmy, $infid) {
+  function FnBuscarDetalleInformeActividades($conmy, $infid) {
     try {
       $stmt = $conmy->prepare("SELECT id, ownid, tipo, actividad, diagnostico, trabajos, observaciones, estado FROM tbldetalleinforme WHERE infid = :Infid;");
       $stmt->execute(array(':Infid' => $infid));
@@ -294,7 +218,7 @@
     }
   }
 
-  function FnRegistrarActividad($conmy, $actividad) {
+  function FnRegistrarDetalleInformeTipoActividad($conmy, $actividad) {
     try {
       $res = false;
       $stmt = $conmy->prepare("INSERT INTO tbldetalleinforme (infid, ownid, actividad, diagnostico, trabajos, observaciones, tipo, creacion, actualizacion) VALUES (:InfId, :OwnId, :Actividad, :Diagnostico, :Trabajos, :Observaciones, :Tipo,:Creacion, :Actualizacion);");
@@ -308,7 +232,7 @@
     }
   }
 
-  function FnModificarActividad($conmy, $actividad) {
+  function FnModificarDetalleInformeActividad($conmy, $actividad) {
     try {
       $stmt = $conmy->prepare("UPDATE tbldetalleinforme SET actividad=:Actividad, diagnostico=:Diagnostico, trabajos=:Trabajos, observaciones=:Observaciones, actualizacion=:Actualizacion WHERE id=:Id;");
       $params = array(':Actividad'=>$actividad->actividad, ':Diagnostico'=>$actividad->diagnostico, ':Trabajos'=>$actividad->trabajos, ':Observaciones'=>$actividad->observaciones, ':Actualizacion'=>$actividad->usuario, ':Id'=>$actividad->id);
@@ -322,7 +246,7 @@
     }
   }
 
-  function FnEliminarActividad($conmy, $id) {
+  function FnEliminarDetalleInformeActividad($conmy, $id) {
     try {
       $stmt = $conmy->prepare("DELETE FROM tbldetalleinforme WHERE id = :Id");
       $params = array(':Id' => $id);
@@ -331,52 +255,6 @@
         throw new Exception('Cambios no realizados.');
       }
       return $result;
-    } catch (PDOException $e) {
-      throw new Exception($e->getMessage());
-    }
-  }
-
-  /**
-   * TABLA : man_ots
-   */
-  function FnBuscarOrden($conmy, $id) {
-    try {
-      $stmt = $conmy->prepare("select idot, idactivo, idcliente, ot, km, hm, supervisor, contacto, estado from man_ots where idot=:Id;");
-      $stmt->execute(array(':Id'=>$id));
-      $orden = new stdClass();
-      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $orden->id = $row['idot'];
-        $orden->equid = $row['idactivo'];
-        $orden->cliid = $row['idcliente'];
-        $orden->nombre = $row['ot'];
-        $orden->km = $row['km'];
-        $orden->hm = $row['hm'];
-        $orden->supervisor = $row['supervisor'];
-        $orden->contacto = $row['contacto'];
-        $orden->estado = $row['estado'];
-      }
-      return $orden;
-    } catch (PDOException $e) {
-      throw new Exception($e->getMessage());
-    }
-  }
-
-  /**
-   * TABLA : man_clientes
-   */
-  function FnBuscarCliente($conmy, $id) {
-    try {
-      $stmt = $conmy->prepare("select idcliente, ruc, razonsocial, nombre, estado from man_clientes where idcliente=:Id;");
-      $stmt->execute(array(':Id'=>$id));
-      $cliente = new stdClass();
-      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $cliente->id = $row['idcliente'];
-        $cliente->ruc = $row['ruc'];
-        $cliente->nombre = $row['razonsocial'];
-        $cliente->alias = $row['nombre'];
-        $cliente->estado = $row['estado'];
-      }
-      return $cliente;
     } catch (PDOException $e) {
       throw new Exception($e->getMessage());
     }
@@ -397,15 +275,15 @@
         $archivo->descripcion = $row['descripcion'];
         $archivo->nombre = $row['nombre'];
         $archivo->estado = $row['estado'];
-        return $archivo; 
+        return $archivo;
       }
-      return null; 
+      return null;
     } catch (PDOException $e) {
       throw new Exception($e->getMessage());
     }
   }
 
-  
+
   function FnBuscarArchivos($conmy, $id) {
     try {
       $stmt = $conmy->prepare("SELECT id, refid, tabla, nombre, descripcion, tipo, estado, titulo FROM tblarchivos WHERE refid=:Id");
@@ -416,7 +294,7 @@
       throw new Exception($e->getMessage());
     }
   }
-  
+
   function FnRegistrarArchivo($conmy, $imagen) {
     try {
       $stmt = $conmy->prepare("INSERT INTO tblarchivos (refid, tabla, nombre, titulo, descripcion, tipo, actualizacion) VALUES (:RefId, :Tabla, :Nombre, :Titulo, :Descripcion, :Tipo, :Actualizacion);");
@@ -433,10 +311,39 @@
       return $stmt;
     } catch (PDOException $ex) {
       throw new Exception($ex->getMessage());
-    } 
+    }
   }
 
-  function FnModificarArchivoTituloDescripcion($conmy, $archivo) {
+  function FnModificarArchivoImagenTituloDescripcion($conmy, $archivo) {
+    try {
+      $query = "UPDATE tblarchivos SET descripcion = :Descripcion, titulo = :Titulo, actualizacion = :Actualizacion";
+      if (!empty($archivo->nombre)) {
+        $query.=", nombre = :Nombre";
+      }
+      $query.=" WHERE id = :Id";
+      $stmt = $conmy->prepare($query);
+      $params = array(
+        ':Descripcion' => $archivo->Descripcion,
+        ':Titulo' => $archivo->Titulo,
+        ':Actualizacion' => $archivo->Usuario,
+        ':Id' => $archivo->Id,
+      );
+      // AGREGAR NUEVO NOMBRE
+      if (!empty($archivo->nombre)) {
+        $params[':Nombre'] = $archivo->nombre;
+      }
+      // EJECUTAR CONSULTA
+      $result = $stmt->execute($params);
+      if ($stmt->rowCount() == 0) {
+        throw new Exception('Cambios no realizados.');
+      }
+      return $result;
+    } catch (PDOException $e) {
+      throw new Exception($e->getMessage());
+    }
+  }
+
+  function FnModificarArchivoAnexoTituloDescripcion($conmy, $archivo) {
     try {
       $query = "UPDATE tblarchivos SET descripcion = :Descripcion, titulo = :Titulo, actualizacion = :Actualizacion";
       if (!empty($archivo->nombre)) {

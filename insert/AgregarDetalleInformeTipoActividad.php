@@ -8,6 +8,10 @@
     if(empty($_SESSION['CliId']) && empty($_SESSION['UserName'])){throw new Exception("Usuario no tiene Autorización.");}
     if (empty($_POST['infid']) || empty($_POST['actividad'])) {throw new Exception("La información está incompleta.");}
 
+    if (strlen($_POST['actividad']) > 500) {
+      throw new Exception("El campo solo permite 500 caracteres.");
+    }
+
     $USUARIO = date('Ymd-His (').$_SESSION['UserName'].')';
     $actividad = new stdClass();
     $actividad->infid = $_POST['infid'];
@@ -20,7 +24,7 @@
     $actividad->usuario = $USUARIO;
 
     $conmy->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    if (FnRegistrarActividad($conmy, $actividad)) {
+    if (FnRegistrarDetalleInformeTipoActividad($conmy, $actividad)) {
       $data['msg'] = "Registro exitoso.";
       $data['res'] = true;
     } else {

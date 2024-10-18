@@ -28,22 +28,22 @@ const FnAgregarDetalleInformeTipoActividad = async () => {
     if (result.res) {
       setTimeout(() => { location.reload(); }, 1000);
         Swal.fire({
-          title: 'Éxito',
+          title: '¡Éxito!',
           text: result.msg,
           icon: 'success',
           timer: 2000
         });
     } else {
         Swal.fire({
-          title: 'Error',
+          title: 'Aviso',
           text: result.msg,
-          icon: 'error',
+          icon: 'info',
           timer: 2000
         });
     }
   } catch (error) {
       Swal.fire({
-        title: 'Error',
+        title: 'Aviso',
         text: `${error.message}`,
         icon: 'error',
         timer:2000
@@ -80,25 +80,25 @@ const FnAgregarDetalleInformeSubActividad = async () =>{
     if (result.res) {
       setTimeout(() => { location.reload(); }, 1000);
       Swal.fire({
-        title: 'Éxito',
+        title: '¡Éxito!',
         text: result.msg,
         icon: 'success',
-        confirmButtonText: 'OK'
+        timer: 2000
       });
     } else {
       Swal.fire({
-        title: 'Error',
+        title: 'Aviso',
         text: result.msg,
-        icon: 'error',
-        confirmButtonText: 'OK'
+        icon: 'info',
+        timer: 2000
       });
     }
   } catch (error) {
     Swal.fire({
-      title: 'Error',
-      text: `Se produjo un error inesperado: ${error.message}`,
+      title: 'Aviso',
+      text: error.message,
       icon: 'error',
-      confirmButtonText: 'OK'
+      timer: 2000
     });
   }
 };
@@ -118,7 +118,7 @@ const FnModalModificarDetalleInformeActividad = async (id) => {
     }
     const datos = await response.json();
     if (!datos.res) {
-        throw new Error(datos.msg);
+      throw new Error(datos.msg);
     }
     document.getElementById('txtActividadId').value = datos.data.id;
     document.getElementById('txtactividad3').value = datos.data.actividad;
@@ -127,11 +127,10 @@ const FnModalModificarDetalleInformeActividad = async (id) => {
     document.getElementById('txtObservacion3').value = datos.data.observaciones;
   } catch (error) {
     Swal.fire({
-        title: 'Error',
-        text: error.message,
-        icon: 'error',
-        confirmButtonText: 'OK',
-        timer:1000
+      title: 'Aviso',
+      text: error.message,
+      icon: 'error',
+      timer:2000
     });
   }
 };
@@ -159,9 +158,19 @@ const FnModificarDetalleInformeActividad = async () => {
     if (!datos.res) {throw new Error(datos.msg);}
     setTimeout(function() {location.reload();}, 500)
     setTimeout(function(){vgLoader.classList.add('loader-full-hidden');}, 500);
-    Swal.fire({title:'Éxito', text:datos.msg, icon:'success', confirmButtonText:'OK'});
+    Swal.fire({
+      title:'¡Éxito!', 
+      text:datos.msg, 
+      icon:'success', 
+      timer:2000
+    });
   } catch (error) {
-    Swal.fire({title: 'Error', text: error.message, icon: 'error', confirmButtonText: 'OK', timer:1000});
+    Swal.fire({
+      title: 'Aviso', 
+      text: error.message, 
+      icon: 'error', 
+      timer:1000
+    });
     setTimeout(function(){vgLoader.classList.add('loader-full-hidden');}, 500);
   }
 };
@@ -227,38 +236,38 @@ function isValidFileSize(file) {
 function displayImage(file) {
   const reader = new FileReader();
   reader.onload = function(event) {
-      const imageUrl = event.target.result;
-      const canvas = document.createElement('canvas');
-      canvas.style.border = '1px solid black';
+    const imageUrl = event.target.result;
+    const canvas = document.createElement('canvas');
+    canvas.style.border = '1px solid black';
 
-      $divImagen.appendChild(canvas);
-      const context = canvas.getContext('2d');
+    $divImagen.appendChild(canvas);
+    const context = canvas.getContext('2d');
 
-      const image = new Image();
-      image.onload = function() {
-          const [newWidth, newHeight] = calculateSize(image, MAX_WIDTH, MAX_HEIGHT);
-          canvas.width = newWidth;
-          canvas.height = newHeight;
-          canvas.id="canvas";
-          context.drawImage(image, 0, 0, newWidth, newHeight);
+    const image = new Image();
+    image.onload = function() {
+      const [newWidth, newHeight] = calculateSize(image, MAX_WIDTH, MAX_HEIGHT);
+      canvas.width = newWidth;
+      canvas.height = newHeight;
+      canvas.id="canvas";
+      context.drawImage(image, 0, 0, newWidth, newHeight);
 
-          // Agregar texto como marca de agua
-          context.strokeStyle = 'rgba(216, 216, 216, 0.7)';// color del texto (blanco con opacidad)
-          context.font = '15px Verdana'; // fuente y tamaño del texto
-          context.strokeText("GPEM SAC", 10, newHeight-10);// texto y posición
+      // Agregar texto como marca de agua
+      context.strokeStyle = 'rgba(216, 216, 216, 0.7)';// color del texto (blanco con opacidad)
+      context.font = '15px Verdana'; // fuente y tamaño del texto
+      context.strokeText("GPEM SAC", 10, newHeight-10);// texto y posición
 
-          canvas.toBlob(
-              (blob) => {
-                  // Handle the compressed image. es. upload or save in local state
-                  displayInfo('Original: ', file);
-                  displayInfo('Comprimido: ', blob);
-              },
-              MIME_TYPE,
-              QUALITY
-          );
+      canvas.toBlob(
+        (blob) => {
+          // Handle the compressed image. es. upload or save in local state
+          displayInfo('Original: ', file);
+          displayInfo('Comprimido: ', blob);
+        },
+        MIME_TYPE,
+        QUALITY
+      );
 
-      };
-      image.src = imageUrl;
+    };
+    image.src = imageUrl;
   };
   reader.readAsDataURL(file);
 }
@@ -281,22 +290,22 @@ function calculateSize(img, maxWidth, maxHeight) {
   let height = img.height;
   // calculate the width and height, constraining the proportions
   if (width > height) {
-      if (width > maxWidth) {
-          height = Math.round((height * maxWidth) / width);
-          width = maxWidth;
-      }
+    if (width > maxWidth) {
+      height = Math.round((height * maxWidth) / width);
+      width = maxWidth;
+    }
   } else {
-      if (height > maxHeight) {
-          width = Math.round((width * maxHeight) / height);
-          height = maxHeight;
-      }
+    if (height > maxHeight) {
+      width = Math.round((width * maxHeight) / height);
+      height = maxHeight;
+    }
   }
   return [width, height];
 }
 
 async function FnAgregarArchivo(){
-  vgLoader.classList.remove('loader-full-hidden');
   try {
+    vgLoader.classList.remove('loader-full-hidden');
     var archivo;
     if(document.getElementById('canvas')){
       archivo = document.querySelector("#canvas").toDataURL("image/jpeg");
@@ -318,11 +327,29 @@ async function FnAgregarArchivo(){
     });
     if(!response.ok){throw new Error(`${response.status} ${response.statusText}`);}
     const datos = await response.json();
-    if(!datos.res){throw new Error(datos.msg);}
-
-    setTimeout(function() {location.reload();}, 1000);
+    if(!datos.res){
+      throw new Error(datos.msg);
+    }
+    setTimeout(() => { 
+      vgLoader.classList.add('loader-full-hidden'); 
+    }, 500);
+    Swal.fire({ 
+      title: '¡Éxito!', 
+      text: datos.msg, 
+      icon: 'success', 
+      timer:2000 
+    });
+    setTimeout(() => { location.reload(); }, 1000);
   } catch (error) {
-      setTimeout(function() {vgLoader.classList.add('loader-full-hidden');}, 1000);
+    setTimeout(function() {
+      vgLoader.classList.add('loader-full-hidden');
+    }, 500);
+    Swal.fire({
+      title: 'Aviso',
+      text: error.message,
+      icon: 'error',
+      timer:2000
+    });
   }
 }
 
@@ -347,7 +374,7 @@ const FnModalModificarArchivoTituloDescripcion = async (id)=>{
     document.getElementById('divImagen2').innerHTML = datos.data.nombre;
   } catch (error) {
     Swal.fire({
-      title: 'Error',
+      title: 'Aviso',
       text: error.message,
       icon: 'error',
       timer:2000
@@ -369,7 +396,7 @@ const FnModificarArchivoTituloDescripcion = async () => {
     if (fileInput.files.length === 1) {
       formData.append('archivo', fileInput.files[0]); 
     }
-    const response = await fetch('/informes/update/ModificarArchivoTituloDescripcion.php', {
+    const response = await fetch('/informes/update/ModificarArchivoImagenTituloDescripcion.php', {
       method: 'POST',
       body: formData
     });
@@ -380,12 +407,28 @@ const FnModificarArchivoTituloDescripcion = async () => {
     if (!datos.res) {
       throw new Error(datos.msg);
     }
-    setTimeout(() => { vgLoader.classList.add('loader-full-hidden'); }, 500);
-    Swal.fire({ title: 'Éxito', text: datos.msg, icon: 'success', timer:2000 });
-    setTimeout(() => { location.reload(); }, 1000);
+    setTimeout(() => { 
+      vgLoader.classList.add('loader-full-hidden'); 
+    }, 500);
+    Swal.fire({ 
+      title: "¡Éxito!", 
+      text: datos.msg, 
+      icon: "success", 
+      timer:2000 
+    });
+    setTimeout(() => { 
+      location.reload(); 
+    }, 1000);
   } catch (error) {
-    Swal.fire({ title: 'Error', text: error.message, icon: 'error', timer: 2000 });
-    setTimeout(() => { vgLoader.classList.add('loader-full-hidden'); }, 500);
+    setTimeout(() => { 
+      vgLoader.classList.add('loader-full-hidden'); 
+    }, 500);
+    Swal.fire({ 
+      title: 'Aviso', 
+      text: error.message, 
+      icon: 'error', 
+      timer: 2000 
+    });
   }
 }
 
@@ -407,18 +450,17 @@ const FnEliminarArchivo = async (id) => {
       throw new Error(`Error: ${response.status} ${response.statusText}`);
     }
     const datos = await response.json();
-
     if (datos.res) {
-      setTimeout(function() {location.reload();}, 1000);
+      setTimeout(function() {location.reload();}, 500);
       Swal.fire({
-        title: "Éxito",
+        title: "¡Éxito!",
         text: datos.msg,
         icon: "success"
       });
     }
   } catch (error) {
     Swal.fire({
-      title: "Error",
+      title: "Aviso",
       text: error.message,
       icon: "error",
       timer:1000
@@ -445,22 +487,22 @@ const FnEliminarDetalleInformeActividad = async (id) => {
     const result = await response.json();
     if (result.res) {
       Swal.fire({
-        title: "Éxito",
+        title: "¡Éxito!",
         text: result.msg,
         icon: "success"
       });
-      setTimeout(function() {location.reload();}, 1000);
+      setTimeout(function() {location.reload();}, 500);
     } else {
       Swal.fire({
-        title: "Error",
+        title: "Aviso",
         text: result.msg,
-        icon: "error",
+        icon: "info",
         timer: 1000
       });
     }
   } catch (error) {
     Swal.fire({
-      title: "Error",
+      title: "Aviso",
       text: error.message,
       icon: "error",
       timer: 1000
@@ -488,8 +530,6 @@ mostrarTitulo('diagnostico');
 mostrarTitulo('trabajo');
 mostrarTitulo('observacion');
 
-
-
 function editarTitulo(id) {
   const titulo = document.getElementById(`titulo-${id}`).innerText;
   // Aquí podrías agregar lógica para guardar el nuevo título, por ejemplo, enviarlo a un servidor
@@ -505,14 +545,11 @@ function editarDescripcion(id) {
 function editarImagen(id) {
   const nuevaImagen = prompt("Introduce la URL de la nueva imagen:");
   if (nuevaImagen) {
-      document.getElementById(`imagen-${id}`).src = nuevaImagen;
-      // Aquí podrías agregar lógica para guardar la nueva imagen en el servidor
-      console.log("Nueva imagen:", nuevaImagen);
+    document.getElementById(`imagen-${id}`).src = nuevaImagen;
+    // Aquí podrías agregar lógica para guardar la nueva imagen en el servidor
+    console.log("Nueva imagen:", nuevaImagen);
   }
 }
-
-
-
 
 function FnResumenInforme(){
   id = document.getElementById('txtInformeId').value;

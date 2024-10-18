@@ -222,7 +222,7 @@ async function FnAgregarInforme() {
     }
     setTimeout(() => { vgLoader.classList.add('loader-full-hidden'); }, 300);
     await Swal.fire({
-      title: "Aviso",
+      title: "¡Éxito!",
       text: datos.msg,
       icon: "success",
       timer: 2000

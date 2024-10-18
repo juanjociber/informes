@@ -41,15 +41,14 @@
 			$html.='<div class="accordion-item" id="'.$nodo['id'].'">';
 			$html.='
 				<div class="accordion-header" id="accordion-header-'.$nodo['id'].'">
-          <div class="contenedor-actividades mb-2 cabecera-actividad--mod" style="margin:0 auto;">
-            <div class="grid-actividad d-flex align-items-center p-1 cabecera-actividad">
-              <span class="text-secondary" style="font-size:17px !important">'.$indiceActual. '</span><span>&nbsp;-</span>
-              <div class="accordion-button p-0" data-bs-toggle="collapse" style="cursor:pointer; background-color:white !important; border: unset; box-shadow: none; font-size:17px !important;" data-bs-target="#collapse-accordion-'.$nodo['id'].'" aria-expanded="true" aria-controls="collapse-accordion-'.$contador.'"><span>&nbsp;</span>'.$nodo['actividad'].'</div>
+          <div class="contenedor-actividades bg-light mb-2 cabecera-actividad--mod" style="margin:0 auto;">
+            <div class="d-flex p-1 cabecera-actividad bg-light">
+              <label class="text-secondary bg-light" style="font-size:17px !important">'.$indiceActual. '<span>&nbsp;-</span></label>
+              <p class="accordion-button p-0 bg-light" data-bs-toggle="collapse" style="cursor:pointer; border: unset; box-shadow: none; font-size:17px !important; text-align:justify;" data-bs-target="#collapse-accordion-'.$nodo['id'].'" aria-expanded="true" aria-controls="collapse-accordion-'.$contador.'"><span>&nbsp;</span>'.$nodo['actividad'].'</p>
             </div>
             <div class="grid-icono input-grop-icons d-flex p-0">
-            
               <!--AGREGAR ACTIVIDAD-->
-              <span class="input-group-text bg-white border border-0 text-muted" style="cursor:pointer;">            
+              <span class="input-group-text bg-light border border-0 text-muted" style="cursor:pointer;">            
                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" width="28px" height="33px" viewBox="0 0 554.625 554.625" style="enable-background:new 0 0 554.625 554.625;" xml:space="preserve" onclick="FnModalAgregarDetalleInformeSubActividad('.$nodo['id'].')">
                   <title>Actividad</title>
                   <g fill="#6B6C6E" stroke="#6B6C6E" stroke-width="8">
@@ -62,7 +61,7 @@
               </span>
               
               <!--EDITAR-->
-              <span class="input-group-text bg-white border border-0 text-secondary" style="cursor:pointer;">
+              <span class="input-group-text bg-light border border-0 text-secondary" style="cursor:pointer;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="23" height="28" viewBox="0 0 59 64" onclick="FnModalModificarDetalleInformeActividad('.$nodo['id'].')">
                   <title>Editar</title>
                   <g fill="none" stroke="#6B6C6E" stroke-width="3">
@@ -82,7 +81,7 @@
               </span>
               
               <!--AGREGAR ARCHIVO-->
-              <span class="input-group-text bg-white border border-0 text-secondary" style="cursor:pointer;">
+              <span class="input-group-text bg-light border border-0 text-secondary" style="cursor:pointer;">
                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" width="23px" height="28px" viewBox="0 0 59 63" version="1.1" onclick="FnModalAgregarArchivo('.$nodo['id'].')">
                   <title>Archivo</title>
                   <desc>Created with Sketch.</desc>
@@ -93,7 +92,7 @@
               </span>
 
               <!--ELIMINAR-->
-              <span class="input-group-text bg-white border border-0 text-secondary" style="cursor:pointer;">      
+              <span class="input-group-text bg-light border border-0 text-secondary" style="cursor:pointer;">      
                 <svg xmlns="http://www.w3.org/2000/svg" width="23" height="28" viewBox="0 0 300 343" onclick="FnEliminarDetalleInformeActividad('.$nodo['id'].')">
                   <title>Eliminar</title>
                   <g fill="none" stroke="#6B6C6E" stroke-width="7">
@@ -105,7 +104,7 @@
             </div>
           </div>
 				</div>
-				<div id="collapse-accordion-'.$nodo['id'].'" class="accordion-collapse collapse show" aria-labelledby="accordion-header-'.$nodo['id'].'">
+				<div id="collapse-accordion-'.$nodo['id'].'" class="accordion-collapse collapse show" aria-labelledby="accordion-header-'.$nodo['id'].'" style="border:0.5px solid #e3dede; margin-bottom:30px; margin-top:-7px;">
 					<div class="accordion-body" style="padding-left:10px !important; padding-right: 10px !important">
 						<div class="row mb-2">
 							<div class="col-12 mb-1">

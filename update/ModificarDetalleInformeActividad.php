@@ -7,6 +7,9 @@
   try {
     if(empty($_SESSION['CliId']) && empty($_SESSION['UserName'])){throw new Exception("Usuario no tiene Autorización.");}
     if (empty($_POST['id']) || empty($_POST['actividad'])) {throw new Exception("La información está incompleta.");}
+    if (strlen($_POST['actividad']) > 500) {
+      throw new Exception("El campo solo permite 500 caracteres.");
+    }
     
     $USUARIO = date('Ymd-His (').$_SESSION['UserName'].')';
     $actividad = new stdClass();
@@ -18,18 +21,18 @@
     $actividad->usuario = $USUARIO;
 
     $conmy->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    if (FnModificarActividad($conmy, $actividad)) {
-      $data['msg'] = "Modificación existosa.";
+    if (FnModificarDetalleInformeActividad($conmy, $actividad)) {
+      $data['msg'] = "Modificación realizada con éxito.";
       $data['res'] = true;
     } else {
-      $data['msg'] = "Error modificando la Actividad.";
+      $data['msg'] = "Error al procesar la solicitud.";
     }
   } catch (PDOException $ex) {
-      $data['msg'] = $ex->getMessage();
-      $conmy = null;
+    $data['msg'] = $ex->getMessage();
+    $conmy = null;
   } catch (Exception $ex) {
-      $data['msg'] = $ex->getMessage();
-      $conmy = null;
+    $data['msg'] = $ex->getMessage();
+    $conmy = null;
   } 
   echo json_encode($data);
 ?>

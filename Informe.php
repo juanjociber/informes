@@ -130,7 +130,7 @@
         $Nombre = $informe->Nombre;
         $Estado = $informe->Estado;
         $archivos = FnBuscarArchivos($conmy, $ID);
-        $datos = FnBuscarActividades($conmy, $ID);
+        $datos = FnBuscarDetalleInformeActividades($conmy, $ID);
         if (!empty($datos)) {        
           foreach ($datos as $dato) {
             if ($dato['tipo'] == 'act') {
@@ -219,6 +219,7 @@
     <style>
       .hijos p:first-child{ padding-top: 10px;}
       .imagen-ajustada { width: 100%; height: 200px; object-fit: contain;}
+      .imagen-ajustada2 { width: 100%; height: 800px; object-fit: contain;}
       .accordion .accordion-item { border: none; }
       .accordion .accordion-header { border: none; }
       .accordion .accordion-body { border: none; padding:0}
@@ -490,6 +491,7 @@
         </div>
         
         <?php $NUMERO+=1; ?>
+        <?php $CONTADORANEXO=0; ?>
         <!-- ANEXOS -->
         <div class="row p-1 mb-2 mt-2">
           <div class="col-12 mb-0 border-bottom bg-light">
@@ -500,11 +502,12 @@
               $html.='
               <div class="mt-2 mb-2 p-1 caja-anexos">';
                 foreach($imagenAnexos as $imagenAnexo){
+                  $CONTADORANEXO+=1;
                   $html.='
                   <div class="card text-center p-0 mb-4">
-                    <div class="card-header text-secondary" style="text-align:justify;padding-left:5px; line-height: 1.2">'.$imagenAnexo['titulo'].'</div>
+                    <div class="card-header text-secondary" style="text-align:justify;padding-left:5px; line-height: 1.2">ANEXO '.$CONTADORANEXO. ': ' .$imagenAnexo['titulo'].'</div>
                     <div class="card-body p-0">
-                      <img src="/mycloud/gesman/files/'.$imagenAnexo['nombre'].'" class="img-fluid" alt="">
+                      <img src="/mycloud/gesman/files/'.$imagenAnexo['nombre'].'" class="imagen-ajustada2" alt="">
                     </div>
                     <div class="card-footer text-secondary" style="text-align:justify;padding-left:5px;">'.$imagenAnexo['descripcion'].'</div>
                   </div>';

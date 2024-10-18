@@ -22,7 +22,7 @@ const FnModificarInformeActividad = async () => {
     const id = document.getElementById('txtIdInforme').value;
     const actividad = document.getElementById('modalActividadInput').value;
     if (isNaN(id)) {
-      setTimeout(() => { vgLoader.classList.add('loader-full-hidden'); }, 300);
+      setTimeout(() => { location.reload(); }, 500);
       return;
     }
     const formData = new FormData();
@@ -32,45 +32,33 @@ const FnModificarInformeActividad = async () => {
       method: 'POST',
       body: formData
     });
-
     if (!response.ok) {
-      const errorText = await response.text();
-      setTimeout(() => { vgLoader.classList.add('loader-full-hidden'); }, 300);
-      await Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: errorText,
-        timer: 2000
-      });
-      return;
+      throw new Error(`${response.status} ${response.statusText}`);
     }
     const datos = await response.json();
-    setTimeout(() => { vgLoader.classList.add('loader-full-hidden'); }, 300);
     if (!datos.res) {
-      await Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: datos.msg,
-        timer: 2000
-      });
-      return;
+      throw new Error(datos.msg);
     }
+    setTimeout(() => { 
+      vgLoader.classList.add('loader-full-hidden'); 
+    }, 500);
     await Swal.fire({
-      icon: 'success',
-      title: 'Éxito',
+      title: "¡Éxito!",
       text: datos.msg,
+      icon: "success",
       timer: 2000
     });
     document.querySelector('#actividadId').textContent = actividad;
-    setTimeout(() => { location.reload(); }, 100);
+    setTimeout(() => { location.reload(); }, 500);
   } catch (error) {
-    setTimeout(() => { vgLoader.classList.add('loader-full-hidden'); }, 300);
+    setTimeout(() => { 
+      vgLoader.classList.add('loader-full-hidden'); 
+    }, 500);
     await Swal.fire({
+      title: 'Aviso',
+      text: error.message,
       icon: 'error',
-      title: 'Error',
-      text: `${error.message}`,
-      timer: 1000,
-      showConfirmButton: false
+      timer: 2000
     });
   }
 };
@@ -82,8 +70,6 @@ let tipoSeleccionado = '';
 // FUNCIÓN AGREGAR
 const FnModalAgregarDetalleInforme = async (tipo) => {
   tipoSeleccionado = tipo;
-  const modal = new bootstrap.Modal(document.getElementById('agregarActividadModal'), { keyboard: false });
-  modal.show();
   // ACTUALIZAR EL TEXTO DEL H5 SEGÚN EL TIPO
   const modalTitle = document.getElementById('cabeceraRegistrarModal');
   switch(tipo) {
@@ -102,6 +88,8 @@ const FnModalAgregarDetalleInforme = async (tipo) => {
     default:
       modalTitle.textContent = 'Agregar';
   }
+  const agregarActividadModal = new bootstrap.Modal(document.getElementById('agregarActividadModal'), { keyboard: false }).show();
+  return false;
 }
 
 const FnAgregarDetalleInformeActividad = async () => {
@@ -111,7 +99,7 @@ const FnAgregarDetalleInformeActividad = async () => {
     formData.append('infid', document.getElementById('txtIdInforme').value);
     formData.append('actividad', document.getElementById('registroActividadInput').value.trim());
     formData.append('tipo', tipoSeleccionado);
-
+    
     const response = await fetch('/informes/insert/AgregarDetalleInformeActividad.php', {
       method: 'POST',
       body: formData
@@ -119,32 +107,28 @@ const FnAgregarDetalleInformeActividad = async () => {
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
-    const result = await response.json();
-    setTimeout(() => { vgLoader.classList.add('loader-full-hidden'); }, 300);
-    if (result.res) {
-      await Swal.fire({
-        title: 'Éxito',
-        text: result.msg,
-        icon: 'success',
-        timer: 2000
-      });
-      setTimeout(() => { location.reload(); }, 100);
-    } else {
-      await Swal.fire({
-        title: 'Error',
-        text: result.msg,
-        icon: 'error',
-        confirmButtonText: 'OK',
-        timer: 2000
-      });
+    const datos = await response.json();
+    if (!datos.res) {
+      throw new Error(datos.msg);
     }
-  } catch (error) {
-    setTimeout(() => { vgLoader.classList.add('loader-full-hidden'); }, 300);
+    setTimeout(() => { 
+      vgLoader.classList.add('loader-full-hidden'); 
+    }, 500);
     await Swal.fire({
-      title: 'Error',
-      text: `${error.message}`,
+      title: "¡Éxito!",
+      text: datos.msg,
+      icon: "success",
+      timer: 2000
+    });
+    setTimeout(() => { location.reload(); }, 500);
+  } catch (error) {
+    setTimeout(() => { 
+      vgLoader.classList.add('loader-full-hidden'); 
+    }, 500);
+    await Swal.fire({
+      title: 'Aviso',
+      text: error.message,
       icon: 'error',
-      confirmButtonText: 'OK',
       timer: 2000
     });
   }
@@ -198,10 +182,10 @@ const FnModalModificarDetalleInforme = async (id, cabecera) => {
   } 
   catch (error) {
     Swal.fire({
-      icon: 'error',
+      icon: 'Aviso',
       title: 'Error',
       text: error,
-      timer: 1000
+      timer: 2000
     });
   }
 }
@@ -213,51 +197,36 @@ const FnModificarDetalleInformeActividad = async () => {
     const formData = new FormData();
     formData.append('id', document.getElementById('txtIdtblDetalleInf').value);
     formData.append('actividad', document.getElementById('actividadModalInput').value.trim());
-
     const response = await fetch('/informes/update/ModificarDetalleInformeActividad.php', {
       method: 'POST',
       body: formData
     });
     if (!response.ok) {
-      const errorText = await response.text();
-      setTimeout(() => { vgLoader.classList.add('loader-full-hidden'); }, 300);
-      await Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: errorText,
-        timer: 2000
-      });
-      return;
+      throw new Error(response.status + ' ' + response.statusText); 
     }
     const datos = await response.json();
-    setTimeout(() => { vgLoader.classList.add('loader-full-hidden'); }, 300);
-    if (!datos.res) {
-      await Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: datos.msg,
-        timer: 2000
-      });
-      return;
-    }
+    setTimeout(() => { 
+      vgLoader.classList.add('loader-full-hidden'); 
+    }, 500);
     await Swal.fire({
-      icon: 'success',
-      title: 'Éxito',
+      title: "¡Éxito!",
       text: datos.msg,
+      icon: "success",
       timer: 2000
     });
-    setTimeout(() => { location.reload(); }, 100);
+    setTimeout(() => { location.reload(); }, 500);
   } catch (error) {
-    setTimeout(() => { vgLoader.classList.add('loader-full-hidden'); }, 300);
+    setTimeout(() => { 
+      vgLoader.classList.add('loader-full-hidden'); 
+    }, 500);
     await Swal.fire({
+      title: 'Aviso',
       icon: 'error',
-      title: 'Error',
-      text: `${error.message}`,
+      text: error.message,
       timer: 2000
     });
   }
 };
-
 
 // FUNCIÓN ELIMINAR
 const FnModalEliminarDetalleInformeActividad = async (id) => {
@@ -270,30 +239,30 @@ const FnModalEliminarDetalleInformeActividad = async (id) => {
       body: formData
     });
     if (!response.ok) {
-      throw new Error(`Error en la respuesta del servidor: ${response.statusText}`);
+      throw new Error(`${response.status} ${response.statusText}`);
     }
-    const result = await response.json();
-    setTimeout(() => { vgLoader.classList.add('loader-full-hidden'); }, 300);
-    if (result.res) {
-      await Swal.fire({
-        title: "Éxito",
-        text: result.msg,
-        icon: "success",
-        timer: 2000,
-      });
-    } else {
-      await Swal.fire({
-        title: "Error",
-        text: result.msg,
-        icon: "error",
-        timer: 2000,
-      });
+    const datos = await response.json();
+    if (!datos.res) {
+      throw new Error(datos.msg);
     }
-    setTimeout(() => { location.reload(); }, 100);
-  } catch (error) {
-    setTimeout(() => { vgLoader.classList.add('loader-full-hidden'); }, 300);
+    setTimeout(() => { 
+      vgLoader.classList.add('loader-full-hidden'); 
+    }, 500);
     await Swal.fire({
-      title: "Error",
+      title: "¡Éxito!",
+      text: datos.msg,
+      icon: "success",
+      timer: 2000,
+    });
+    setTimeout(() => { 
+      location.reload(); 
+    }, 500);
+  } catch (error) {
+    setTimeout(() => { 
+      vgLoader.classList.add('loader-full-hidden'); 
+    }, 500);
+    await Swal.fire({
+      title: "Aviso",
       text: error.message,
       icon: "error",
       timer: 1000
@@ -304,7 +273,7 @@ const FnModalEliminarDetalleInformeActividad = async (id) => {
 function FnResumenInforme(){
   id = document.getElementById('txtIdInforme').value;
   if(id > 0){
-      window.location.href='/informes/Informe.php?id='+id;
+    window.location.href='/informes/Informe.php?id='+id;
   }
   return false;
 }

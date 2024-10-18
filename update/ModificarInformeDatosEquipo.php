@@ -21,11 +21,11 @@
     $informe->actualizacion = $USUARIO;
 
     $conmy->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    if (FnModificarInformeEquipo($conmy, $informe)) {
-        $data['msg'] = "Se modificaron los datos del equipo.";
+    if (FnModificarInformeDatosEquipo($conmy, $informe)) {
+        $data['msg'] = "Modificación realizada con éxito.";
         $data['res'] = true;
     } else {
-        $data['msg'] = "Error modificando los datos del equipo.";
+        $data['msg'] = "Error al procesar la solicitud.";
     }
   } catch (PDOException $ex) {
     $data['msg'] = $ex->getMessage();

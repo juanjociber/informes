@@ -20,21 +20,20 @@
     $informe->actualizacion = $USUARIO;
 
     $conmy->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
     $result = FnModificarInformeDatosGenerales($conmy, $informe);
     if ($result) {
-      $data['msg'] = "Se modificó los datos generales.";
+      $data['msg'] = "Modificación realizada con éxito.";
       $data['res'] = true;
       $data['result'] = $result;
     } else {
-      $data['msg'] = "Error modificando datos generales.";
+      $data['msg'] = "Error al procesar la solicitud.";
     }
   } catch (PDOException $ex) {
-      $data['msg'] = $ex->getMessage();
-      $conmy = null;
+    $data['msg'] = $ex->getMessage();
+    $conmy = null;
   } catch (Exception $ex) {
-      $data['msg'] = $ex->getMessage();
-      $conmy = null;
+    $data['msg'] = $ex->getMessage();
+    $conmy = null;
   } 
   echo json_encode($data);
 ?>

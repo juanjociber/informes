@@ -7,7 +7,6 @@ window.onload = function() {
   document.getElementById('MenuInformes').classList.add('menu-activo','fw-bold');
   vgLoader.classList.add('loader-full-hidden');
 };
-
 // FUNCIÓN BUSCAR EQUIPO POR ID
 const FnModalInformeModificarEquipo = async (id)=>{
   modalEquipo.show();
@@ -44,7 +43,6 @@ const FnModificarInformeEquipo = async () => {
       throw new Error(`Error: ${response.status} ${response.statusText}`);
     }
     const datos = await response.json();
-    console.log(datos);
     setTimeout(() => { vgLoader.classList.add('loader-full-hidden'); }, 300);
     if (!datos.res) {
       throw new Error(datos.msg);
@@ -59,16 +57,20 @@ const FnModificarInformeEquipo = async () => {
     document.querySelector('#txtEquHm1').textContent = equhm;
     // Mostrar el SweetAlert
     await Swal.fire({
-      title: "Información de servidor",
+      title: "¡Éxito!",
       text: datos.msg,
       icon: "success",
       timer: 2000
     });
-    setTimeout(() => { location.reload(); }, 100);
+    setTimeout(() => { 
+      location.reload(); 
+    }, 1000);
   } catch (error) {
-    setTimeout(() => { vgLoader.classList.add('loader-full-hidden'); }, 300);
+    setTimeout(() => { 
+      vgLoader.classList.add('loader-full-hidden'); 
+    }, 300);
     await Swal.fire({
-      title: "Información de servidor",
+      title: "Aviso",
       text: error.message,
       icon: "error",
       timer: 2000
@@ -90,32 +92,38 @@ const FnEliminarInformeArchivo = async (id) => {
       }
     });
     const result = await response.json();
-    setTimeout(() => { vgLoader.classList.add('loader-full-hidden'); }, 300);
+    setTimeout(() => { 
+      vgLoader.classList.add('loader-full-hidden'); 
+    }, 500);
     if (result.res) {
       const elemento = document.getElementById(id);
       if (elemento) {
         elemento.remove();
       }
       await Swal.fire({
-        title: "Información de servidor",
+        title: "¡Éxito!",
         text: result.msg,
         icon: "success",
         timer: 2000
       });
-      setTimeout(() => { location.reload(); }, 100);
+      setTimeout(() => { 
+        location.reload(); 
+      }, 1000);
     } else {
       await Swal.fire({
-        title: "Información de servidor",
+        title: "Aviso",
         text: result.msg,
-        icon: "error",
+        icon: "info",
         timer: 2000
       });
     }
   } catch (error) {
-    setTimeout(() => { vgLoader.classList.add('loader-full-hidden'); }, 300);
+    setTimeout(() => { 
+      vgLoader.classList.add('loader-full-hidden'); 
+    }, 500);
     await Swal.fire({
-      title: "Información de servidor",
-      text: `Error: ${error.message}`,
+      title: "Aviso",
+      text: error.message,
       icon: "error",
       timer: 2000
     });
@@ -271,21 +279,25 @@ async function FnAgregarInformeArchivo() {
       throw new Error(`${response.status} ${response.statusText}`);
     }
     const datos = await response.json();
-    console.log(datos);
     if (!datos.res) {
       throw new Error(datos.msg);
     }
-    setTimeout(() => { vgLoader.classList.add('loader-full-hidden'); }, 300);
-    // Mostrar el SweetAlert
+    setTimeout(() => { 
+      vgLoader.classList.add('loader-full-hidden'); 
+    }, 500);
     await Swal.fire({
-      title: "Éxito",
+      title: "¡Éxito!",
       text: datos.msg,
       icon: "success",
       timer: 2000
     });
-    setTimeout(() => { location.reload(); }, 100);
+    setTimeout(() => { 
+      location.reload(); 
+    }, 1000);
   } catch (error) {
-    setTimeout(() => { vgLoader.classList.add('loader-full-hidden'); }, 300);
+    setTimeout(() => { 
+      vgLoader.classList.add('loader-full-hidden'); 
+    }, 500);
     document.getElementById('msjAgregarImagen').innerHTML = `<div class="alert alert-danger m-0 p-1 text-center" role="alert">${error.message}</div>`;
   }
 }
@@ -293,7 +305,7 @@ async function FnAgregarInformeArchivo() {
 function FnResumenInforme(){
   id = document.getElementById('txtInformeId').value;
   if(id > 0){
-      window.location.href='/informes/Informe.php?id='+id;
+    window.location.href='/informes/Informe.php?id='+id;
   }
   return false;
 }

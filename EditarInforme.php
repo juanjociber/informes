@@ -3,7 +3,8 @@
   if(!isset($_SESSION['UserName']) || !isset($_SESSION['CliId'])){ header("location:/gesman"); exit(); }
   require_once $_SERVER['DOCUMENT_ROOT']."/gesman/connection/ConnGesmanDb.php";
   require_once $_SERVER['DOCUMENT_ROOT']."/informes/datos/InformesData.php";
-
+  require_once $_SERVER['DOCUMENT_ROOT']."/informes/datos/SupervisoresData.php";
+ 
   $ID = empty($_GET['id'])?0:$_GET['id'];
   $isAuthorized = false;
   $errorMessage = '';

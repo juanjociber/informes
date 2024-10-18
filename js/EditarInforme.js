@@ -45,7 +45,6 @@ const cargaSelect = () => {
         }
       });
       selectList.style.display = 'block';
-
       // LIMPIAR EL INPUT SI NO HAY CONCIDENCIAS
       if (!textoEncontrado) {
         selectInput.value = '';
@@ -87,18 +86,20 @@ const FnAgregarInformeDatosGenerales = async () => {
     }    
     setTimeout(() => { vgLoader.classList.add('loader-full-hidden'); }, 300);
     await Swal.fire({
-      title: "Aviso",
+      title: "¡Éxito!",
       text: datos.msg,
       icon: "success",
       timer: 2000
     });
-    setTimeout(() => { location.reload(); }, 100);
+    setTimeout(() => { location.reload(); }, 1000);
    } catch (error) {
-    setTimeout(() => { vgLoader.classList.add('loader-full-hidden'); }, 300);
+    setTimeout(() => { 
+      vgLoader.classList.add('loader-full-hidden'); 
+    }, 500);
     await Swal.fire({
       title: "Aviso",
       text: error.message,
-      icon: "info",
+      icon: "error",
       timer: 2000
     });
   }
@@ -107,7 +108,7 @@ const FnAgregarInformeDatosGenerales = async () => {
 function FnResumenInforme(){
   id = document.getElementById('txtInformeId').value;
   if(id > 0){
-      window.location.href='/informes/Informe.php?id='+id;
+    window.location.href='/informes/Informe.php?id='+id;
   }
   return false;
 }

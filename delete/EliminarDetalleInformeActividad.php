@@ -10,7 +10,7 @@
     $id = $_POST['id']; 
 
     $conmy->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    if (FnEliminarActividad($conmy, $id)) {
+    if (FnEliminarDetalleInformeActividad($conmy, $id)) {
       $data['msg'] = "Eliminación existosa.";
       $data['res'] = true;
     } else {
