@@ -291,7 +291,7 @@
       $archivos = $stmt ->fetchAll(PDO::FETCH_ASSOC);
       return $archivos;
     } catch (PDOException $ex) {
-      throw new Exception($e->getMessage());
+      throw new Exception($ex->getMessage());
     }
   }
 

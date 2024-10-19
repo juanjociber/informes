@@ -76,13 +76,13 @@
     <?php require_once $_SERVER['DOCUMENT_ROOT'].'/gesman/menu/sidebar.php';?>
     <div class="container section-top mb-4">
       <div class="row mb-3">
-        <div class="col-12 btn-group p-0" role="group" aria-label="Basic example">
+        <div class="col-12 btn-group" role="group" aria-label="Basic example">
           <button type="button" class="btn btn-outline-primary fw-bold" onclick="FnListarInformes(); return false;"><i class="fas fa-list"></i><span class="d-none d-sm-block"> Informes</span></button>
           <button type="button" class="btn btn-outline-primary fw-bold <?php echo $claseHabilitado;?> <?php echo $atributoHabilitado;?>" onclick="FnResumenInforme(); return false;"><i class="fas fa-desktop"></i><span class="d-none d-sm-block"> Resúmen</span></button>
         </div>
       </div>
       <div class="row border-bottom mb-3 fs-5">
-        <div class="col-12 fw-bold d-flex justify-content-between p-0">
+        <div class="col-12 fw-bold d-flex justify-content-between">
           <p class="m-0 p-0 text-secondary"><?php echo $isAuthorized ? $_SESSION['CliNombre'] : 'UNKNOWN'; ?></p>
           <input type="text" class="d-none" id="txtIdInforme" value="<?php echo $ID; ?>" readonly/>
           <input type="text" class="d-none" id="txtIdtblDetalleInf">
@@ -91,7 +91,7 @@
       </div>
       <?php if ($isAuthorized): ?>
         <div class="row">
-        <div class="col-12 p-0">
+        <div class="col-12">
           <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
             <ol class="breadcrumb">
               <li class="breadcrumb-item fw-bold"><a href="/informes/EditarInforme.php?id=<?php echo $ID ?>" class="text-decoration-none">INFORME</a></li>

@@ -69,7 +69,7 @@
   </style>
   <body>
     <?php require_once $_SERVER['DOCUMENT_ROOT'].'/gesman/menu/sidebar.php';?>
-    <div class="container section-top p-0">
+    <div class="container section-top">
       <div class="row mb-3">
           <div class="col-12 btn-group" role="group" aria-label="Basic example">
             <button type="button" class="btn btn-outline-primary fw-bold" onclick="FnListarInformes(); return false;"><i class="fas fa-list"></i><span class="d-none d-sm-block"> Informes</span></button>
