@@ -2,37 +2,35 @@
   /**
    * TABLA : tblinformes
    */
-  function FnRegistrarInforme($conmy, $orden, $cliente, $equipo, $fecha, $actividad, $usuario) {
+  function FnAgregarInforme($conmy, $informe) {
     try {
-      $stmt = $conmy->prepare("CALL spman_agregarinforme(:_ordid, :_equid, :_cliid, :_fecha, :_ordnombre, :_clinombre, :_clicontacto, :_clidireccion, :_supervisor, :_equcodigo, :_equnombre, :_equmarca, :_equmodelo, :_equserie, :_equdatos, :_equkm, :_equhm, :_actividad, :_usuario, @_id)");
-      $stmt->bindParam(':_ordid', $orden->id, PDO::PARAM_INT);
-      $stmt->bindParam(':_equid', $equipo->id, PDO::PARAM_INT);
-      $stmt->bindParam(':_cliid', $cliente->id, PDO::PARAM_INT);
-      $stmt->bindParam(':_fecha', $fecha, PDO::PARAM_STR);
-      $stmt->bindParam(':_ordnombre', $orden->nombre, PDO::PARAM_STR);
-      $stmt->bindParam(':_clinombre', $cliente->nombre, PDO::PARAM_STR);
-      $stmt->bindParam(':_clicontacto', $orden->contacto, PDO::PARAM_STR);
-      $stmt->bindParam(':_clidireccion', $equipo->cli_direccion, PDO::PARAM_STR);
-      $stmt->bindParam(':_supervisor', $orden->supervisor, PDO::PARAM_STR);
-      $stmt->bindParam(':_equcodigo', $equipo->codigo, PDO::PARAM_STR);
-      $stmt->bindParam(':_equnombre', $equipo->nombre, PDO::PARAM_STR);
-      $stmt->bindParam(':_equmarca', $equipo->marca, PDO::PARAM_STR);
-      $stmt->bindParam(':_equmodelo', $equipo->modelo, PDO::PARAM_STR);
-      $stmt->bindParam(':_equserie', $equipo->serie, PDO::PARAM_STR);
-      $stmt->bindParam(':_equdatos', $equipo->caracteristicas, PDO::PARAM_STR);
-      $stmt->bindParam(':_equkm', $orden->km, PDO::PARAM_INT);
-      $stmt->bindParam(':_equhm', $orden->hm, PDO::PARAM_INT);
-      $stmt->bindParam(':_actividad', $actividad, PDO::PARAM_STR);
-      $stmt->bindParam(':_usuario', $usuario, PDO::PARAM_STR);
-      $stmt->execute();
-
-      $stmt = $conmy->query("SELECT @_id as id");
-      $row = $stmt->fetch(PDO::FETCH_ASSOC);
-      $id = $row['id'];
-
-      return $id;
-    } catch (PDOException $e) {
-      throw new Exception($e->getMessage());
+        $stmt = $conmy->prepare("CALL spman_agregarinforme(:_ordid, :_equid, :_cliid, :_fecha, :_ordnombre, :_clinombre, :_clicontacto, :_clidireccion, :_supervisor, :_equcodigo, :_equnombre, :_equmarca, :_equmodelo, :_equserie, :_equdatos, :_equkm, :_equhm, :_actividad, :_usuario, @_id)");
+        $stmt->bindParam(':_ordid', $informe['ordid'], PDO::PARAM_INT);
+        $stmt->bindParam(':_equid', $informe['equid'], PDO::PARAM_INT);
+        $stmt->bindParam(':_cliid', $informe['cliid'], PDO::PARAM_INT);
+        $stmt->bindParam(':_fecha', $informe['fecha'], PDO::PARAM_STR);
+        $stmt->bindParam(':_ordnombre', $informe['ordnombre'], PDO::PARAM_STR);
+        $stmt->bindParam(':_clinombre', $informe['clinombre'], PDO::PARAM_STR);
+        $stmt->bindParam(':_clicontacto', $informe['clicontacto'], PDO::PARAM_STR);
+        $stmt->bindParam(':_clidireccion', $informe['clidireccion'], PDO::PARAM_STR);
+        $stmt->bindParam(':_supervisor', $informe['supervisor'], PDO::PARAM_STR);
+        $stmt->bindParam(':_equcodigo', $informe['equcodigo'], PDO::PARAM_STR);
+        $stmt->bindParam(':_equnombre', $informe['equnombre'], PDO::PARAM_STR);
+        $stmt->bindParam(':_equmarca', $informe['equmarca'], PDO::PARAM_STR);
+        $stmt->bindParam(':_equmodelo', $informe['equmodelo'], PDO::PARAM_STR);
+        $stmt->bindParam(':_equserie', $informe['equserie'], PDO::PARAM_STR);
+        $stmt->bindParam(':_equdatos', $informe['equdatos'], PDO::PARAM_STR);
+        $stmt->bindParam(':_equkm', $informe['equkm'], PDO::PARAM_INT);
+        $stmt->bindParam(':_equhm', $informe['equhm'], PDO::PARAM_INT);
+        $stmt->bindParam(':_actividad', $informe['actividad'], PDO::PARAM_STR);
+        $stmt->bindParam(':_usuario', $informe['usuario'], PDO::PARAM_STR);
+        $stmt->execute();
+        $stmt = $conmy->query("SELECT @_id as id");
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $id = $row['id'];
+        return $id;            
+    } catch (PDOException $ex) {
+        throw new Exception($ex->getMessage());
     }
   }
 
@@ -260,20 +258,22 @@
     }
   }
 
-  /**
-   * TABLA : tblarchivos
-   */
+
+
+
+
   function FnBuscarArchivoTituloDescripcion($conmy, $id) {
     try {
-      $stmt = $conmy->prepare("SELECT id, titulo, descripcion, nombre FROM tblarchivos WHERE id = :Id");
+      $stmt = $conmy->prepare("SELECT id, refid, nombre, titulo, descripcion FROM tblarchivos WHERE id = :Id");
       $stmt->execute(array(':Id' => $id));
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
       if ($row) {
         $archivo = new stdClass();
         $archivo->id = $row['id'];
+        $archivo->refid = $row['refid'];
+        $archivo->nombre = $row['nombre'];
         $archivo->titulo = $row['titulo'];
         $archivo->descripcion = $row['descripcion'];
-        $archivo->nombre = $row['nombre'];
         return $archivo;
       }
       return null;
@@ -282,103 +282,4 @@
     }
   }
 
-
-  function FnBuscarArchivos($conmy, $id) {
-    try {
-      $stmt = $conmy->prepare("SELECT id, refid, tabla, nombre, descripcion, tipo, titulo FROM tblarchivos WHERE refid=:Id");
-      $stmt->execute(array(':Id' => $id));
-      $archivos = $stmt ->fetchAll(PDO::FETCH_ASSOC);
-      return $archivos;
-    } catch (PDOException $ex) {
-      throw new Exception($ex->getMessage());
-    }
-  }
-
-  function FnRegistrarArchivo($conmy, $imagen) {
-    try {
-      $stmt = $conmy->prepare("INSERT INTO tblarchivos (refid, tabla, nombre, titulo, descripcion, tipo) VALUES (:RefId, :Tabla, :Nombre, :Titulo, :Descripcion, :Tipo)");
-      $params = array(
-        ':RefId' => $imagen->refid,
-        ':Tabla' => $imagen->tabla,
-        ':Nombre' => $imagen->nombre,
-        ':Titulo' => $imagen->titulo,
-        ':Descripcion' => $imagen->descripcion,
-        ':Tipo' => $imagen->tipo
-      );
-      $stmt->execute($params);
-      return $stmt;
-    } catch (PDOException $ex) {
-      throw new Exception($ex->getMessage());
-    }
-  }
-
-  function FnModificarArchivoImagenTituloDescripcion($conmy, $archivo) {
-    try {
-      $query = "UPDATE tblarchivos SET descripcion = :Descripcion, titulo = :Titulo";
-      if (!empty($archivo->nombre)) {
-        $query.=", nombre = :Nombre";
-      }
-      $query.=" WHERE id = :Id";
-      $stmt = $conmy->prepare($query);
-      $params = array(
-        ':Descripcion' => $archivo->Descripcion,
-        ':Titulo' => $archivo->Titulo,
-        ':Id' => $archivo->Id,
-      );
-      // AGREGAR NUEVO NOMBRE
-      if (!empty($archivo->nombre)) {
-        $params[':Nombre'] = $archivo->nombre;
-      }
-      // EJECUTAR CONSULTA
-      $result = $stmt->execute($params);
-      if ($stmt->rowCount() == 0) {
-        throw new Exception('Cambios no realizados.');
-      }
-      return $result;
-    } catch (PDOException $e) {
-      throw new Exception($e->getMessage());
-    }
-  }
-
-  function FnModificarArchivoAnexoTituloDescripcion($conmy, $archivo) {
-    try {
-      $query = "UPDATE tblarchivos SET descripcion = :Descripcion, titulo = :Titulo";
-      if (!empty($archivo->nombre)) {
-        $query.=", nombre = :Nombre";
-      }
-      $query.=" WHERE id = :Id";
-      $stmt = $conmy->prepare($query);
-      $params = array(
-        ':Descripcion' => $archivo->Descripcion,
-        ':Titulo' => $archivo->Titulo,
-        ':Id' => $archivo->Id,
-      );
-      // AGREGAR NUEVO NOMBRE
-      if (!empty($archivo->nombre)) {
-        $params[':Nombre'] = $archivo->nombre;
-      }
-      // EJECUTAR CONSULTA
-      $result = $stmt->execute($params);
-      if ($stmt->rowCount() == 0) {
-        throw new Exception('Cambios no realizados.');
-      }
-      return $result;
-    } catch (PDOException $e) {
-      throw new Exception($e->getMessage());
-    }
-  }
-
-  function FnEliminarArchivo($conmy, $id) {
-    try {
-      $res = false;
-      $stmt = $conmy->prepare("DELETE FROM tblarchivos WHERE id =:Id");
-      $params = array(':Id' => $id);
-      if ($stmt->execute($params)) {
-          $res = true;
-      }
-      return $res;
-    } catch (PDOException $e) {
-      throw new Exception($e->getMessage());
-    }
-  }
 ?>

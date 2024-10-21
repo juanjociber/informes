@@ -356,6 +356,7 @@ async function FnAgregarArchivo(){
 
 const FnModalModificarArchivoTituloDescripcion = async (id)=>{
   document.getElementById('txtArchivoId').value = id;
+  
   const formData = new FormData();
   formData.append('id', id);
   try {
@@ -367,6 +368,7 @@ const FnModalModificarArchivoTituloDescripcion = async (id)=>{
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
     const datos = await response.json();
+    console.log(datos);
     if (!datos.res) {
       throw new Error(datos.msg);
     }
@@ -435,11 +437,17 @@ const FnModificarArchivoTituloDescripcion = async () => {
 
 //ELIMINAR ARCHIVO
 const FnEliminarArchivo = async (id) => {
-  vgLoader.classList.remove('loader-full-hidden');
-  const formData = new FormData();
-  formData.append('id', id);
   try {
-    const response = await fetch('/informes/delete/EliminarArchivo.php', {
+    vgLoader.classList.remove('loader-full-hidden');
+    const formData = new FormData();
+    formData.append('id', id);
+    formData.append('refid',document.querySelector('#txtInformeId').value);
+
+    formData.forEach((value, key) => {
+      console.log(`${key}: ${value}`);
+    });
+    // const response = await fetch('/informes/delete/EliminarArchivo.php', {
+    const response = await fetch('/gesman/delete/EliminarArchivo.php', {
       method: 'POST',
       body: formData,
       headers: {
@@ -451,6 +459,7 @@ const FnEliminarArchivo = async (id) => {
       throw new Error(`Error: ${response.status} ${response.statusText}`);
     }
     const datos = await response.json();
+    console.log(datos);
     if (datos.res) {
       setTimeout(function() {location.reload();}, 500);
       Swal.fire({

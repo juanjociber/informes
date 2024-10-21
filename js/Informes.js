@@ -70,8 +70,8 @@ function FnModalAgregarInforme(){
 }
 
 async function FnBuscarInformes(){
-    vgLoader.classList.remove('loader-full-hidden');
     try {
+      vgLoader.classList.remove('loader-full-hidden');
       Nombre = document.getElementById('txtNombre').value;
       EquId = document.getElementById('cbEquipo').value;
       FechaInicial = document.getElementById('dtpFechaInicial').value;

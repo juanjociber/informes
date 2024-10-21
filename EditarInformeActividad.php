@@ -36,7 +36,6 @@
 		$contador=1;		
 
 		foreach ($arbol as $key=>$nodo) {
- 
 			$indiceActual = $nivel==0?$contador++:$indice.'.'.($key+1);
 			$html.='<div class="accordion-item" id="'.$nodo['id'].'">';
 			$html.='
@@ -179,6 +178,8 @@
 			$html.='</div>';
 		}
 		return $html;
+
+
 	}
   try{
     $Id2 = 0;
