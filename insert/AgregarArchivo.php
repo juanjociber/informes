@@ -9,7 +9,7 @@
     $tabla = $_POST['tabla'];
     if (!in_array($tabla, array('INFE', 'INFA', 'INFD'))) {throw new Exception('Tabla no válida.');}
 
-    $USUARIO = date('Ymd-His (').$_SESSION['UserName'].')';
+    // $USUARIO = date('Ymd-His (').$_SESSION['UserName'].')';
     $FileName = $tabla.'_'.$_POST['refid'].'_'.uniqid().'.jpeg';
     $FileEncoded = str_replace("data:image/jpeg;base64,", "", $_POST['archivo']);
     $FileDecoded = base64_decode($FileEncoded);
@@ -21,7 +21,6 @@
     $imagen->nombre = $FileName;
     $imagen->titulo = $_POST['titulo'];
     $imagen->descripcion = $_POST['descripcion'];
-    $imagen->usuario = $USUARIO;
     $imagen->tipo = 'IMG';
 
     $conmy->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

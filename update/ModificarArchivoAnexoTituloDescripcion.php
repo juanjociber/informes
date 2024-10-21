@@ -8,7 +8,7 @@
     if (empty($_SESSION['CliId']) && empty($_SESSION['UserName'])) { throw new Exception("Usuario no tiene Autorización."); }
     if (empty($_POST['id'])) { throw new Exception("La información está incompleta."); }
 
-    $USUARIO = date('Ymd-His ('.$_SESSION['UserName'].')');
+    // $USUARIO = date('Ymd-His ('.$_SESSION['UserName'].')');
     // OBTENER ARCHIVO EXISTENTE
     $archivoExistente = FnBuscarArchivoTituloDescripcion($conmy, $_POST['id']);
     if (!$archivoExistente) {
@@ -28,7 +28,6 @@
     $archivo->Titulo = $_POST['titulo'];
     $archivo->Descripcion = empty($_POST['descripcion']) ? null : $_POST['descripcion'];
     $archivo->nombre = $FileName; 
-    $archivo->Usuario = $USUARIO; 
 
     if (FnModificarArchivoAnexoTituloDescripcion($conmy, $archivo)) {
       $data['msg'] = "Modificación realizada con éxito.";

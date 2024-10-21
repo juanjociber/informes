@@ -327,6 +327,7 @@ async function FnAgregarArchivo(){
     });
     if(!response.ok){throw new Error(`${response.status} ${response.statusText}`);}
     const datos = await response.json();
+    console.log(datos);
     if(!datos.res){
       throw new Error(datos.msg);
     }

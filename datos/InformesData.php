@@ -265,7 +265,7 @@
    */
   function FnBuscarArchivoTituloDescripcion($conmy, $id) {
     try {
-      $stmt = $conmy->prepare("SELECT id, titulo, descripcion, nombre, estado FROM tblarchivos WHERE id = :Id");
+      $stmt = $conmy->prepare("SELECT id, titulo, descripcion, nombre FROM tblarchivos WHERE id = :Id");
       $stmt->execute(array(':Id' => $id));
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
       if ($row) {
@@ -274,7 +274,6 @@
         $archivo->titulo = $row['titulo'];
         $archivo->descripcion = $row['descripcion'];
         $archivo->nombre = $row['nombre'];
-        $archivo->estado = $row['estado'];
         return $archivo;
       }
       return null;
@@ -286,7 +285,7 @@
 
   function FnBuscarArchivos($conmy, $id) {
     try {
-      $stmt = $conmy->prepare("SELECT id, refid, tabla, nombre, descripcion, tipo, estado, titulo FROM tblarchivos WHERE refid=:Id");
+      $stmt = $conmy->prepare("SELECT id, refid, tabla, nombre, descripcion, tipo, titulo FROM tblarchivos WHERE refid=:Id");
       $stmt->execute(array(':Id' => $id));
       $archivos = $stmt ->fetchAll(PDO::FETCH_ASSOC);
       return $archivos;
@@ -297,15 +296,14 @@
 
   function FnRegistrarArchivo($conmy, $imagen) {
     try {
-      $stmt = $conmy->prepare("INSERT INTO tblarchivos (refid, tabla, nombre, titulo, descripcion, tipo, actualizacion) VALUES (:RefId, :Tabla, :Nombre, :Titulo, :Descripcion, :Tipo, :Actualizacion);");
+      $stmt = $conmy->prepare("INSERT INTO tblarchivos (refid, tabla, nombre, titulo, descripcion, tipo) VALUES (:RefId, :Tabla, :Nombre, :Titulo, :Descripcion, :Tipo)");
       $params = array(
         ':RefId' => $imagen->refid,
         ':Tabla' => $imagen->tabla,
         ':Nombre' => $imagen->nombre,
         ':Titulo' => $imagen->titulo,
         ':Descripcion' => $imagen->descripcion,
-        ':Tipo' => $imagen->tipo,
-        ':Actualizacion' => $imagen->usuario
+        ':Tipo' => $imagen->tipo
       );
       $stmt->execute($params);
       return $stmt;
@@ -316,7 +314,7 @@
 
   function FnModificarArchivoImagenTituloDescripcion($conmy, $archivo) {
     try {
-      $query = "UPDATE tblarchivos SET descripcion = :Descripcion, titulo = :Titulo, actualizacion = :Actualizacion";
+      $query = "UPDATE tblarchivos SET descripcion = :Descripcion, titulo = :Titulo";
       if (!empty($archivo->nombre)) {
         $query.=", nombre = :Nombre";
       }
@@ -325,7 +323,6 @@
       $params = array(
         ':Descripcion' => $archivo->Descripcion,
         ':Titulo' => $archivo->Titulo,
-        ':Actualizacion' => $archivo->Usuario,
         ':Id' => $archivo->Id,
       );
       // AGREGAR NUEVO NOMBRE
@@ -345,7 +342,7 @@
 
   function FnModificarArchivoAnexoTituloDescripcion($conmy, $archivo) {
     try {
-      $query = "UPDATE tblarchivos SET descripcion = :Descripcion, titulo = :Titulo, actualizacion = :Actualizacion";
+      $query = "UPDATE tblarchivos SET descripcion = :Descripcion, titulo = :Titulo";
       if (!empty($archivo->nombre)) {
         $query.=", nombre = :Nombre";
       }
@@ -354,7 +351,6 @@
       $params = array(
         ':Descripcion' => $archivo->Descripcion,
         ':Titulo' => $archivo->Titulo,
-        ':Actualizacion' => $archivo->Usuario,
         ':Id' => $archivo->Id,
       );
       // AGREGAR NUEVO NOMBRE
