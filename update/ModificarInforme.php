@@ -20,7 +20,7 @@
     $informe->actualizacion = $USUARIO;
 
     $conmy->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $result = FnModificarInformeDatosGenerales($conmy, $informe);
+    $result = FnModificarInforme($conmy, $informe);
     if ($result) {
       $data['msg'] = "Modificación realizada con éxito.";
       $data['res'] = true;

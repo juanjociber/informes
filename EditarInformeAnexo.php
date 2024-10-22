@@ -8,6 +8,7 @@
   $CLI_ID = $_SESSION['CliId'];
   require_once $_SERVER['DOCUMENT_ROOT']."/gesman/connection/ConnGesmanDb.php";
   require_once $_SERVER['DOCUMENT_ROOT']."/informes/datos/InformesData.php";
+  require_once $_SERVER['DOCUMENT_ROOT']."/gesman/data/ArchivosData.php";
 
   $isAuthorized = false;
   $errorMessage = '';
@@ -25,7 +26,7 @@
         $Nombre = $informe->Nombre;
         $claseHabilitado = "btn-outline-primary";
         $atributoHabilitado = ""; 
-        $archivos = FnBuscarArchivos($conmy, $ID);
+        $archivos = FnBuscarArchivos2($conmy, $ID);
       } 
     } else {
       throw new Exception('El ID es inválido.');
@@ -36,7 +37,8 @@
   } catch (Exception $ex) {
       $errorMessage = $ex->getMessage();
       $conmy = null;
-  } 
+  }
+   
 ?>
 
 <!doctype html>
@@ -121,7 +123,7 @@
                     <div class="text-secondary">ANEXO</div></span><span>&nbsp;- </span><span class="text-secondary" style="font-size:17px !important"><?php echo $contador ?></div>
                     <div class="grid-icono input-grop-icons d-flex p-0">
                       <!--EDITAR-->
-                      <span class="bg-light input-group-text border border-0 text-secondary" style="cursor:pointer;" onclick="FnModalModificarArchivoAnexo(<?php echo ($archivo['id']); ?>)">
+                      <span class="bg-light input-group-text border border-0 text-secondary" style="cursor:pointer;" onclick="FnModalModificarArchivo(<?php echo ($archivo['id']); ?>)">
                         <svg xmlns="http://www.w3.org/2000/svg" width="23" height="28" viewBox="0 0 59 64">
                           <title>Editar</title>
                           <g fill="none" stroke="#6B6C6E" stroke-width="3">
@@ -140,7 +142,7 @@
                         </svg>
                       </span>
                       <!--ELIMINAR-->
-                      <span class="input-group-text bg-light border border-0 text-secondary" style="cursor:pointer;" onclick="FnEliminarArchivo(<?php echo ($archivo['id']); ?>)">      
+                      <span class="input-group-text bg-light border border-0 text-secondary" style="cursor:pointer;" onclick="FnEliminarArchivo(<?php echo ($archivo['id'])?>, <?php echo ($archivo['refid']) ?>)">      
                         <svg xmlns="http://www.w3.org/2000/svg" width="23" height="28" viewBox="0 0 300 343">
                           <title>Eliminar</title>
                           <g fill="none" stroke="#6B6C6E" stroke-width="7">
@@ -229,7 +231,7 @@
           </div>
           <div id="msjAgregarImagen" class="modal-body pt-1"></div>
           <div class="col-12 modal-footer">
-            <button type="button" class="btn btn-primary fw-bold pt-2 pb-2 col-12 w-100" onclick="FnModificarArchivoAnexo();" <?php echo !$isAuthorized ? 'disabled' : ''; ?>><i class="fas fa-save"></i>  GUADAR</button>
+            <button type="button" class="btn btn-primary fw-bold pt-2 pb-2 col-12 w-100" onclick="FnModificarArchivo();" <?php echo !$isAuthorized ? 'disabled' : ''; ?>><i class="fas fa-save"></i>  GUADAR</button>
           </div>
         </div>
       </div>

@@ -21,7 +21,7 @@
     $actividad->usuario = $USUARIO;
 
     $conmy->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    if (FnModificarDetalleInformeActividad($conmy, $actividad)) {
+    if (FnModificarInformeActividades($conmy, $actividad)) {
       $data['msg'] = "Modificación realizada con éxito.";
       $data['res'] = true;
     } else {

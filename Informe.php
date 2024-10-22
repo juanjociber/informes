@@ -11,6 +11,7 @@
 ?>
 <?php
   require_once $_SERVER['DOCUMENT_ROOT']."/gesman/connection/ConnGesmanDb.php";
+  require_once $_SERVER['DOCUMENT_ROOT']."/gesman/data/ArchivosData.php";
   require_once $_SERVER['DOCUMENT_ROOT']."/informes/datos/InformesData.php";
   $isAuthorized = false;
   $errorMessage = ''; 
@@ -129,8 +130,8 @@
         $isAuthorized = true;
         $Nombre = $informe->Nombre;
         $Estado = $informe->Estado;
-        $archivos = FnBuscarArchivos($conmy, $ID);
-        $datos = FnBuscarDetalleInformeActividades($conmy, $ID);
+        $archivos = FnBuscarArchivos2($conmy, $ID);
+        $datos = FnBuscarInformeActividades2($conmy, $ID);
         if (!empty($datos)) {        
           foreach ($datos as $dato) {
             if ($dato['tipo'] == 'act') {
@@ -173,15 +174,17 @@
           
           if (count($ids) > 0) {
             $placeholders = implode(',', $ids);
-            $stmt3 = $conmy->prepare("SELECT id, refid, nombre, descripcion, titulo FROM tblarchivos WHERE refid IN ($placeholders) AND tabla=:Tabla AND tipo=:Tipo");
+            $stmt3 = $conmy->prepare("SELECT id, refid, nombre, descripcion, titulo, tipo FROM tblarchivos WHERE refid IN ($placeholders) AND tabla=:Tabla AND tipo=:Tipo");
             $stmt3->execute(array(':Tabla'=>'INFD', ':Tipo'=>'IMG'));
             
             while ($row3 = $stmt3->fetch(PDO::FETCH_ASSOC)) {
               $imagenes[$row3['refid']][] = array(
                 'id' => (int)$row3['id'],
+                'refid' => $row3['refid'], 
                 'nombre' => $row3['nombre'],
                 'descripcion' => $row3['descripcion'],
                 'titulo' => $row3['titulo'],
+                'tipo' => $row3['tipo']
               );
             }
           }

@@ -24,7 +24,7 @@
     $actividad->usuario = $USUARIO;
 
     $conmy->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    if (FnRegistrarDetalleInformeTipoActividad($conmy, $actividad)) {
+    if (FnRegistrarInformeActividad($conmy, $actividad)) {
       $data['msg'] = "Registro exitoso.";
       $data['res'] = true;
     } else {

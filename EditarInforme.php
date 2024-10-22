@@ -150,7 +150,7 @@
         <!-- BOTON GUARDAR -->
         <div class="row mt-4">
           <div class="col-12 mt-2">
-            <button id="guardarInforme" class="btn btn-outline-primary pt-2 pb-2 col-12 fw-bold" onclick="FnAgregarInformeDatosGenerales();">
+            <button id="guardarInforme" class="btn btn-outline-primary pt-2 pb-2 col-12 fw-bold" onclick="FnModificarInforme();">
               <svg id="editarInforme" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="28px" height="33px">
                 <g data-name="Layer 24" id="Layer_24">
                   <path fill="#0d6efd" d="M26.72,10.79a.49.49,0,0,0-.15-.34L21.32,5.19A.5.5,0,0,0,21,5H6.78a1.5,1.5,0,0,0-1.5,1.5V25.46A1.5,1.5,0,0,0,6.78,27H25.22a1.5,1.5,0,0,0,1.5-1.5V10.8ZM18,6V8.17a.5.5,0,0,0,1,0V6h.92V8.39A1.91,1.91,0,0,1,18,10.3H14a1.91,1.91,0,0,1-1.91-1.91V6ZM10.71,26V21.21a1.5,1.5,0,0,1,1.5-1.5h7.58a1.5,1.5,0,0,1,1.5,1.5V26Zm14.51,0H22.29V21.21a2.5,2.5,0,0,0-2.5-2.5H12.21a2.5,2.5,0,0,0-2.5,2.5V26H6.78a.5.5,0,0,1-.5-.5V6.54a.5.5,0,0,1,.5-.5h4.3V8.39A2.91,2.91,0,0,0,14,11.3h4a2.91,2.91,0,0,0,2.91-2.91V6.19L25.72,11V25.46A.5.5,0,0,1,25.22,26Z"/>

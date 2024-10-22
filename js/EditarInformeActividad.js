@@ -8,8 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
   vgLoader.classList.add('loader-full-hidden');
 });
 
-//FUNCIÓN CREA ACTIVIDAD
-const FnAgregarDetalleInformeTipoActividad = async () => {
+// AGREGAR INFORME ACTIVIDAD
+const FnAgregarInformeActividades = async () => {
   const formData = new FormData();
   formData.append('infid', document.getElementById('txtActividadInfid1').value);
   formData.append('actividad', document.getElementById('txtActividad1').value.trim());
@@ -17,74 +17,25 @@ const FnAgregarDetalleInformeTipoActividad = async () => {
   formData.append('trabajos', document.getElementById('txtTrabajo1').value.trim());
   formData.append('observaciones', document.getElementById('txtObservacion1').value.trim());
   try {
-    const response = await fetch('/informes/insert/AgregarDetalleInformeTipoActividad.php', {
-        method: 'POST',
-        body: formData
-    });
-    if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-    const result = await response.json();
-    if (result.res) {
-      setTimeout(() => { location.reload(); }, 1000);
-        Swal.fire({
-          title: '¡Éxito!',
-          text: result.msg,
-          icon: 'success',
-          timer: 2000
-        });
-    } else {
-        Swal.fire({
-          title: 'Aviso',
-          text: result.msg,
-          icon: 'info',
-          timer: 2000
-        });
-    }
-  } catch (error) {
-      Swal.fire({
-        title: 'Aviso',
-        text: `${error.message}`,
-        icon: 'error',
-        timer:2000
-      });
-  }
-};
-
-// CREAR SUBACTIVIDAD
-const FnModalAgregarDetalleInformeSubActividad = async (id) => {
-  const modal = new bootstrap.Modal(document.getElementById('modalNuevaSubActividad'), { keyboard: false });
-  modal.show();
-  document.getElementById('txtActividadOwnid').value = id;
-};
-
-// GUARDAR SUB-ACTIVIDAD
-const FnAgregarDetalleInformeSubActividad = async () =>{
-  const formData = new FormData();
-  formData.append('infid', document.getElementById('txtActividadInfid2').value);
-  formData.append('ownid', document.getElementById('txtActividadOwnid').value);
-  formData.append('actividad', document.getElementById('txtActividad2').value.trim());
-  formData.append('diagnostico', document.getElementById('txtDiagnostico2').value.trim());
-  formData.append('trabajos', document.getElementById('txtTrabajo2').value.trim());
-  formData.append('observaciones', document.getElementById('txtObservacion2').value.trim());
-  try {
-    const response = await fetch('/informes/insert/AgregarDetalleInformeTipoActividad.php', {
+    const response = await fetch('/informes/insert/AgregarInformeActividad.php', {
       method: 'POST',
       body: formData
     });
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
-    const result = await response.json();
-
-    if (result.res) {
-      setTimeout(() => { location.reload(); }, 1000);
+    const datos = await response.json();
+    if (datos.res) {
+        setTimeout(function(){
+          vgLoader.classList.add('loader-full-hidden');
+        }, 500);
       Swal.fire({
         title: '¡Éxito!',
-        text: result.msg,
+        text: datos.msg,
         icon: 'success',
         timer: 2000
       });
+      setTimeout(() => { location.reload(); }, 1000);
     } else {
       Swal.fire({
         title: 'Aviso',
@@ -94,6 +45,66 @@ const FnAgregarDetalleInformeSubActividad = async () =>{
       });
     }
   } catch (error) {
+    setTimeout(function(){
+      vgLoader.classList.add('loader-full-hidden');
+    }, 500);
+    Swal.fire({
+      title: 'Aviso',
+      text: `${error.message}`,
+      icon: 'error',
+      timer:2000
+    });
+  }
+};
+
+// ABRIR MODAL INFORME SUB-ACTIVIDAD
+const FnModalAgregarInformeActividades = async (id) => {
+  const modal = new bootstrap.Modal(document.getElementById('modalNuevaSubActividad'), { keyboard: false });
+  modal.show();
+  document.getElementById('txtActividadOwnid').value = id;
+};
+
+// AGREGAR INFORME SUB-ACTIVIDAD
+const FnAgregarInformeActividades2 = async () =>{
+  const formData = new FormData();
+  formData.append('infid', document.getElementById('txtActividadInfid2').value);
+  formData.append('ownid', document.getElementById('txtActividadOwnid').value);
+  formData.append('actividad', document.getElementById('txtActividad2').value.trim());
+  formData.append('diagnostico', document.getElementById('txtDiagnostico2').value.trim());
+  formData.append('trabajos', document.getElementById('txtTrabajo2').value.trim());
+  formData.append('observaciones', document.getElementById('txtObservacion2').value.trim());
+  try {
+    const response = await fetch('/informes/insert/AgregarInformeActividad.php', {
+      method: 'POST',
+      body: formData
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const datos = await response.json();
+    if (datos.res) {
+      setTimeout(function(){
+        vgLoader.classList.add('loader-full-hidden');
+      }, 500);
+      Swal.fire({
+        title: '¡Éxito!',
+        text: datos.msg,
+        icon: 'success',
+        timer: 2000
+      });
+      setTimeout(() => { location.reload(); }, 1000);
+    } else {
+      Swal.fire({
+        title: 'Aviso',
+        text: datos.msg,
+        icon: 'info',
+        timer: 2000
+      });
+    }
+  } catch (error) {
+    setTimeout(function(){
+      vgLoader.classList.add('loader-full-hidden');
+    }, 500);
     Swal.fire({
       title: 'Aviso',
       text: error.message,
@@ -103,13 +114,13 @@ const FnAgregarDetalleInformeSubActividad = async () =>{
   }
 };
 
-//BUSCAR ACTIVIDAD
-const FnModalModificarDetalleInformeActividad = async (id) => {
+//BUSCAR INFORME ACTIVIDAD
+const FnModalModificarInformeActividades = async (id) => {
   modalEditarActividad.show();
   const formData = new FormData();
   formData.append('id', id);
   try {
-    const response = await fetch('/informes/search/BuscarDetalleInformeActividad.php', {
+    const response = await fetch('/informes/search/BuscarInformeActividades.php', {
         method: 'POST',
         body: formData
     });
@@ -117,15 +128,27 @@ const FnModalModificarDetalleInformeActividad = async (id) => {
         throw new Error(`HTTP error! Status: ${response.status}`);
     }
     const datos = await response.json();
-    if (!datos.res) {
-      throw new Error(datos.msg);
+    if (datos.res) { 
+      setTimeout(function(){
+        vgLoader.classList.add('loader-full-hidden');
+      }, 500);
+      document.getElementById('txtActividadId').value = datos.data.id;
+      document.getElementById('txtactividad3').value = datos.data.actividad;
+      document.getElementById('txtDiagnostico3').value = datos.data.diagnostico;
+      document.getElementById('txtTrabajo3').value = datos.data.trabajos;
+      document.getElementById('txtObservacion3').value = datos.data.observaciones;  
+    } else {
+      Swal.fire({
+        title: 'Aviso',
+        text: datos.msg,
+        icon: 'info',
+        timer: 2000
+      });
     }
-    document.getElementById('txtActividadId').value = datos.data.id;
-    document.getElementById('txtactividad3').value = datos.data.actividad;
-    document.getElementById('txtDiagnostico3').value = datos.data.diagnostico;
-    document.getElementById('txtTrabajo3').value = datos.data.trabajos;
-    document.getElementById('txtObservacion3').value = datos.data.observaciones;
   } catch (error) {
+    setTimeout(function(){
+      vgLoader.classList.add('loader-full-hidden');
+    }, 500);
     Swal.fire({
       title: 'Aviso',
       text: error.message,
@@ -135,11 +158,10 @@ const FnModalModificarDetalleInformeActividad = async (id) => {
   }
 };
 
-//MODIFICAR ACTIVIDAD
-const FnModificarDetalleInformeActividad = async () => {
+//MODIFICAR INFORME ACTIVIDAD
+const FnModificarInformeActividades = async () => {
   try {
     vgLoader.classList.remove('loader-full-hidden');
-
     const formData = new FormData();
     formData.append('id', document.getElementById('txtActividadId').value);
     formData.append('actividad', document.getElementById('txtactividad3').value);
@@ -147,16 +169,19 @@ const FnModificarDetalleInformeActividad = async () => {
     formData.append('trabajos', document.getElementById('txtTrabajo3').value);
     formData.append('observaciones', document.getElementById('txtObservacion3').value);
 
-    const response = await fetch('/informes/update/ModificarDetalleInformeActividad.php', {
+    const response = await fetch('/informes/update/ModificarInformeActividades.php', {
       method: 'POST',
       body: formData
     });
-
     if (!response.ok) {throw new Error(`${response.status} ${response.statusText}`);}
 
     const datos = await response.json();
-    if (!datos.res) {throw new Error(datos.msg);}
-    setTimeout(function() {location.reload();}, 500)
+    if (!datos.res) {
+      throw new Error(datos.msg);
+    }
+    setTimeout(function() {
+      location.reload();
+    }, 500)
     setTimeout(function(){vgLoader.classList.add('loader-full-hidden');}, 500);
     Swal.fire({
       title:'¡Éxito!', 
@@ -172,6 +197,45 @@ const FnModificarDetalleInformeActividad = async () => {
       timer:1000
     });
     setTimeout(function(){vgLoader.classList.add('loader-full-hidden');}, 500);
+  }
+};
+
+// FUNCIÓN ELIMINAR ACTIVIDAD
+const FnEliminarInformeActividades = async (id) => {
+  const formData = new FormData();
+  formData.append('id', id);
+  try {
+    const response = await fetch('/informes/delete/EliminarInformeActividades.php', {
+      method: 'POST',
+      body: formData
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error en la respuesta del servidor: ${response.statusText}`);
+    }
+    const datos = await response.json();
+    if (datos.res) {
+      Swal.fire({
+        title: "¡Éxito!",
+        text: datos.msg,
+        icon: "success"
+      });
+      setTimeout(function() {location.reload();}, 500);
+    } else {
+      Swal.fire({
+        title: "Aviso",
+        text: datos.msg,
+        icon: "info",
+        timer: 1000
+      });
+    }
+  } catch (error) {
+    Swal.fire({
+      title: "Aviso",
+      text: error.message,
+      icon: "error",
+      timer: 1000
+    });
   }
 };
 
@@ -321,26 +385,31 @@ async function FnAgregarArchivo(){
     formData.append('archivo', archivo);
     formData.append('tabla', 'INFD');
 
-    const response = await fetch('/informes/insert/AgregarArchivo.php', {
+    const response = await fetch('/gesman/insert/AgregarArchivo.php', {
       method:'POST',
       body: formData
     });
     if(!response.ok){throw new Error(`${response.status} ${response.statusText}`);}
     const datos = await response.json();
-    console.log(datos);
-    if(!datos.res){
-      throw new Error(datos.msg);
+    if(datos.res){
+      setTimeout(() => { 
+        vgLoader.classList.add('loader-full-hidden'); 
+      }, 500);
+      Swal.fire({ 
+        title: '¡Éxito!', 
+        text: datos.msg, 
+        icon: 'success', 
+        timer:2000 
+      });
+      setTimeout(() => { location.reload(); }, 1000);
+    }else {
+      Swal.fire({
+        title: 'Aviso',
+        text: datos.msg,
+        icon: 'info',
+        timer: 2000
+      });
     }
-    setTimeout(() => { 
-      vgLoader.classList.add('loader-full-hidden'); 
-    }, 500);
-    Swal.fire({ 
-      title: '¡Éxito!', 
-      text: datos.msg, 
-      icon: 'success', 
-      timer:2000 
-    });
-    setTimeout(() => { location.reload(); }, 1000);
   } catch (error) {
     setTimeout(function() {
       vgLoader.classList.add('loader-full-hidden');
@@ -354,13 +423,13 @@ async function FnAgregarArchivo(){
   }
 }
 
-const FnModalModificarArchivoTituloDescripcion = async (id)=>{
+const FnModalModificarArchivo = async (id)=>{
   document.getElementById('txtArchivoId').value = id;
   
   const formData = new FormData();
   formData.append('id', id);
   try {
-    const response = await fetch('/informes/search/BuscarArchivoTituloDescripcion.php', {
+    const response = await fetch('/gesman/search/BuscarArchivo.php', {
       method: 'POST',
       body: formData
     });
@@ -368,7 +437,6 @@ const FnModalModificarArchivoTituloDescripcion = async (id)=>{
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
     const datos = await response.json();
-    console.log(datos);
     if (!datos.res) {
       throw new Error(datos.msg);
     }
@@ -387,19 +455,20 @@ const FnModalModificarArchivoTituloDescripcion = async (id)=>{
   return false;
 }
 
-const FnModificarArchivoTituloDescripcion = async () => {
+const FnModificarArchivo = async () => {
   try {
     vgLoader.classList.remove('loader-full-hidden');
     const formData = new FormData();
     formData.append('id', document.getElementById('txtArchivoId').value);
     formData.append('titulo', document.getElementById('txtTitulo2').value);
     formData.append('descripcion', document.getElementById('txtDescripcion2').value);
+    formData.append('tipo','INFD')
     // AGREGAR ARCHIVO SI SE HA CARGADO
     const fileInput = document.getElementById('fileImagen2');
     if (fileInput.files.length === 1) {
       formData.append('archivo', fileInput.files[0]); 
     }
-    const response = await fetch('/informes/update/ModificarArchivoImagenTituloDescripcion.php', {
+    const response = await fetch('/gesman/update/ModificarArchivo.php', {
       method: 'POST',
       body: formData
     });
@@ -407,6 +476,7 @@ const FnModificarArchivoTituloDescripcion = async () => {
       throw new Error(`${response.status} ${response.statusText}`);
     }
     const datos = await response.json();
+    console.log(datos);
     if (!datos.res) {
       throw new Error(datos.msg);
     }
@@ -436,17 +506,13 @@ const FnModificarArchivoTituloDescripcion = async () => {
 }
 
 //ELIMINAR ARCHIVO
-const FnEliminarArchivo = async (id) => {
+const FnEliminarArchivo = async (id,refid) => {
   try {
     vgLoader.classList.remove('loader-full-hidden');
     const formData = new FormData();
     formData.append('id', id);
-    formData.append('refid',document.querySelector('#txtInformeId').value);
-
-    formData.forEach((value, key) => {
-      console.log(`${key}: ${value}`);
-    });
-    // const response = await fetch('/informes/delete/EliminarArchivo.php', {
+    formData.append('refid', refid);
+    console.log(id, refid);
     const response = await fetch('/gesman/delete/EliminarArchivo.php', {
       method: 'POST',
       body: formData,
@@ -454,68 +520,40 @@ const FnEliminarArchivo = async (id) => {
         'Accept': 'application/json'
       }
     });
-
     if (!response.ok) {
       throw new Error(`Error: ${response.status} ${response.statusText}`);
     }
     const datos = await response.json();
-    console.log(datos);
     if (datos.res) {
-      setTimeout(function() {location.reload();}, 500);
+      setTimeout(() => { 
+        vgLoader.classList.add('loader-full-hidden'); 
+      }, 500);
       Swal.fire({
         title: "¡Éxito!",
         text: datos.msg,
-        icon: "success"
+        icon: "success",
+        timer: 2000
+      });
+      setTimeout(() => { 
+        location.reload(); 
+      }, 1000);
+    }else {
+      await Swal.fire({
+        title: "Aviso",
+        text: datos.msg,
+        icon: "info",
+        timer: 2000
       });
     }
   } catch (error) {
+    setTimeout(function() {
+      vgLoader.classList.add('loader-full-hidden');
+    }, 500);
     Swal.fire({
       title: "Aviso",
       text: error.message,
       icon: "error",
       timer:1000
-    });
-    setTimeout(function() {
-      vgLoader.classList.add('loader-full-hidden');
-    }, 500)
-  }
-};
-
-// FUNCIÓN ELIMINAR ACTIVIDAD
-const FnEliminarDetalleInformeActividad = async (id) => {
-  const formData = new FormData();
-  formData.append('id', id);
-  try {
-    const response = await fetch('/informes/delete/EliminarDetalleInformeActividad.php', {
-      method: 'POST',
-      body: formData
-    });
-
-    if (!response.ok) {
-      throw new Error(`Error en la respuesta del servidor: ${response.statusText}`);
-    }
-    const result = await response.json();
-    if (result.res) {
-      Swal.fire({
-        title: "¡Éxito!",
-        text: result.msg,
-        icon: "success"
-      });
-      setTimeout(function() {location.reload();}, 500);
-    } else {
-      Swal.fire({
-        title: "Aviso",
-        text: result.msg,
-        icon: "info",
-        timer: 1000
-      });
-    }
-  } catch (error) {
-    Swal.fire({
-      title: "Aviso",
-      text: error.message,
-      icon: "error",
-      timer: 1000
     });
   }
 };
@@ -573,4 +611,60 @@ function FnResumenInforme(){
 function FnListarInformes(){
   window.location.href='/informes/Informes.php';
   return false;
+};
+
+
+
+//CAPTURAR LAS ACTIVIDADES
+function FnCapturarActividad(item) {
+  const actividad = {
+    id: item.id,
+    actividad: item.querySelector('.accordion-header p').innerText.replace('\n', '').trim(),
+    diagnostico: item.querySelector('.diagnostico').innerText.trim(),
+    trabajos: item.querySelector('.trabajo').innerText.trim(),
+    observaciones: item.querySelector('.observacion').innerText.trim(),
+    imagenes: [],
+    hijos: []
+  };
+
+  // OBTENER LAS IMAGENES
+  const contenedorImagenes = item.querySelector('.contenedor-imagen');
+  if (contenedorImagenes) {
+    const imagenes = contenedorImagenes.querySelectorAll('.card');
+    imagenes.forEach(imagen => {
+      actividad.imagenes.push({
+        id: imagen.id.split('-')[1],
+        titulo: imagen.querySelector('.card-header').innerText.trim(),
+        nombre: imagen.querySelector('img').src,
+        descripcion: imagen.querySelector('.card-footer').innerText.trim()
+      });
+    });
+  }
+  const hijos = item.querySelectorAll(`#accordion-container-${item.id} .accordion-item`);
+  hijos.forEach(hijo => {
+    actividad.hijos.push(FnCapturarActividad(hijo));
+  });
+  return actividad;
 }
+
+function FnCapturarActividades() {
+  const actividades = [];
+  const items = document.querySelector('#accordion-container');
+  Array.from(items.children).forEach(actividadPadre => {
+    actividades.push(FnCapturarActividad(actividadPadre));
+  });
+  console.log(actividades);
+
+}
+
+FnCapturarActividades();
+
+
+// const test = document.querySelector('#accordion-container');
+
+
+
+// Array.from(test.children).forEach(item => {
+//   console.log(item); 
+// });
+

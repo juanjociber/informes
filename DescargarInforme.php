@@ -1,6 +1,6 @@
 <?php
     require_once $_SERVER['DOCUMENT_ROOT']."/gesman/connection/ConnGesmanDb.php";
-	require_once $_SERVER['DOCUMENT_ROOT']."/informes/datos/InformesData.php";
+	require_once '../Datos/InformesData.php';
 
 	$NOMBRE='UNKNOWN';
 	$html5='';
@@ -297,7 +297,7 @@
 			}		
 		}*/
 
-		$datos=FnBuscarInformeActividades($conmy, $informe->Id);
+		$datos=FnBuscarInformeActividades2($conmy, $informe->Id);
 
 		foreach($datos as $dato){
 			if($dato['tipo']=='act'){

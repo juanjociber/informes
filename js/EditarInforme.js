@@ -63,7 +63,7 @@ const cargaSelect = () => {
 document.addEventListener('DOMContentLoaded', cargaSelect);
 
 // FUNCIÓN GUARDAR DATOS GENERALES
-const FnAgregarInformeDatosGenerales = async () => {
+const FnModificarInforme = async () => {
   try {
     vgLoader.classList.remove('loader-full-hidden');
     const formData = new FormData();      
@@ -73,7 +73,7 @@ const FnAgregarInformeDatosGenerales = async () => {
     formData.append('clidireccion', document.querySelector('#txtCliDireccion').value.trim()); 
     formData.append('supervisor', document.querySelector('#cbSupervisor').value.trim());
     
-    const response = await fetch('/informes/update/ModificarInformeDatosGenerales.php', {
+    const response = await fetch('/informes/update/ModificarInforme.php', {
       method: 'POST',
       body: formData
     });

@@ -7,128 +7,6 @@ window.onload = function() {
   document.getElementById('MenuInformes').classList.add('menu-activo','fw-bold');
   vgLoader.classList.add('loader-full-hidden');
 };
-// FUNCIÓN BUSCAR EQUIPO POR ID
-const FnModalInformeModificarEquipo = async (id)=>{
-  modalEquipo.show();
-};
-
-// FUNCIÓN MÓDIFICAR EQUIPOS
-const FnModificarInformeEquipo = async () => {
-  try {
-    vgLoader.classList.remove('loader-full-hidden');
-    const id = document.getElementById('txtInformeId').value;
-    const equnombre = document.getElementById('txtEquNombre2').value;
-    const equmarca = document.getElementById('txtEquMarca2').value;
-    const equmodelo = document.getElementById('txtEquModelo2').value;
-    const equserie = document.getElementById('txtEquSerie2').value;
-    const equdatos = document.getElementById('txtEquDatos2').value;
-    const equkm = document.getElementById('txtEquKm2').value;
-    const equhm = document.getElementById('txtEquHm2').value;
-
-    const formData = new FormData();
-    formData.append('Id', id);
-    formData.append('EquNombre', equnombre);
-    formData.append('EquMarca', equmarca);
-    formData.append('EquModelo', equmodelo);
-    formData.append('EquSerie', equserie);
-    formData.append('EquDatos', equdatos);
-    formData.append('EquKm', equkm);
-    formData.append('EquHm', equhm);
-
-    const response = await fetch('/informes/update/ModificarInformeDatosEquipo.php', {
-      method: 'POST',
-      body: formData
-    });
-    if (!response.ok) {
-      throw new Error(`Error: ${response.status} ${response.statusText}`);
-    }
-    const datos = await response.json();
-    setTimeout(() => { vgLoader.classList.add('loader-full-hidden'); }, 300);
-    if (!datos.res) {
-      throw new Error(datos.msg);
-    }
-    // Actualizar los campos del equipo
-    document.querySelector('#txtEquNombre1').textContent = equnombre;
-    document.querySelector('#txtEquMarca1').textContent = equmarca;
-    document.querySelector('#txtEquModelo1').textContent = equmodelo;
-    document.querySelector('#txtEquSerie1').textContent = equserie;
-    document.querySelector('#txtEquDatos1').textContent = equdatos;
-    document.querySelector('#txtEquKm1').textContent = equkm;
-    document.querySelector('#txtEquHm1').textContent = equhm;
-    // Mostrar el SweetAlert
-    await Swal.fire({
-      title: "¡Éxito!",
-      text: datos.msg,
-      icon: "success",
-      timer: 2000
-    });
-    setTimeout(() => { 
-      location.reload(); 
-    }, 1000);
-  } catch (error) {
-    setTimeout(() => { 
-      vgLoader.classList.add('loader-full-hidden'); 
-    }, 300);
-    await Swal.fire({
-      title: "Aviso",
-      text: error.message,
-      icon: "error",
-      timer: 2000
-    });
-  }
-};
-
-//ELIMINAR ARCHIVO
-const FnEliminarInformeArchivo = async (id) => {
-  try {
-    vgLoader.classList.remove('loader-full-hidden');
-    const formData = new FormData();
-    formData.append('id', id);
-    const response = await fetch('/informes/delete/EliminarArchivo.php', {
-      method: 'POST',
-      body: formData,
-      headers: {
-        'Accept': 'application/json'
-      }
-    });
-    const result = await response.json();
-    setTimeout(() => { 
-      vgLoader.classList.add('loader-full-hidden'); 
-    }, 500);
-    if (result.res) {
-      const elemento = document.getElementById(id);
-      if (elemento) {
-        elemento.remove();
-      }
-      await Swal.fire({
-        title: "¡Éxito!",
-        text: result.msg,
-        icon: "success",
-        timer: 2000
-      });
-      setTimeout(() => { 
-        location.reload(); 
-      }, 1000);
-    } else {
-      await Swal.fire({
-        title: "Aviso",
-        text: result.msg,
-        icon: "info",
-        timer: 2000
-      });
-    }
-  } catch (error) {
-    setTimeout(() => { 
-      vgLoader.classList.add('loader-full-hidden'); 
-    }, 500);
-    await Swal.fire({
-      title: "Aviso",
-      text: error.message,
-      icon: "error",
-      timer: 2000
-    });
-  }
-};
 
 // ABRIR MODAL PARA REGISTRAR IMAGEN
 const FnModalInformeAgregarArchivo = () => {
@@ -202,7 +80,6 @@ function displayImage(file) {
       canvas.height = newHeight;
       canvas.id="canvas";
       context.drawImage(image, 0, 0, newWidth, newHeight);
-
       // Agregar texto como marca de agua
       context.strokeStyle = 'rgba(216, 216, 216, 0.7)';// color del texto (blanco con opacidad)
       context.font = '15px Verdana'; // fuente y tamaño del texto
@@ -271,7 +148,7 @@ async function FnAgregarInformeArchivo() {
     formData.append('descripcion', document.getElementById('txtDescripcion').value);
     formData.append('archivo', archivo);
     formData.append('tabla', 'INFE');
-    const response = await fetch('/informes/insert/AgregarArchivo.php', {
+    const response = await fetch('/gesman/insert/AgregarArchivo.php', {
       method: 'POST',
       body: formData
     });
@@ -279,21 +156,27 @@ async function FnAgregarInformeArchivo() {
       throw new Error(`${response.status} ${response.statusText}`);
     }
     const datos = await response.json();
-    if (!datos.res) {
-      throw new Error(datos.msg);
+    if (datos.res) {
+      setTimeout(() => { 
+        vgLoader.classList.add('loader-full-hidden'); 
+      }, 500);
+      await Swal.fire({
+        title: "¡Éxito!",
+        text: datos.msg,
+        icon: "success",
+        timer: 2000
+      });
+      setTimeout(() => { 
+        location.reload(); 
+      }, 1000);
+    }else {
+      await Swal.fire({
+        title: "Aviso",
+        text: datos.msg,
+        icon: "info",
+        timer: 2000
+      });
     }
-    setTimeout(() => { 
-      vgLoader.classList.add('loader-full-hidden'); 
-    }, 500);
-    await Swal.fire({
-      title: "¡Éxito!",
-      text: datos.msg,
-      icon: "success",
-      timer: 2000
-    });
-    setTimeout(() => { 
-      location.reload(); 
-    }, 1000);
   } catch (error) {
     setTimeout(() => { 
       vgLoader.classList.add('loader-full-hidden'); 
@@ -301,6 +184,137 @@ async function FnAgregarInformeArchivo() {
     document.getElementById('msjAgregarImagen').innerHTML = `<div class="alert alert-danger m-0 p-1 text-center" role="alert">${error.message}</div>`;
   }
 }
+
+//ELIMINAR ARCHIVO
+const FnEliminarInformeArchivo = async (id) => {
+  try {
+    vgLoader.classList.remove('loader-full-hidden');
+    const formData = new FormData();
+    formData.append('id', id);
+    formData.append('refid', document.getElementById('txtInformeId').value);
+    const response = await fetch('/gesman/delete/EliminarArchivo.php', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'Accept': 'application/json'
+      }
+    });
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status} ${response.statusText}`);
+    }
+    const datos = await response.json();
+    if (datos.res) {
+      setTimeout(() => { 
+        vgLoader.classList.add('loader-full-hidden'); 
+      }, 500);
+      await Swal.fire({
+        title: "¡Éxito!",
+        text: datos.msg,
+        icon: "success",
+        timer: 2000
+      });
+      setTimeout(() => { 
+        location.reload(); 
+      }, 1000);
+    } else {
+      await Swal.fire({
+        title: "Aviso",
+        text: datos.msg,
+        icon: "info",
+        timer: 2000
+      });
+    }
+  } catch (error) {
+    setTimeout(() => { 
+      vgLoader.classList.add('loader-full-hidden'); 
+    }, 500);
+    await Swal.fire({
+      title: "Aviso",
+      text: error.message,
+      icon: "error",
+      timer: 2000
+    });
+  }
+};
+
+// FUNCIÓN BUSCAR INFORME POR 'id'
+const FnModalModificarInformeEquipo = async (id)=>{
+  modalEquipo.show();
+};
+
+// FUNCIÓN MÓDIFICAR EQUIPO
+const FnModificarInformeEquipo = async () => {
+  try {
+    vgLoader.classList.remove('loader-full-hidden');
+    const id = document.getElementById('txtInformeId').value;
+    const equnombre = document.getElementById('txtEquNombre2').value;
+    const equmarca = document.getElementById('txtEquMarca2').value;
+    const equmodelo = document.getElementById('txtEquModelo2').value;
+    const equserie = document.getElementById('txtEquSerie2').value;
+    const equdatos = document.getElementById('txtEquDatos2').value;
+    const equkm = document.getElementById('txtEquKm2').value;
+    const equhm = document.getElementById('txtEquHm2').value;
+
+    const formData = new FormData();
+    formData.append('Id', id);
+    formData.append('EquNombre', equnombre);
+    formData.append('EquMarca', equmarca);
+    formData.append('EquModelo', equmodelo);
+    formData.append('EquSerie', equserie);
+    formData.append('EquDatos', equdatos);
+    formData.append('EquKm', equkm);
+    formData.append('EquHm', equhm);
+
+    const response = await fetch('/informes/update/ModificarInformeEquipo.php', {
+      method: 'POST',
+      body: formData
+    });
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status} ${response.statusText}`);
+    }
+    const datos = await response.json();
+    // Actualizar los campos del equipo
+    document.querySelector('#txtEquNombre1').textContent = equnombre;
+    document.querySelector('#txtEquMarca1').textContent = equmarca;
+    document.querySelector('#txtEquModelo1').textContent = equmodelo;
+    document.querySelector('#txtEquSerie1').textContent = equserie;
+    document.querySelector('#txtEquDatos1').textContent = equdatos;
+    document.querySelector('#txtEquKm1').textContent = equkm;
+    document.querySelector('#txtEquHm1').textContent = equhm;
+    // Mostrar el SweetAlert
+    if (datos.res) {
+      setTimeout(() => { 
+        vgLoader.classList.add('loader-full-hidden'); 
+      }, 500);
+      await Swal.fire({
+        title: "¡Éxito!",
+        text: datos.msg,
+        icon: "success",
+        timer: 2000
+      });
+      setTimeout(() => { 
+        location.reload(); 
+      }, 1000);
+    }else {
+      await Swal.fire({
+        title: "Aviso",
+        text: datos.msg,
+        icon: "info",
+        timer: 2000
+      });
+    }
+  } catch (error) {
+    setTimeout(() => { 
+      vgLoader.classList.add('loader-full-hidden'); 
+    }, 500);
+    await Swal.fire({
+      title: "Aviso",
+      text: error.message,
+      icon: "error",
+      timer: 2000
+    });
+  }
+};
 
 function FnResumenInforme(){
   id = document.getElementById('txtInformeId').value;

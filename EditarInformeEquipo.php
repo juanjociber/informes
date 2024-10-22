@@ -6,6 +6,7 @@
   }
   require_once $_SERVER['DOCUMENT_ROOT']."/gesman/connection/ConnGesmanDb.php";
   require_once $_SERVER['DOCUMENT_ROOT']."/informes/datos/InformesData.php";
+  require_once $_SERVER['DOCUMENT_ROOT']."/gesman/data/ArchivosData.php";
 
   $CLI_ID = $_SESSION['CliId'];
   $ID = empty($_GET['id'])?0:$_GET['id'];
@@ -25,7 +26,7 @@
         $Nombre = $informe->Nombre;
         $claseHabilitado = "btn-outline-primary";
         $atributoHabilitado = "";
-        $archivos = FnBuscarArchivos($conmy, $ID);
+        $archivos = FnBuscarArchivos2($conmy, $ID);
       }
     }
   } catch (PDOException $e) {
@@ -104,7 +105,7 @@
           <?php
           $html=''; 
           $html.='<div class="d-flex justify-content-start align-items-center">
-            <button id="editarInformeEquipo" class="btn btn-outline-primary" onclick="FnModalInformeModificarEquipo('.$ID.');" style="margin-right: 10px;">
+            <button id="editarInformeEquipo" class="btn btn-outline-primary" onclick="FnModalModificarInformeEquipo('.$ID.');" style="margin-right: 10px;">
               <svg id="editarDatoEquipo" xmlns="http://www.w3.org/2000/svg" width="23" height="28" viewBox="0 0 59 64">
                 <title>Editar</title>
                 <g fill="none" stroke="#0d6efd" stroke-width="3">

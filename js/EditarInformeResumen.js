@@ -36,20 +36,25 @@ const FnModificarInformeActividad = async () => {
       throw new Error(`${response.status} ${response.statusText}`);
     }
     const datos = await response.json();
-    if (!datos.res) {
-      throw new Error(datos.msg);
+    if (datos.res) {
+      setTimeout(() => { 
+        vgLoader.classList.add('loader-full-hidden'); 
+      }, 500);
+      await Swal.fire({
+        title: "¡Éxito!",
+        text: datos.msg,
+        icon: "success",
+        timer: 2000
+      });
+      setTimeout(() => { location.reload(); }, 1000);
+    }else {
+      await Swal.fire({
+        title: "Aviso",
+        text: datos.msg,
+        icon: "info",
+        timer: 2000
+      });
     }
-    setTimeout(() => { 
-      vgLoader.classList.add('loader-full-hidden'); 
-    }, 500);
-    await Swal.fire({
-      title: "¡Éxito!",
-      text: datos.msg,
-      icon: "success",
-      timer: 2000
-    });
-    document.querySelector('#actividadId').textContent = actividad;
-    setTimeout(() => { location.reload(); }, 500);
   } catch (error) {
     setTimeout(() => { 
       vgLoader.classList.add('loader-full-hidden'); 
@@ -92,7 +97,7 @@ const FnModalAgregarDetalleInforme = async (tipo) => {
   return false;
 }
 
-const FnAgregarDetalleInformeActividad = async () => {
+const FnAgregarInformeActividades = async () => {
   try {
     vgLoader.classList.remove('loader-full-hidden');
     const formData = new FormData();
@@ -100,7 +105,7 @@ const FnAgregarDetalleInformeActividad = async () => {
     formData.append('actividad', document.getElementById('registroActividadInput').value.trim());
     formData.append('tipo', tipoSeleccionado);
     
-    const response = await fetch('/informes/insert/AgregarDetalleInformeActividad.php', {
+    const response = await fetch('/informes/insert/AgregarInformeActividades.php', {
       method: 'POST',
       body: formData
     });

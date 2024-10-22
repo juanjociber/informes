@@ -123,12 +123,12 @@ function calculateSize(img, maxWidth, maxHeight) {
   return [width, height];
 }
 
-async function FnModalModificarArchivoAnexo(id){
+async function FnModalModificarArchivo(id){
   document.getElementById('txtArchivoId').value = id;  
   const formData = new FormData();
   formData.append('id', id);
   try {
-    const response = await fetch('/informes/search/BuscarArchivoTituloDescripcion.php', {
+    const response = await fetch('/gesman/search/BuscarArchivo.php', {
       method: 'POST',
       body: formData
     });
@@ -155,19 +155,20 @@ async function FnModalModificarArchivoAnexo(id){
 };
 
 
-async function FnModificarArchivoAnexo(){
+async function FnModificarArchivo(){
   try {
     vgLoader.classList.remove('loader-full-hidden');
     const formData = new FormData();
     formData.append('id', document.getElementById('txtArchivoId').value);
     formData.append('titulo', document.getElementById('txtTitulo2').value);
     formData.append('descripcion', document.getElementById('txtDescripcion2').value);
-    // AGREGAR ARCHIVO SI SE HA CARGADO
+    formData.append('tipo','INFA')
+
     const fileInput = document.getElementById('fileImagen2');
     if (fileInput.files.length === 1) {
       formData.append('archivo', fileInput.files[0]); 
     }
-    const response = await fetch('/informes/update/ModificarArchivoAnexoTituloDescripcion.php', {
+    const response = await fetch('/gesman/update/ModificarArchivo.php', {
       method: 'POST',
       body: formData
     });
@@ -214,7 +215,7 @@ async function FnAgregarArchivo() {
     formData.append('archivo', archivo);
     formData.append('tabla', 'INFA'); 
 
-    const response = await fetch('/informes/insert/AgregarArchivo.php', {
+    const response = await fetch('/gesman/insert/AgregarArchivo.php', {
       method: 'POST',
       body: formData
     });
@@ -242,38 +243,37 @@ async function FnAgregarArchivo() {
 }
 
 //ELIMINAR ARCHIVO
-async function FnEliminarArchivo(id){
+async function FnEliminarArchivo(id, refid){
   try {
     vgLoader.classList.remove('loader-full-hidden');
     const formData = new FormData();
     formData.append('id', id);
-    const response = await fetch('/informes/delete/EliminarArchivo.php', {
+    formData.append('refid', refid);
+    const response = await fetch('/gesman/delete/EliminarArchivo.php', {
       method: 'POST',
       body: formData,
       headers: {
         'Accept': 'application/json'
       }
     });
-    const result = await response.json();
-    setTimeout(() => { 
-      vgLoader.classList.add('loader-full-hidden'); 
-    }, 500);
-    if (result.res) {
-      const elemento = document.getElementById(id);
-      if (elemento) {
-          elemento.remove();
-      }
+    const datos = await response.json();
+    if (datos.res) {
+      setTimeout(() => { 
+        vgLoader.classList.add('loader-full-hidden'); 
+      }, 500);
       Swal.fire({
         title: "¡Éxito!",
-        text: result.msg,
+        text: datos.msg,
         icon: "success",
         timer: 2000
       });
-      setTimeout(() => { location.reload();}, 1000);
-    } else {
-      Swal.fire({
+      setTimeout(() => { 
+        location.reload(); 
+      }, 1000);
+    }else {
+      await Swal.fire({
         title: "Aviso",
-        text: result.msg,
+        text: datos.msg,
         icon: "info",
         timer: 2000
       });

@@ -1,9 +1,7 @@
 <?php 
 session_start();
-
 require_once $_SERVER['DOCUMENT_ROOT']."/gesman/connection/ConnGesmanDb.php";
 require_once $_SERVER['DOCUMENT_ROOT']."/informes/datos/InformesData.php";
-
 $data = array('res' => false, 'msg' => 'Error general.');
 
 try {
@@ -29,7 +27,7 @@ try {
     $actividad->usuario = $USUARIO;
 
     $conmy->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    if (FnRegistrarDetalleInformeTipoActividad($conmy, $actividad)) {
+    if (FnRegistrarInformeActividades($conmy, $actividad)) {
         $data['msg'] = "Registro exitoso.";
         $data['res'] = true;
     } else {
@@ -45,5 +43,4 @@ try {
 
 echo json_encode($data);
 ?>
-
 
