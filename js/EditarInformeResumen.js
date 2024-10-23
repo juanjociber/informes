@@ -140,7 +140,7 @@ const FnAgregarInformeActividades = async () => {
 };
 
 // FUNCIÓN ABRIR MODAL Y BUSCA DATA ENVIADA POR EL SERVIDOR
-const FnModalModificarDetalleInforme = async (id, cabecera) => {
+const FnModalModificarActividad = async (id, cabecera) => {
   const modal = new bootstrap.Modal(document.getElementById('modalGeneral'), {keyboard: false});
   modal.show();
   document.getElementById('txtIdtblDetalleInf').value = id;
@@ -148,7 +148,7 @@ const FnModalModificarDetalleInforme = async (id, cabecera) => {
   const formData = new FormData();
   formData.append('id', id);
   try {
-    const response = await fetch('/informes/search/BuscarDetalleInformeActividad.php', {
+    const response = await fetch('/informes/search/BuscarInformeActividad.php', {
       method: 'POST',
       body: formData
     });
@@ -196,13 +196,13 @@ const FnModalModificarDetalleInforme = async (id, cabecera) => {
 }
 
 // FUNCIÓN MODIFICAR ACTIVIDAD DETALLE
-const FnModificarDetalleInformeActividad = async () => {
+const FnModificarInformeActividades = async () => {
   try {
     vgLoader.classList.remove('loader-full-hidden');
     const formData = new FormData();
     formData.append('id', document.getElementById('txtIdtblDetalleInf').value);
     formData.append('actividad', document.getElementById('actividadModalInput').value.trim());
-    const response = await fetch('/informes/update/ModificarDetalleInformeActividad.php', {
+    const response = await fetch('/informes/update/ModificarInformeActividades.php', {
       method: 'POST',
       body: formData
     });
@@ -239,7 +239,7 @@ const FnModalEliminarDetalleInformeActividad = async (id) => {
     vgLoader.classList.remove('loader-full-hidden');
     const formData = new FormData();
     formData.append('id', id);
-    const response = await fetch('/informes/delete/EliminarDetalleInformeActividad.php', {
+    const response = await fetch('/informes/delete/EliminarInformeActividades.php', {
       method: 'POST',
       body: formData
     });

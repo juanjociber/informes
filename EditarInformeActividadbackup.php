@@ -38,9 +38,6 @@
 		foreach ($arbol as $key=>$nodo) {
 			$indiceActual = $nivel==0?$contador++:$indice.'.'.($key+1);
 			$html.='<div class="accordion-item" id="'.$nodo['id'].'">';
-      $html.='<input type="hidden" id="infidPadre" value="'.$nodo['infid'].'">';
-      $html.='<input type="hidden" id="ownidPadre" value="'.$nodo['ownid'].'">';
-      $html.='<input type="hidden" id="tipoPadre" value="'.$nodo['tipo'].'">';
 			$html.='
 				<div class="accordion-header" id="accordion-header-'.$nodo['id'].'">
           <div class="contenedor-actividades bg-light mb-2 cabecera-actividad--mod" style="margin:0 auto;">
@@ -50,7 +47,7 @@
             </div>
             <div class="grid-icono input-grop-icons d-flex p-0">
               <!--AGREGAR ACTIVIDAD-->
-              <span class="input-group-text input-group--mod bg-light border border-0 text-muted" style="cursor:pointer;">            
+              <span class="input-group-text bg-light border border-0 text-muted" style="cursor:pointer;">            
                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" width="28px" height="33px" viewBox="0 0 554.625 554.625" style="enable-background:new 0 0 554.625 554.625;" xml:space="preserve" onclick="FnModalAgregarInformeActividades('.$nodo['id'].')">
                   <title>Actividad</title>
                   <g fill="#6B6C6E" stroke="#6B6C6E" stroke-width="8">
@@ -63,7 +60,7 @@
               </span>
               
               <!--EDITAR-->
-              <span class="input-group-text input-group--mod bg-light border border-0 text-secondary" style="cursor:pointer;">
+              <span class="input-group-text bg-light border border-0 text-secondary" style="cursor:pointer;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="23" height="28" viewBox="0 0 59 64" onclick="FnModalModificarInformeActividades('.$nodo['id'].')">
                   <title>Editar</title>
                   <g fill="none" stroke="#6B6C6E" stroke-width="3">
@@ -83,7 +80,7 @@
               </span>
               
               <!--AGREGAR ARCHIVO-->
-              <span class="input-group-text input-group--mod bg-light border border-0 text-secondary" style="cursor:pointer;">
+              <span class="input-group-text bg-light border border-0 text-secondary" style="cursor:pointer;">
                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" width="23px" height="28px" viewBox="0 0 59 63" version="1.1" onclick="FnModalAgregarArchivo('.$nodo['id'].')">
                   <title>Archivo</title>
                   <desc>Created with Sketch.</desc>
@@ -94,7 +91,7 @@
               </span>
 
               <!--ELIMINAR-->
-              <span class="input-group-text input-group--mod bg-light border border-0 text-secondary" style="cursor:pointer;">      
+              <span class="input-group-text bg-light border border-0 text-secondary" style="cursor:pointer;">      
                 <svg xmlns="http://www.w3.org/2000/svg" width="23" height="28" viewBox="0 0 300 343" onclick="FnEliminarInformeActividades('.$nodo['id'].')">
                   <title>Eliminar</title>
                   <g fill="none" stroke="#6B6C6E" stroke-width="7">
@@ -103,10 +100,6 @@
                   </g>
                 </svg>
               </span>
-              <!--ARRIBA-->
-              <span class="input-group-text input-group--mod bg-light border border-0 text-secondary btn-arriba" style="cursor:pointer; font-size:30px;"><i class="fas fa-arrow-alt-circle-up" style="color: #a3a3a3;"></i></span>
-              <!--ABAJO-->
-              <span class="input-group-text input-group--mod bg-light border border-0 text-secondary btn-abajo" style="cursor:pointer; font-size:30px;"><i class="fas fa-arrow-alt-circle-down" style="color: #a3a3a3;"></i></span>
             </div>
           </div>
 				</div>
@@ -133,6 +126,7 @@
 									$html.='
                   <div class="d-flex flex-column">
                     <div class="d-flex justify-content-end align-items-center text-secondary">
+
                     <!--BOTON EDITAR-->  
                     <span data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" onclick="FnModalModificarArchivo('.$elemento['id'].')" style="font-size:25px; cursor:pointer; padding:10px">
                         <svg xmlns="http://www.w3.org/2000/svg" width="23" height="28" viewBox="0 0 59 64">
@@ -163,9 +157,6 @@
                       </span>
                     </div>
                     <div class="card text-center p-0" id="archivo-'.$elemento['id'].'">
-                      <input type="hidden" id="txtRefid" value="'.$elemento['refid'].'">
-                      <input type="hidden" id="txtTabla" value="'.$elemento['tabla'].'">
-                      <input type="hidden" id="txtTipo" value="'.$elemento['tipo'].'">
                       <div class="card-header text-secondary" style="text-align:justify;padding-left:5px;">'.$elemento['titulo'].'</div>
                       <div class="card-body p-0">
                         <img src="/mycloud/gesman/files/'.$elemento['nombre'].'" class="imagen-ajustada" alt="">
@@ -179,17 +170,16 @@
         $html.='</div>';
 			if (!empty($nodo['hijos'])) {
 				$html.='<div class="accordion" id="accordion-container-'.$nodo['id'].'">';
-        $html.='<input type="hidden" id="infidHijo" value="'.$nodo['infid'].'">';
-        $html.='<input type="hidden" id="ownidHijo" value="'.$nodo['ownid'].'">';
-        $html.='<input type="hidden" id=""tipoHijo value="'.$nodo['tipo'].'">';
 				$html.=FnGenerarInformeHtmlAcordeon($nodo['hijos'], $imagenes, $nivel+1, $indiceActual );
-				$html.='</div>';  
+				$html.='</div>';
 			}
 			$html.='</div>';
 			$html.='</div>';
 			$html.='</div>';
 		}
 		return $html;
+
+
 	}
   try{
     $Id2 = 0;
@@ -210,7 +200,7 @@
       }
     }
     if($Id2 > 0){
-      $stmt2 = $conmy->prepare("select id, infid, ownid, tipo, actividad, diagnostico, trabajos, observaciones from tbldetalleinforme where infid=:InfId and tipo='act';");
+      $stmt2 = $conmy->prepare("select id, ownid, tipo, actividad, diagnostico, trabajos, observaciones from tbldetalleinforme where infid=:InfId and tipo='act';");
       $stmt2->bindParam(':InfId', $ID, PDO::PARAM_INT);
       $stmt2->execute();
       $actividades = $stmt2->fetchAll(PDO::FETCH_ASSOC);
@@ -223,17 +213,15 @@
           $cadenaIds = implode(',', $ids);
           $imagenes=array();
 
-          $stmt3 = $conmy->prepare("select id, refid, tabla, nombre, titulo, descripcion, tipo from tblarchivos where refid IN(".$cadenaIds.") and tabla=:Tabla and tipo=:Tipo;");				
+          $stmt3 = $conmy->prepare("select id, refid, nombre, descripcion, titulo from tblarchivos where refid IN(".$cadenaIds.") and tabla=:Tabla and tipo=:Tipo;");				
           $stmt3->execute(array(':Tabla'=>'INFD', ':Tipo'=>'IMG'));
           while($row3=$stmt3->fetch(PDO::FETCH_ASSOC)){
             $imagenes[$row3['refid']][]=array(
               'id'=>(int)$row3['id'],
               'refid'=>$row3['refid'],
-              'tabla'=>$row3['tabla'],
               'nombre'=>$row3['nombre'],
-              'titulo'=>$row3['titulo'],
               'descripcion'=>$row3['descripcion'],
-              'tipo'=>$row3['tipo']  
+              'titulo'=>$row3['titulo'],
             );
           }
           $tablaHTML.='<div class="accordion" id="accordion-container">';
@@ -270,8 +258,7 @@
       .accordion .accordion-item { border: none; }
       .accordion .accordion-header { border: none; }
       .accordion .accordion-body { border: none; padding:0}
-      .contenedor-actividades{ display:grid; background-color:white !important; }
-      @media(max-width:767px){.input-group--mod{background-color:white !important; }}
+      .contenedor-actividades{ display:grid; }
       .grid-icono{ grid-row: 1 / 2; place-self: end }
       @media(min-width:768px){
         .contenedor-actividades{ grid-template-columns: 6fr 1fr;}
@@ -292,11 +279,6 @@
         width: 100%;
         height: 200px;
         object-fit: contain;
-      }
-      .btn-desactivado {
-        color: grey; 
-        pointer-events: none; 
-        opacity: 0.5; 
       }
     </style>
 </head>

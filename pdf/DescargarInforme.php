@@ -11,15 +11,16 @@
 	$MSG='';
 	$html5='';
 
-	$arbol=array();
-	$actividades=array();
-	$conclusiones=array();
-	$recomendaciones=array();
-	$antecedentes=array();	
+	$arbol = array();
+	$actividades = array();
+	$analisis = array();
+	$conclusiones = array();
+	$recomendaciones = array();
+	$antecedentes = array();	
 
-	$imagenes=array();
-	$ImgInforme=array();
-	$ImgAnexos=array();
+	$imagenes = array();
+	$ImgInforme = array();
+	$ImgAnexos = array();
 	
     function construirArbol($registros, $padreId = 0) {
 		$arbol2 = array();
@@ -121,13 +122,13 @@
 				$html.=FnGenerarInformeHtml($nodo['hijos'], $imagenes, $numero, $nivel+1, $indiceActual);
 			}
 		}
-		return $html;
+		return $html;		
 	}
-
+	
 	try{
 		$conmy->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);		
 		$informe=FnBuscarInforme($conmy, $ID, $CLI_ID);
-
+		
 		if(!empty($informe->Id)){
 			$NOMBRE=$informe->Nombre;
 			$ID2=$informe->Id;
@@ -151,6 +152,8 @@
 					);
 				}else if($dato['tipo']=='con'){
 					$conclusiones[]=array('actividad'=>$dato['actividad']);
+				}else if($dato['tipo']=='ana'){
+					$analisis[]=array('actividad'=>$dato['actividad']);
 				}else if($dato['tipo']=='rec'){
 					$recomendaciones[]=array('actividad'=>$dato['actividad']);
 				}else if($dato['tipo']=='ant'){
@@ -184,15 +187,18 @@
 			$stmt4 = $conmy->prepare("select nombre, titulo, descripcion from tblarchivos where refid=:RefId and tabla=:Tabla and tipo=:Tipo;");				
 			$stmt4->execute(array('RefId'=>$ID2, ':Tabla'=>'INFA', ':Tipo'=>'IMG'));
 			$ImgAnexos = $stmt4->fetchAll(PDO::FETCH_ASSOC);
-		}		
+		}
+
+		$conmy=null;		
 	}catch(PDOException $ex){
 		$MSG=$ex->getMessage();
+		$conmy=null;
 	} catch (Exception $ex) {
 		$MSG=$ex->getMessage();
-	}finally{
 		$conmy=null;
 	}
 
+	
 	$html5='
 	<!DOCTYPE html>
 		<html lang="es">
@@ -244,7 +250,7 @@
 	<footer>
 		<p style="text-align:center; padding:0px; margin:0px;">AV. Los Incas 4ta Cuadra S/N - Comas - Lima - Per&uacute; - Telf. (511) 7130629 Anexo 300</p>
 		<p style="text-align:center; padding:0px; margin:0px;">e-mail: hola@gpemsac.com</p>
-		<img src="'.$_SERVER['DOCUMENT_ROOT']."/mycloud/portal/empresa/footer/gpemsac.jpg".'" width="100%"/>
+		<img src="'.$_SERVER['DOCUMENT_ROOT']."/mycloud/logos/footer-gpem.jpg".'" width="100%"/>
 	</footer>';
     
     $html5.='
@@ -344,45 +350,49 @@
 		</table>';
 
 		//SECCION IMAGENES DEL EQUIPO
-		$html5.='
-		<table width="100%" style="margin-bottom: 10px;">
-			<tbody>';
-			if(count($ImgInforme)==1){
-				$html5.='
-				<tr>
-					<td style="border: 1px solid; text-align:center;">
-						<p style="margin:0px;">'.utf8_encode($ImgInforme[0]['titulo']).'</p>
-						<img src="'.$_SERVER['DOCUMENT_ROOT'].'/mycloud/gesman/files/'.$ImgInforme[0]['nombre'].'" style="max-height:200px;">
-						<p style="margin:0px;">'.utf8_encode($ImgInforme[0]['descripcion']).'</p>
-					</td>
-				</tr>';
-			}else if(count($ImgInforme)>1){
-				$i=1;
-				foreach ($ImgInforme as $imagen) {
-					if($i==2){
-						$html5.='
-							<td width="50%" style="border: 1px solid; text-align:center;">
-								<p style="margin:0px;">'.utf8_encode($imagen['titulo']).'</p>
-								<img src="'.$_SERVER['DOCUMENT_ROOT'].'/mycloud/gesman/files/'.$imagen['nombre'].'" class="img-fluid" style="max-height:200px;" alt="...">
-								<p style="margin:0px;">'.utf8_encode($imagen['descripcion']).'</p>
-							</td>
-						</tr>';
-						$i=1;
-					}else{
-						$html5.='
-						<tr>
-							<td width="50%" style="border: 1px solid; text-align:center;">
-								<p style="margin:0px;">'.utf8_encode($imagen['titulo']).'</p>
-								<img src="'.$_SERVER['DOCUMENT_ROOT'].'/mycloud/gesman/files/'.$imagen['nombre'].'" class="img-fluid" style="max-height:200px;" alt="...">
-								<p style="margin:0px;">'.utf8_encode($imagen['descripcion']).'</p>
-							</td>';
-						$i+=1;
-					}
+		if(count($ImgInforme)==1){
+			$html5.='
+			<table width="100%" style="margin-bottom: 10px;">
+				<tbody>
+					<tr>
+						<td style="border: 1px solid; text-align:center;">
+							<p style="margin:0px;">'.utf8_encode($ImgInforme[0]['titulo']).'</p>
+							<img src="'.$_SERVER['DOCUMENT_ROOT'].'/mycloud/gesman/files/'.$ImgInforme[0]['nombre'].'" style="max-height:200px;">
+							<p style="margin:0px;">'.utf8_encode($ImgInforme[0]['descripcion']).'</p>
+						</td>
+					</tr>
+				</tbody>
+			</table>';
+		}else if(count($ImgInforme)>1){
+			$i=1;
+			$html5.='
+			<table width="100%" style="margin-bottom: 10px;">
+				<tbody>';
+			foreach ($ImgInforme as $imagen) {
+				if($i==2){
+					$html5.='
+						<td width="50%" style="border: 1px solid; text-align:center;">
+							<p style="margin:0px;">'.utf8_encode($imagen['titulo']).'</p>
+							<img src="'.$_SERVER['DOCUMENT_ROOT'].'/mycloud/gesman/files/'.$imagen['nombre'].'" class="img-fluid" style="max-height:200px;" alt="...">
+							<p style="margin:0px;">'.utf8_encode($imagen['descripcion']).'</p>
+						</td>
+					</tr>';
+					$i=1;
+				}else{
+					$html5.='
+					<tr>
+						<td width="50%" style="border: 1px solid; text-align:center;">
+							<p style="margin:0px;">'.utf8_encode($imagen['titulo']).'</p>
+							<img src="'.$_SERVER['DOCUMENT_ROOT'].'/mycloud/gesman/files/'.$imagen['nombre'].'" class="img-fluid" style="max-height:200px;" alt="...">
+							<p style="margin:0px;">'.utf8_encode($imagen['descripcion']).'</p>
+						</td>';
+					$i+=1;
 				}
 			}
 			$html5.='
-			</tbody>
-		</table>';
+				</tbody>
+			</table>';
+		}			
 		$NUMERO+=1;
 
 		//SECCION SOLICITUD DEL CLIENTE
@@ -434,6 +444,29 @@
 			</tbody>
 		</table>';
 		$NUMERO+=1;
+
+		//SECCION ANALISIS
+		if(count($analisis)>0){
+			$html5.='
+			<table width="100%" style="border: #b2b2b2 1px solid; margin-bottom: 10px;">
+				<tbody>
+					<tr>
+						<td  style="font-weight:bold; font-size: 13px; background-color:#dcdcdc;">'.$NUMERO.'- ANALISIS</td>
+					</tr>
+					<tr>
+						<td>
+							<ul style="margin-left: 5px; padding-left:5px;">';
+								foreach ($analisis as $analisis2) {
+									$html5.='<li style="padding-left:15px;">'.utf8_encode($analisis2['actividad']).'</li>';
+								}
+							$html5.='
+							</ul>
+						</td>
+					</tr>
+				</tbody>
+			</table>';
+			$NUMERO+=1;
+		}
 
 		//SECCION CONCLUSIONES
 		if(count($conclusiones)>0){
@@ -494,7 +527,7 @@
 						<tr>
 							<td style="border: 1px solid; text-align:center;">
 								<p style="margin:0px; font-weight:bold; font-size:14px;">'.utf8_encode($anexo['titulo']).'</p>
-								<img src="'.$_SERVER['DOCUMENT_ROOT'].'/mycloud/gesman/files/'.$anexo['nombre'].'" class="img-fluid" style="max-height:400px;" alt="...">
+								<img src="'.$_SERVER['DOCUMENT_ROOT'].'/mycloud/gesman/files/'.$anexo['nombre'].'" class="img-fluid" style="max-height:500px;" alt="...">
 								<p style="margin:0px;">'.utf8_encode($anexo['descripcion']).'</p>
 							</td>
 						</tr>';
@@ -510,7 +543,7 @@
 				<tr>
 					<td width="35%"></td>
 					<td width="35%"></td>
-					<td width="30%" style="border-top:1px solid; text-align:center;"><p style="margin:0px; font-weight:bold;">'.$informe->Supervisor.'</p><p style="margin:0px;">SUPERVISOR RESPONSABLE</p></td>
+					<td width="30%" style="border-top:1px solid; text-align:center;"><p style="margin:0px; font-weight:bold;">'.utf8_encode($informe->Supervisor).'</p><p style="margin:0px;">SUPERVISOR RESPONSABLE</p></td>
 				</tr>
 			</tbody>
 		</table>';

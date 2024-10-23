@@ -297,7 +297,7 @@
 			}		
 		}*/
 
-		$datos=FnBuscarInformeActividades2($conmy, $informe->Id);
+		$datos=FnBuscarInformeActividades($conmy, $informe->Id);
 
 		foreach($datos as $dato){
 			if($dato['tipo']=='act'){

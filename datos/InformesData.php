@@ -34,20 +34,23 @@
     }
   }
 
+  /** */
   function FnModificarInformeActividad($conmy, $actividad) {
     try {
+      $res = false;
       $stmt = $conmy->prepare("UPDATE tblinforme SET actividad = :Actividad, actualizacion=:Actualizacion WHERE id = :Id");
       $params = array(':Actividad' => $actividad->actividad,':Actualizacion'=>$actividad->usuario,':Id' => $actividad->id);
-      $result = $stmt->execute($params);
-      if ($stmt->rowCount() == 0) {
-        throw new Exception('Cambios no realizados.');
+      
+      if ($stmt->execute($params)) {
+        $res = true;
       }
-      return $result;
+      return $res;
     } catch (PDOException $ex) {
       throw new Exception($ex->getMessage());
     }
   }
 
+  /** */
   function FnBuscarInforme($conmy, $id, $cliid) {
     try {
       $stmt = $conmy->prepare("SELECT id, ordid, equid, cliid, numero, nombre, fecha, ord_nombre, cli_nombre, cli_contacto, cli_direccion, supervisor, equ_codigo, equ_nombre, equ_marca, equ_modelo, equ_serie, equ_datos, equ_km, equ_hm, actividad, estado FROM tblinforme WHERE id = :Id AND cliid = :Cliid");
@@ -122,8 +125,10 @@
     }
   }
 
+  /** */
   function FnModificarInforme($conmy, $informe) {
     try {
+      $res = false;
       $stmt = $conmy->prepare("UPDATE tblinforme SET fecha = :Fecha, cli_contacto=:CliContacto, cli_direccion = :Clidireccion, supervisor = :Supervisor, actualizacion = :Actualizacion WHERE id=:Id");
       $params = array(
         ':Fecha' => $informe->fecha,
@@ -133,18 +138,19 @@
         ':Actualizacion' => $informe->actualizacion,
         ':Id' => $informe->id,
       );
-      $result = $stmt->execute($params);
-      if ($stmt->rowCount() == 0) {
-        throw new Exception('Cambios no realizados.');
+      if ($stmt->execute($params)) {
+        $res=true;
       }
-      return $result;
+      return $res;
     } catch (PDOException $e) {
       throw new Exception($e->getMessage());
     }
   }
 
+  /** */
   function FnModificarInformeEquipo($conmy, $informe) {
     try {
+      $res = false;
       $stmt = $conmy->prepare("UPDATE tblinforme SET equ_nombre = :EquNombre, equ_marca = :EquMarca, equ_modelo = :EquModelo, equ_serie = :EquSerie, equ_datos = :EquDatos, equ_km = :EquKm, equ_hm = :EquHm, actualizacion = :Actualizacion WHERE id =:Id");
       $params = array(
         ':EquNombre' => $informe->equnombre,
@@ -156,11 +162,10 @@
         ':EquHm' =>$informe->equhm,
         ':Actualizacion' => $informe->actualizacion,
         ':Id' => $informe->id);
-      $result = $stmt->execute($params);
-      if ($stmt->rowCount() == 0) {
-        throw new Exception('Cambios no realizados.');
+      if ($stmt->execute($params)) {
+        $res=true;
       }
-      return $result;
+      return $res;
     } catch (PDOException $ex) {
       throw new Exception($ex->getMessage());
     }
@@ -197,7 +202,7 @@
     }
   }
 
-  function FnBuscarInformeActividades1($conmy, $id) {
+  function FnBuscarInformeActividad($conmy, $id) {
     try {
       $stmt = $conmy->prepare("SELECT id, infid, ownid, tipo, actividad, diagnostico, trabajos, observaciones, estado FROM tbldetalleinforme WHERE id = :Id;");
       $stmt->execute(array(':Id' => $id));
@@ -219,13 +224,19 @@
     }
   }
 
-  function FnBuscarInformeActividades2($conmy, $infid) {
+  function FnBuscarInformeActividades($conmy, $infid) {
     try {
-      $stmt = $conmy->prepare("SELECT id, ownid, tipo, actividad, diagnostico, trabajos, observaciones, estado FROM tbldetalleinforme WHERE infid = :Infid;");
-      $stmt->execute(array(':Infid' => $infid));
-      $actividades = $stmt ->fetchAll(PDO::FETCH_ASSOC);;
-      return $actividades;
+        $stmt = $conmy->prepare("SELECT id, ownid, tipo, actividad, diagnostico, trabajos, observaciones, estado FROM tbldetalleinforme WHERE infid = :Infid;");
+        $stmt->execute(array(':Infid' => $infid));
+        $datos = array(); 
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+          $datos[] = $row; 
+        }
+        return $datos; 
     } catch (PDOException $ex) {
+      throw new Exception($ex->getMessage());
+    }
+      catch (Exception $ex) {
       throw new Exception($ex->getMessage());
     }
   }

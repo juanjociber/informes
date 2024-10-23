@@ -9,7 +9,7 @@
     if(empty($_POST['id'])){ throw new Exception("La informacion esta incompleta."); }
     
     $conmy->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $actividad = FnBuscarInformeActividades1($conmy, $_POST['id']);    
+    $actividad = FnBuscarInformeActividad($conmy, $_POST['id']);    
     if ($actividad) {
       $data['res'] = true;
       $data['msg'] = 'Ok.';

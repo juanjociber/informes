@@ -131,7 +131,7 @@
         $Nombre = $informe->Nombre;
         $Estado = $informe->Estado;
         $archivos = FnBuscarArchivos2($conmy, $ID);
-        $datos = FnBuscarInformeActividades2($conmy, $ID);
+        $datos = FnBuscarInformeActividades($conmy, $ID);
         if (!empty($datos)) {        
           foreach ($datos as $dato) {
             if ($dato['tipo'] == 'act') {

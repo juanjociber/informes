@@ -120,7 +120,7 @@ const FnModalModificarInformeActividades = async (id) => {
   const formData = new FormData();
   formData.append('id', id);
   try {
-    const response = await fetch('/informes/search/BuscarInformeActividades.php', {
+    const response = await fetch('/informes/search/BuscarInformeActividad.php', {
         method: 'POST',
         body: formData
     });
@@ -615,32 +615,36 @@ function FnListarInformes(){
 
 
 
-//CAPTURAR LAS ACTIVIDADES
+
+/** CAMBIO DE POSICIONES DE ACTIVIDADES */
 function FnCapturarActividad(item) {
   const actividad = {
     id: item.id,
+    infid: item.querySelector('#infidPadre').value,
+    ownid: item.querySelector('#ownidPadre').value,
+    tipo: item.querySelector('#tipoPadre').value,
     actividad: item.querySelector('.accordion-header p').innerText.replace('\n', '').trim(),
     diagnostico: item.querySelector('.diagnostico').innerText.trim(),
     trabajos: item.querySelector('.trabajo').innerText.trim(),
     observaciones: item.querySelector('.observacion').innerText.trim(),
-    imagenes: [],
+    archivos: [],
     hijos: []
   };
-
+  
   // OBTENER LAS IMAGENES
-  const contenedorImagenes = item.querySelector('.contenedor-imagen');
-  if (contenedorImagenes) {
-    const imagenes = contenedorImagenes.querySelectorAll('.card');
-    imagenes.forEach(imagen => {
-      actividad.imagenes.push({
-        id: imagen.id.split('-')[1],
-        titulo: imagen.querySelector('.card-header').innerText.trim(),
-        nombre: imagen.querySelector('img').src,
-        descripcion: imagen.querySelector('.card-footer').innerText.trim()
+  const contenedorArchivos = item.querySelector('.contenedor-imagen');
+  if (contenedorArchivos) {
+    const archivos = contenedorArchivos.querySelectorAll('.d-flex.flex-column');
+    archivos.forEach(archivo => {
+      const archivoId = archivo.querySelector('span[data-bs-toggle="tooltip"][title="Editar"]').getAttribute('onclick').match(/\(([^)]+)\)/)[1]; // Extract id from onclick
+      actividad.archivos.push({
+        id: archivoId,
+        // Add other properties if needed
       });
     });
   }
-  const hijos = item.querySelectorAll(`#accordion-container-${item.id} .accordion-item`);
+  
+  const hijos = item.querySelectorAll(`#accordion-container .accordion-item`); // Adjust as needed for child elements
   hijos.forEach(hijo => {
     actividad.hijos.push(FnCapturarActividad(hijo));
   });
@@ -654,17 +658,71 @@ function FnCapturarActividades() {
     actividades.push(FnCapturarActividad(actividadPadre));
   });
   console.log(actividades);
-
 }
 
-FnCapturarActividades();
+// MOVER ACCORDION-ITEM HACIA ARRIBA
+async function FnMoverArriba(item) {
+  const prev = item.previousElementSibling;
+  if (prev) {
+    item.parentNode.insertBefore(item, prev);
+    await FnActualizarPosiciones();
+  }
+}
+
+// MOVER ACCORDION-ITEM HACIA ABAJO
+async function FnMoverAbajo(item) {
+  const next = item.nextElementSibling;
+  if (next) {
+    item.parentNode.insertBefore(next, item);
+    await FnActualizarPosiciones();
+  }
+}
+
+// Actualizar posiciones en el servidor
+async function FnActualizarPosiciones() {
+  const actividades = FnCapturarActividades(); // Captura las actividades actuales
+  try {
+    const response = await fetch('/informes/update/ModificarActividades.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(actividades)
+    });
+    if (!response.ok) {
+      throw new Error('Error en la actualización de posiciones');
+    }
+    const data = await response.json();
+    console.log('Posiciones actualizadas en el servidor:', data);
+  } catch (error) {
+    console.error('Error al actualizar posiciones:', error);
+  }
+}
+
+// AGREGAR EVENTO A BOTONES
+function FnAgregarEventoBotones(item) {
+  const btnArriba = item.querySelector('.btn-arriba');
+  const btnAbajo = item.querySelector('.btn-abajo');
+  
+  if (btnArriba) {
+    btnArriba.addEventListener('click', () => FnMoverArriba(item));
+  }
+  
+  if (btnAbajo) {
+    btnAbajo.addEventListener('click', () => FnMoverAbajo(item));
+  }
+}
+
+// INICIALIZANDO ACTIVIDADES Y AGREGAR
+function FnInicializar() {
+  FnCapturarActividades();
+  const items = document.querySelectorAll('.accordion-item');
+  items.forEach(item => {
+    FnAgregarEventoBotones(item);
+  });
+}
+
+FnInicializar();
 
 
-// const test = document.querySelector('#accordion-container');
-
-
-
-// Array.from(test.children).forEach(item => {
-//   console.log(item); 
-// });
 
