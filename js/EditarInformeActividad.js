@@ -614,132 +614,141 @@ function FnListarInformes(){
 };
 
 
-
-
 /** CAMBIO DE POSICIONES DE ACTIVIDADES */
-function FnCapturarActividad(item) {
-  const actividad = {
-    id: item.id,
-    infid: item.querySelector('#infidPadre').value,
-    ownid: item.querySelector('#ownidPadre').value,
-    tipo: item.querySelector('#tipoPadre').value,
-    actividad: item.querySelector('.accordion-header p').innerText.replace('\n', '').trim(),
-    diagnostico: item.querySelector('.diagnostico').innerText.trim(),
-    trabajos: item.querySelector('.trabajo').innerText.trim(),
-    observaciones: item.querySelector('.observacion').innerText.trim(),
-    archivos: [],
-    hijos: []
-  };
+// function FnCapturarActividad(item) {
+//   const actividad = {
+//     id: item.id,
+//     infid: item.querySelector('#infidPadre').value,
+//     ownid: item.querySelector('#ownidPadre').value,
+//     tipo: item.querySelector('#tipoPadre').value,
+//     actividad: item.querySelector('.accordion-header p').innerText.replace('\n', '').trim(),
+//     diagnostico: item.querySelector('.diagnostico').innerText.trim(),
+//     trabajos: item.querySelector('.trabajo').innerText.trim(),
+//     observaciones: item.querySelector('.observacion').innerText.trim(),
+//     archivos: [],
+//     hijos: []
+//   };
   
-  // OBTENER LAS IMÁGENES
-  const contenedorArchivos = item.querySelector('.contenedor-imagen');
-  if (contenedorArchivos) {
-    const archivos = contenedorArchivos.querySelectorAll('.d-flex.flex-column');
-    archivos.forEach(archivo => {
-      const archivoId = archivo.querySelector('span[data-bs-toggle="tooltip"][title="Editar"]').getAttribute('onclick').match(/\(([^)]+)\)/)[1]; 
-      actividad.archivos.push({
-        id: archivoId,
-        refid: actividad.id,
-        tabla: archivo.querySelector('#txtTabla') ? archivo.querySelector('#txtTabla').value : '',
-        nombre: archivo.querySelector('#imagenArchivo').getAttribute('src').split('/')[4],
-        titulo: archivo.querySelector('#tituloArchivo').textContent,
-        descripcion: archivo.querySelector('#descripcionArchivo').textContent,
-        tipo: archivo.querySelector('#txtTipoArchivo').value
-      });
-    });
-  }
+//   // OBTENER LAS IMÁGENES
+//   const contenedorArchivos = item.querySelector('.contenedor-imagen');
+//   if (contenedorArchivos) {
+//     const archivos = contenedorArchivos.querySelectorAll('.d-flex.flex-column');
+//     archivos.forEach(archivo => {
+//       const archivoId = archivo.querySelector('span[data-bs-toggle="tooltip"][title="Editar"]').getAttribute('onclick').match(/\(([^)]+)\)/)[1]; 
+//       actividad.archivos.push({
+//         id: archivoId,
+//         refid: actividad.id,
+//         tabla: archivo.querySelector('#txtTabla') ? archivo.querySelector('#txtTabla').value : '',
+//         nombre: archivo.querySelector('#imagenArchivo').getAttribute('src').split('/')[4],
+//         titulo: archivo.querySelector('#tituloArchivo').textContent,
+//         descripcion: archivo.querySelector('#descripcionArchivo').textContent,
+//         tipo: archivo.querySelector('#txtTipoArchivo').value
+//       });
+//     });
+//   }
   
-  // Capturar hijos
-  const hijos = item.querySelectorAll(`#accordion-container .accordion-item`); 
-  hijos.forEach(hijo => {
-    actividad.hijos.push(FnCapturarActividad(hijo));
-  });
+//   // Capturar hijos
+//   const hijos = item.querySelectorAll(`#accordion-container .accordion-item`); 
+//   hijos.forEach(hijo => {
+//     actividad.hijos.push(FnCapturarActividad(hijo));
+//   });
   
-  return actividad;
-}
+//   return actividad;
+// }
 
-function FnCapturarActividades() {
-  const actividades = [];
-  const items = document.querySelector('#accordion-container');
-  Array.from(items.children).forEach(actividadPadre => {
-    actividades.push(FnCapturarActividad(actividadPadre));
-  });
+// function FnCapturarActividades() {
+//   const actividades = [];
+//   const items = document.querySelector('#accordion-container');
+//   Array.from(items.children).forEach(actividadPadre => {
+//     actividades.push(FnCapturarActividad(actividadPadre));
+//   });
   
-  console.log(actividades);
-  return actividades;
-}
+//   console.log(actividades);
+//   return actividades;
+// }
 
-// MOVER ACCORDION-ITEM HACIA ARRIBA
-async function FnMoverArriba(item) {
-  const prev = item.previousElementSibling;
-  if (prev) {
-    item.parentNode.insertBefore(item, prev);
-    await FnActualizarPosiciones();
-  }
-}
+// // MOVER ACCORDION-ITEM HACIA ARRIBA
+// async function FnMoverArriba(item) {
+//   const prev = item.previousElementSibling;
+//   if (prev) {
+//     item.parentNode.insertBefore(item, prev);
+//     await FnActualizarPosiciones();
+//   }
+// }
 
-// MOVER ACCORDION-ITEM HACIA ABAJO
-async function FnMoverAbajo(item) {
-  const next = item.nextElementSibling;
-  if (next) {
-    item.parentNode.insertBefore(next, item);
-    await FnActualizarPosiciones();
-  }
-}
+// // MOVER ACCORDION-ITEM HACIA ABAJO
+// async function FnMoverAbajo(item) {
+//   const next = item.nextElementSibling;
+//   if (next) {
+//     item.parentNode.insertBefore(next, item);
+//     await FnActualizarPosiciones();
+//   }
+// }
 
-// Actualizar posiciones en el servidor
-async function FnActualizarPosiciones() {
-  const actividades = FnCapturarActividades(); 
+// // Actualizar posiciones en el servidor
+// async function FnActualizarPosiciones() {
+//   const actividades = FnCapturarActividades(); 
   
-  try {
-    const response = await fetch('/informes/update/ModificarActividades.php', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(actividades)
-    });
+//   try {
+//     const response = await fetch('/informes/update/ModificarActividades.php', {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json'
+//       },
+//       body: JSON.stringify(actividades)
+//     });
+
+//     console.log(response);
     
-    // Verifica si la respuesta es correcta
-    if (!response.ok) {
-      throw new Error('Error en la actualización de posiciones: ' + response.statusText);
-    }
+//     // Verifica si la respuesta es correcta
+//     if (!response.ok) {
+//       throw new Error(response.statusText);
+//     }
 
-    const data = await response.json();
-    console.log('Posiciones actualizadas en el servidor:', data);
-  } catch (error) {
-    console.error('Error al actualizar posiciones:', error);
-  }
-}
+//     const data = await response.json();
+//     console.log(data);
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
 
-// AGREGAR EVENTO A BOTONES
-function FnAgregarEventoBotones(item) {
-  const btnArriba = item.querySelector('.btn-arriba');
-  const btnAbajo = item.querySelector('.btn-abajo');
+// // AGREGAR EVENTO A BOTONES
+// function FnAgregarEventoBotones(item) {
+//   const btnArriba = item.querySelector('.btn-arriba');
+//   const btnAbajo = item.querySelector('.btn-abajo');
   
-  if (btnArriba) {
-    btnArriba.addEventListener('click', () => FnMoverArriba(item));
-  }
+//   if (btnArriba) {
+//     btnArriba.addEventListener('click', () => FnMoverArriba(item));
+//   }
   
-  if (btnAbajo) {
-    btnAbajo.addEventListener('click', () => FnMoverAbajo(item));
-  }
-}
+//   if (btnAbajo) {
+//     btnAbajo.addEventListener('click', () => FnMoverAbajo(item));
+//   }
+// }
 
-// INICIALIZANDO ACTIVIDADES Y AGREGAR
-function FnInicializar() {
-  FnCapturarActividades();
-  const items = document.querySelectorAll('.accordion-item');
-  items.forEach(item => {
-    FnAgregarEventoBotones(item);
-  });
-}
+// // INICIALIZANDO ACTIVIDADES Y AGREGAR
+// function FnInicializar() {
+//   FnCapturarActividades();
+//   const items = document.querySelectorAll('.accordion-item');
 
-// Ejecutar la inicialización al cargar la página
-FnInicializar();
+//   // Solo agregar eventos a los items principales
+//   items.forEach(item => {
+//     if (!item.querySelector('.accordion-item')) { // Asegúrate de que no tenga hijos
+//       FnAgregarEventoBotones(item);
+//     }
+//   });
+// }
+
+// // Ejecutar la inicialización al cargar la página
+// FnInicializar();
 
 
-
+const actividades = [];
+const items = document.querySelector('#accordion-container');
+Array.from(items.children).forEach(elemento => {
+  actividades.push(elemento.id, elemento.getAttribute('data-position'));
+});
+console.log(actividades);
 
 
 

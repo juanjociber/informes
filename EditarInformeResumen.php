@@ -176,7 +176,7 @@
               </div>
               <div class="input-grop-icons col-4 col-md-2 d-flex justify-content-around align-items-center">
                 <span class="input-group-text bg-white border border-0 text-secondary" style="cursor:pointer;">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="23" height="28" viewBox="0 0 59 64" data-tipo="<?php echo $analisi['tipo']; ?>" onclick="FnModalModificarDetalleInforme(<?php echo $analisi['id']; ?>, 'analisis')">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="23" height="28" viewBox="0 0 59 64" data-tipo="<?php echo $analisi['tipo']; ?>" onclick="FnModalModificarActividad(<?php echo $analisi['id']; ?>, 'analisis')">
                     <title>Editar</title>
                     <g fill="none" stroke="#6B6C6E" stroke-width="3">
                       <path d="M47,45v15c0,1.1-0.9,2-2,2H2c-1.1,0-2-0.9-2-2V2c0-1.1,0.9-2,2-2h25.9L47,18.1V33"/>
@@ -215,7 +215,7 @@
               </div>
               <div class="input-grop-icons col-4 col-md-2 d-flex justify-content-around align-items-center">
                 <span class="input-group-text bg-white border border-0 text-secondary" style="cursor: pointer;">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="23" height="28" viewBox="0 0 59 64" data-tipo="<?php echo $conclusion['tipo']; ?>" onclick="FnModalModificarDetalleInforme(<?php echo $conclusion['id']; ?>, 'conclusion')">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="23" height="28" viewBox="0 0 59 64" data-tipo="<?php echo $conclusion['tipo']; ?>" onclick="FnModalModificarActividad(<?php echo $conclusion['id']; ?>, 'conclusion')">
                     <title>Editar</title>
                     <g fill="none" stroke="#6B6C6E" stroke-width="3">
                       <path d="M47,45v15c0,1.1-0.9,2-2,2H2c-1.1,0-2-0.9-2-2V2c0-1.1,0.9-2,2-2h25.9L47,18.1V33"/>
@@ -253,7 +253,7 @@
                 </div>
                 <div class="input-grop-icons col-4 col-md-2 d-flex justify-content-around align-items-center">
                   <span class="input-group-text bg-white border border-0 text-secondary" style="cursor: pointer;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="23" height="28" viewBox="0 0 59 64" data-tipo="<?php echo $recomendacion['tipo']; ?>" onclick="FnModalModificarDetalleInforme(<?php echo $recomendacion['id']; ?>, 'recomendacion')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="23" height="28" viewBox="0 0 59 64" data-tipo="<?php echo $recomendacion['tipo']; ?>" onclick="FnModalModificarActividadFnModalModificarDetalleInforme(<?php echo $recomendacion['id']; ?>, 'recomendacion')">
                       <title>Editar</title>
                       <g fill="none" stroke="#6B6C6E" stroke-width="3">
                         <path d="M47,45v15c0,1.1-0.9,2-2,2H2c-1.1,0-2-0.9-2-2V2c0-1.1,0.9-2,2-2h25.9L47,18.1V33"/>

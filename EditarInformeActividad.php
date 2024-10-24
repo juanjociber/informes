@@ -37,7 +37,7 @@
 
 		foreach ($arbol as $key=>$nodo) {
 			$indiceActual = $nivel==0?$contador++:$indice.'.'.($key+1);
-			$html.='<div class="accordion-item" id="'.$nodo['id'].'">';
+			$html.='<div class="accordion-item  sortable" id="'.$nodo['id'].'" data-index="'.$nodo['id'].'"  data-position="'.$nodo['posicion'].'" >';
       $html.='<input type="hidden" id="infidPadre" value="'.$nodo['infid'].'">';
       $html.='<input type="hidden" id="ownidPadre" value="'.$nodo['ownid'].'">';
       $html.='<input type="hidden" id="tipoPadre" value="'.$nodo['tipo'].'">';
@@ -210,7 +210,7 @@
       }
     }
     if($Id2 > 0){
-      $stmt2 = $conmy->prepare("select id, infid, ownid, tipo, actividad, diagnostico, trabajos, observaciones from tbldetalleinforme where infid=:InfId and tipo='act';");
+      $stmt2 = $conmy->prepare("select id, infid, ownid, posicion, tipo, actividad, diagnostico, trabajos, observaciones from tbldetalleinforme where infid=:InfId and tipo='act';");
       $stmt2->bindParam(':InfId', $ID, PDO::PARAM_INT);
       $stmt2->execute();
       $actividades = $stmt2->fetchAll(PDO::FETCH_ASSOC);
@@ -258,12 +258,16 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Editar Actividades | GPEM S.A.C</title>
     <link rel="shortcut icon" href="/mycloud/logos/favicon.ico">
+
     <link rel="stylesheet" href="/mycloud/library/fontawesome-free-5.9.0-web/css/all.css">
     <link rel="stylesheet" href="/mycloud/library/SweetAlert2/css/sweetalert2.min.css">
     <link rel="stylesheet" href="/mycloud/library/bootstrap-5.0.2-dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/mycloud/library/select-gpem-1.0/css/select-gpem-1.0.css">
     <link rel="stylesheet" href="/mycloud/library/gpemsac/css/gpemsac.css"> 
     <link rel="stylesheet" href="/gesman/menu/sidebar.css">
+
+
+
     <style>
       /* .contenedor-imagen{ display: grid; grid-template-columns:1fr 1fr; gap:5px;} */
       @media(min-width:768px){.contenedor-imagen{display: grid; grid-template-columns:1fr 1fr; gap:15px;}}
@@ -560,8 +564,51 @@
     <div class="loader-full"></div>
   </div>
   </body>
+
+  <script type="text/javascript" charset="utf-8" src="/informes/js/jquery-3.3.1.min.js"></script>
+  <script type="text/javascript" charset="utf-8" src="/informes/js/jquery-ui.min.js"></script>
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+        $('.sortable').sortable({
+            update: function(event, ui) {
+                $(this).children().each(function(index) {
+                    if ($(this).attr('data-position') != (index + 1)) {
+                        $(this).attr('data-position', (index + 1)).addClass('updated');
+                    }
+                });
+
+                guardandoPosiciones();
+            }
+        });
+    });
+
+    function guardandoPosiciones() {
+        let positions = [];
+        $('.updated').each(function() {
+            positions.push([$(this).attr('data-index'), $(this).attr('data-position')]);
+            $(this).removeClass('updated');
+        });
+
+        $.ajax({
+            url: 'ModificarActividades.php',
+            method: 'POST',
+            dataType: 'text',
+            data: {
+                update: 1,
+                positions: positions
+            },
+            success: function(response) {
+                console.log(response);
+            }
+        });
+    }
+    </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
   <script src="/informes/js/EditarInformeActividad.js"></script>
   <script src="/mycloud/library/SweetAlert2/js/sweetalert2.all.min.js"></script>
   <script src="/mycloud/library/bootstrap-5.0.2-dist/js/bootstrap.min.js"></script>
   <script src="/gesman/menu/sidebar.js"></script>
+
 </html>
