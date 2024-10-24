@@ -165,12 +165,12 @@
                     <div class="card text-center p-0" id="archivo-'.$elemento['id'].'">
                       <input type="hidden" id="txtRefid" value="'.$elemento['refid'].'">
                       <input type="hidden" id="txtTabla" value="'.$elemento['tabla'].'">
-                      <input type="hidden" id="txtTipo" value="'.$elemento['tipo'].'">
-                      <div class="card-header text-secondary" style="text-align:justify;padding-left:5px;">'.$elemento['titulo'].'</div>
+                      <input type="hidden" id="txtTipoArchivo" value="'.$elemento['tipo'].'">
+                      <div class="card-header text-secondary" style="text-align:justify;padding-left:5px;" id="tituloArchivo">'.$elemento['titulo'].'</div>
                       <div class="card-body p-0">
-                        <img src="/mycloud/gesman/files/'.$elemento['nombre'].'" class="imagen-ajustada" alt="">
+                        <img src="/mycloud/gesman/files/'.$elemento['nombre'].'" class="imagen-ajustada" alt="" id="imagenArchivo">
                       </div>
-                      <div class="card-footer text-secondary" style="text-align:justify;padding-left:5px;">'.$elemento['descripcion'].'</div>
+                      <div class="card-footer text-secondary" style="text-align:justify;padding-left:5px;" id="descripcionArchivo">'.$elemento['descripcion'].'</div>
                     </div>
                   </div>
                 ';

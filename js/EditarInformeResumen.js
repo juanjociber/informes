@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (modalElement) {
     modalEditarActividad = new bootstrap.Modal(modalElement, { keyboard: false });
   }
-  document.getElementById('MenuInformes').classList.add('menu-activo','fw-bold');
+  // document.getElementById('MenuInformes').classList.add('menu-activo','fw-bold');
   vgLoader.classList.add('loader-full-hidden');
 });
 

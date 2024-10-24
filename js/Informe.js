@@ -1,7 +1,7 @@
 const vgLoader = document.querySelector('.container-loader-full');
 
 window.onload = function() {
-  document.getElementById('MenuInformes').classList.add('menu-activo', 'fw-bold');
+  // document.getElementById('MenuInformes').classList.add('menu-activo', 'fw-bold');
   vgLoader.classList.add('loader-full-hidden');
 };
 

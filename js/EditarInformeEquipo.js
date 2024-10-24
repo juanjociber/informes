@@ -4,7 +4,7 @@ const vgLoader = document.querySelector('.container-loader-full');
 
 window.onload = function() {
   modalEquipo = new bootstrap.Modal(document.getElementById('modalEquipo'), { keyboard: false });
-  document.getElementById('MenuInformes').classList.add('menu-activo','fw-bold');
+  // document.getElementById('MenuInformes').classList.add('menu-activo','fw-bold');
   vgLoader.classList.add('loader-full-hidden');
 };
 

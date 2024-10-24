@@ -4,7 +4,7 @@ let modalEditarActividad;
 
 document.addEventListener('DOMContentLoaded', () => {
   modalEditarActividad = new bootstrap.Modal(document.getElementById('modalEditarActividad'), { keyboard: false });
-  document.getElementById('MenuInformes').classList.add('menu-activo','fw-bold');
+  // document.getElementById('MenuInformes').classList.add('menu-activo','fw-bold');
   vgLoader.classList.add('loader-full-hidden');
 });
 
@@ -631,23 +631,30 @@ function FnCapturarActividad(item) {
     hijos: []
   };
   
-  // OBTENER LAS IMAGENES
+  // OBTENER LAS IMÁGENES
   const contenedorArchivos = item.querySelector('.contenedor-imagen');
   if (contenedorArchivos) {
     const archivos = contenedorArchivos.querySelectorAll('.d-flex.flex-column');
     archivos.forEach(archivo => {
-      const archivoId = archivo.querySelector('span[data-bs-toggle="tooltip"][title="Editar"]').getAttribute('onclick').match(/\(([^)]+)\)/)[1]; // Extract id from onclick
+      const archivoId = archivo.querySelector('span[data-bs-toggle="tooltip"][title="Editar"]').getAttribute('onclick').match(/\(([^)]+)\)/)[1]; 
       actividad.archivos.push({
         id: archivoId,
-        // Add other properties if needed
+        refid: actividad.id,
+        tabla: archivo.querySelector('#txtTabla') ? archivo.querySelector('#txtTabla').value : '',
+        nombre: archivo.querySelector('#imagenArchivo').getAttribute('src').split('/')[4],
+        titulo: archivo.querySelector('#tituloArchivo').textContent,
+        descripcion: archivo.querySelector('#descripcionArchivo').textContent,
+        tipo: archivo.querySelector('#txtTipoArchivo').value
       });
     });
   }
   
-  const hijos = item.querySelectorAll(`#accordion-container .accordion-item`); // Adjust as needed for child elements
+  // Capturar hijos
+  const hijos = item.querySelectorAll(`#accordion-container .accordion-item`); 
   hijos.forEach(hijo => {
     actividad.hijos.push(FnCapturarActividad(hijo));
   });
+  
   return actividad;
 }
 
@@ -657,7 +664,9 @@ function FnCapturarActividades() {
   Array.from(items.children).forEach(actividadPadre => {
     actividades.push(FnCapturarActividad(actividadPadre));
   });
+  
   console.log(actividades);
+  return actividades;
 }
 
 // MOVER ACCORDION-ITEM HACIA ARRIBA
@@ -680,7 +689,8 @@ async function FnMoverAbajo(item) {
 
 // Actualizar posiciones en el servidor
 async function FnActualizarPosiciones() {
-  const actividades = FnCapturarActividades(); // Captura las actividades actuales
+  const actividades = FnCapturarActividades(); 
+  
   try {
     const response = await fetch('/informes/update/ModificarActividades.php', {
       method: 'POST',
@@ -689,9 +699,12 @@ async function FnActualizarPosiciones() {
       },
       body: JSON.stringify(actividades)
     });
+    
+    // Verifica si la respuesta es correcta
     if (!response.ok) {
-      throw new Error('Error en la actualización de posiciones');
+      throw new Error('Error en la actualización de posiciones: ' + response.statusText);
     }
+
     const data = await response.json();
     console.log('Posiciones actualizadas en el servidor:', data);
   } catch (error) {
@@ -722,7 +735,11 @@ function FnInicializar() {
   });
 }
 
+// Ejecutar la inicialización al cargar la página
 FnInicializar();
+
+
+
 
 
 
