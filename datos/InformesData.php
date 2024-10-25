@@ -177,8 +177,8 @@
   function FnRegistrarInformeActividad($conmy, $actividad) {
     try {
       $res = false;
-      $stmt = $conmy->prepare("INSERT INTO tbldetalleinforme (infid, ownid, actividad, diagnostico, trabajos, observaciones, tipo, creacion, actualizacion) VALUES (:InfId, :OwnId, :Actividad, :Diagnostico, :Trabajos, :Observaciones, :Tipo,:Creacion, :Actualizacion);");
-      $params = array(':InfId' => $actividad->infid,':OwnId' => $actividad->ownid,':Actividad' => $actividad->actividad,':Diagnostico' => $actividad->diagnostico,':Trabajos' => $actividad->trabajos,':Observaciones' => $actividad->observaciones,':Tipo' => $actividad->tipo, ':Creacion' => $actividad->usuario,':Actualizacion' => $actividad->usuario);
+      $stmt = $conmy->prepare("INSERT INTO tbldetalleinforme (infid, ownid, orden, tipo, actividad, diagnostico, trabajos, observaciones, creacion, actualizacion) VALUES (:InfId, :OwnId, :Actividad, :Diagnostico, :Trabajos, :Observaciones, :Tipo,:Creacion, :Actualizacion);");
+      $params = array(':InfId' => $actividad->infid,':OwnId' => $actividad->ownid,':Orden' => $actividad->orden, ':Tipo' => $actividad->tipo, ':Actividad' => $actividad->actividad,':Diagnostico' => $actividad->diagnostico,':Trabajos' => $actividad->trabajos,':Observaciones' => $actividad->observaciones,':Creacion' => $actividad->usuario,':Actualizacion' => $actividad->usuario);
       if ($stmt->execute($params)) {
           $res = true;
       }
@@ -226,7 +226,7 @@
 
   function FnBuscarInformeActividades($conmy, $infid) {
     try {
-        $stmt = $conmy->prepare("SELECT id, ownid, tipo, actividad, diagnostico, trabajos, observaciones, estado FROM tbldetalleinforme WHERE infid = :Infid;");
+        $stmt = $conmy->prepare("SELECT id, ownid, orden, tipo, actividad, diagnostico, trabajos, observaciones, estado FROM tbldetalleinforme WHERE infid = :Infid order by orden");
         $stmt->execute(array(':Infid' => $infid));
         $datos = array(); 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {

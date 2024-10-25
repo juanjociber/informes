@@ -613,142 +613,106 @@ function FnListarInformes(){
   return false;
 };
 
-
-/** CAMBIO DE POSICIONES DE ACTIVIDADES */
-// function FnCapturarActividad(item) {
-//   const actividad = {
-//     id: item.id,
-//     infid: item.querySelector('#infidPadre').value,
-//     ownid: item.querySelector('#ownidPadre').value,
-//     tipo: item.querySelector('#tipoPadre').value,
-//     actividad: item.querySelector('.accordion-header p').innerText.replace('\n', '').trim(),
-//     diagnostico: item.querySelector('.diagnostico').innerText.trim(),
-//     trabajos: item.querySelector('.trabajo').innerText.trim(),
-//     observaciones: item.querySelector('.observacion').innerText.trim(),
-//     archivos: [],
-//     hijos: []
-//   };
-  
-//   // OBTENER LAS IMÁGENES
-//   const contenedorArchivos = item.querySelector('.contenedor-imagen');
-//   if (contenedorArchivos) {
-//     const archivos = contenedorArchivos.querySelectorAll('.d-flex.flex-column');
-//     archivos.forEach(archivo => {
-//       const archivoId = archivo.querySelector('span[data-bs-toggle="tooltip"][title="Editar"]').getAttribute('onclick').match(/\(([^)]+)\)/)[1]; 
-//       actividad.archivos.push({
-//         id: archivoId,
-//         refid: actividad.id,
-//         tabla: archivo.querySelector('#txtTabla') ? archivo.querySelector('#txtTabla').value : '',
-//         nombre: archivo.querySelector('#imagenArchivo').getAttribute('src').split('/')[4],
-//         titulo: archivo.querySelector('#tituloArchivo').textContent,
-//         descripcion: archivo.querySelector('#descripcionArchivo').textContent,
-//         tipo: archivo.querySelector('#txtTipoArchivo').value
-//       });
+// const lista = document.getElementById('accordion-container');
+// Sortable.create(lista, {
+//   animation: 150,
+//   choseClass:"seleccionado",
+//   dragClass: "drag",
+//   onEnd:() =>{
+//     console.log('Cambio posicion');
+//     const orden = lista.children; 
+//     const nuevaOrden = Array.from(orden).map(item => item.id); 
+//     // ENVIAR NNUEVOS 'id' AL SERVIDOR
+//     fetch('/informes/update/ModificarActividades.php', {
+//         method: 'POST',
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify({ orden: nuevaOrden })
+//     })
+//     .then(response => response.json())
+//     .then(data => {
+//         console.log('Orden actualizado:', data);
+//     })
+//     .catch(error => {
+//         console.error('Error al actualizar el orden:', error);
 //     });
-//   }
-  
-//   // Capturar hijos
-//   const hijos = item.querySelectorAll(`#accordion-container .accordion-item`); 
-//   hijos.forEach(hijo => {
-//     actividad.hijos.push(FnCapturarActividad(hijo));
-//   });
-  
-//   return actividad;
-// }
-
-// function FnCapturarActividades() {
-//   const actividades = [];
-//   const items = document.querySelector('#accordion-container');
-//   Array.from(items.children).forEach(actividadPadre => {
-//     actividades.push(FnCapturarActividad(actividadPadre));
-//   });
-  
-//   console.log(actividades);
-//   return actividades;
-// }
-
-// // MOVER ACCORDION-ITEM HACIA ARRIBA
-// async function FnMoverArriba(item) {
-//   const prev = item.previousElementSibling;
-//   if (prev) {
-//     item.parentNode.insertBefore(item, prev);
-//     await FnActualizarPosiciones();
-//   }
-// }
-
-// // MOVER ACCORDION-ITEM HACIA ABAJO
-// async function FnMoverAbajo(item) {
-//   const next = item.nextElementSibling;
-//   if (next) {
-//     item.parentNode.insertBefore(next, item);
-//     await FnActualizarPosiciones();
-//   }
-// }
-
-// // Actualizar posiciones en el servidor
-// async function FnActualizarPosiciones() {
-//   const actividades = FnCapturarActividades(); 
-  
-//   try {
-//     const response = await fetch('/informes/update/ModificarActividades.php', {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json'
-//       },
-//       body: JSON.stringify(actividades)
-//     });
-
-//     console.log(response);
-    
-//     // Verifica si la respuesta es correcta
-//     if (!response.ok) {
-//       throw new Error(response.statusText);
+//   },
+//   group:"lista-actividades",
+//   store:{
+//     //GUARDAR ORDEN DE ACTIVIDADES
+//     set: (sortable) => {
+//       const orden = sortable.toArray();
+//       localStorage.setItem(sortable.options.group.name, orden.join('|'));
+//       console.log(orden);
+//     },
+//     // OBTENER ORDEN DE LISTA 
+//     get: (sortable) => {
+//       const orden = localStorage.getItem(sortable.options.group.name);
+//       console.log(orden ? orden.split('|') : []);
+//       return orden ? orden.split('|') : [];
 //     }
-
-//     const data = await response.json();
-//     console.log(data);
-//   } catch (error) {
-//     console.log(error);
 //   }
-// }
+// })
 
-// // AGREGAR EVENTO A BOTONES
-// function FnAgregarEventoBotones(item) {
-//   const btnArriba = item.querySelector('.btn-arriba');
-//   const btnAbajo = item.querySelector('.btn-abajo');
-  
-//   if (btnArriba) {
-//     btnArriba.addEventListener('click', () => FnMoverArriba(item));
-//   }
-  
-//   if (btnAbajo) {
-//     btnAbajo.addEventListener('click', () => FnMoverAbajo(item));
-//   }
-// }
+const lista = document.getElementById('accordion-container');
+let sortable;
 
-// // INICIALIZANDO ACTIVIDADES Y AGREGAR
-// function FnInicializar() {
-//   FnCapturarActividades();
-//   const items = document.querySelectorAll('.accordion-item');
-
-//   // Solo agregar eventos a los items principales
-//   items.forEach(item => {
-//     if (!item.querySelector('.accordion-item')) { // Asegúrate de que no tenga hijos
-//       FnAgregarEventoBotones(item);
-//     }
-//   });
-// }
-
-// // Ejecutar la inicialización al cargar la página
-// FnInicializar();
-
-
-const actividades = [];
-const items = document.querySelector('#accordion-container');
-Array.from(items.children).forEach(elemento => {
-  actividades.push(elemento.id, elemento.getAttribute('data-position'));
-});
-console.log(actividades);
-
+function initSortable() {
+  if (window.innerWidth >= 768) {
+    if (!sortable) { 
+      sortable = Sortable.create(lista, {
+        animation: 150,
+        chosenClass: "seleccionado",
+        dragClass: "drag",
+        onEnd: () => {
+          console.log('Cambio posición');
+          const orden = lista.children; 
+          const nuevaOrden = Array.from(orden).map(item => item.id); 
+          // ENVIAR NUEVOS 'id' AL SERVIDOR
+          fetch('/informes/update/ModificarActividades.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ orden: nuevaOrden })
+          })
+          .then(response => response.json())
+          .then(data => {
+            // console.log('Orden actualizado:', data);
+          })
+          .catch(error => {
+            // console.error('Error al actualizar el orden:', error);
+          });
+        },
+        group: "lista-actividades",
+        store: {
+          // GUARDAR ORDEN DE ACTIVIDADES
+          set: (sortable) => {
+            const orden = sortable.toArray();
+            localStorage.setItem(sortable.options.group.name, orden.join('|'));
+            // console.log(orden);
+          },
+          // OBTENER ORDEN DE LISTA 
+          get: (sortable) => {
+            const orden = localStorage.getItem(sortable.options.group.name);
+            // console.log(orden ? orden.split('|') : []);
+            return orden ? orden.split('|') : [];
+          }
+        }
+      });
+    }
+  } else {
+    if (sortable) { 
+      // DESTRUIR sortable SI EXISTE
+      sortable.destroy();
+      sortable = null;
+    }
+  }
+}
+// INICIALIZAR sortable AL CARGAR LA PÁGINA
+initSortable();
+// REINICIA sortable EN CADA CAMBIO DE TAMAÑO
+window.addEventListener('resize', initSortable);
 
 

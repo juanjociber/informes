@@ -34,160 +34,152 @@
 	function FnGenerarInformeHtmlAcordeon($arbol, $imagenes, $nivel = 0, $indice ='1') {
 		$html='';
 		$contador=1;		
-
 		foreach ($arbol as $key=>$nodo) {
 			$indiceActual = $nivel==0?$contador++:$indice.'.'.($key+1);
-			$html.='<div class="accordion-item sortable" id="'.$nodo['id'].'" data-index="'.$nodo['id'].'"  data-position="'.$nodo['posicion'].'" >';
-      $html.='<input type="hidden" id="infidPadre" value="'.$nodo['infid'].'">';
-      $html.='<input type="hidden" id="ownidPadre" value="'.$nodo['ownid'].'">';
-      $html.='<input type="hidden" id="tipoPadre" value="'.$nodo['tipo'].'">';
 			$html.='
-				<div class="accordion-header" id="accordion-header-'.$nodo['id'].'">
-          <div class="contenedor-actividades bg-light mb-2 cabecera-actividad--mod" style="margin:0 auto;">
-            <div class="d-flex p-1 cabecera-actividad bg-light">
-              <label class="text-secondary bg-light" style="font-size:17px !important">'.$indiceActual. '<span>&nbsp;-</span></label>
-              <p class="accordion-button p-0 bg-light" data-bs-toggle="collapse" style="cursor:pointer; border: unset; box-shadow: none; font-size:17px !important; text-align:justify;" data-bs-target="#collapse-accordion-'.$nodo['id'].'" aria-expanded="true" aria-controls="collapse-accordion-'.$contador.'"><span>&nbsp;</span>'.$nodo['actividad'].'</p>
-            </div>
-            <div class="grid-icono input-grop-icons d-flex p-0">
-              <!--AGREGAR ACTIVIDAD-->
-              <span class="input-group-text input-group--mod bg-light border border-0 text-muted" style="cursor:pointer;">            
-                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" width="28px" height="33px" viewBox="0 0 554.625 554.625" style="enable-background:new 0 0 554.625 554.625;" xml:space="preserve" onclick="FnModalAgregarInformeActividades('.$nodo['id'].')">
-                  <title>Actividad</title>
-                  <g fill="#6B6C6E" stroke="#6B6C6E" stroke-width="8">
-                    <g>
-                      <polygon points="392.062,439.875 392.062,382.5 372.938,382.5 372.938,439.875 315.562,439.875 315.562,459 372.938,459     372.938,516.375 392.062,516.375 392.062,459 449.438,459 449.438,439.875   "/>
-                      <path d="M430.312,355.725V143.438v-9.562L315.562,0H306H105.188c-21.038,0-38.25,17.212-38.25,38.25v439.875    c0,21.037,17.212,38.25,38.25,38.25h196.987c19.125,22.95,47.812,38.25,80.325,38.25c57.375,0,105.188-47.812,105.188-105.188    C487.688,409.275,464.737,372.938,430.312,355.725z M315.562,28.688l89.888,105.188h-70.763c-9.562,0-19.125-9.562-19.125-19.125    V28.688z M105.188,497.25c-9.562,0-19.125-7.65-19.125-19.125V38.25c0-9.562,7.65-19.125,19.125-19.125h191.25v95.625    c0,21.038,17.213,38.25,38.25,38.25h76.5v195.075c-9.562-1.913-19.125-3.825-28.688-3.825    c-57.375,0-105.188,47.812-105.188,105.188c0,17.213,3.825,32.513,11.475,47.812H105.188z M382.5,535.5    c-47.812,0-86.062-38.25-86.062-86.062s38.25-86.062,86.062-86.062s86.062,38.25,86.062,86.062S430.312,535.5,382.5,535.5z"/>
+        <div class="accordion-item" id="'.$nodo['id'].'" data-id="'.$nodo['id'].'">
+          <input type="hidden" id="txtOrden" value="'.$nodo['orden'].'">
+          <div class="accordion-header" id="accordion-header-'.$nodo['id'].'">
+            <div class="contenedor-actividades bg-light mb-2 cabecera-actividad--mod" style="margin:0 auto;">
+              <div class="d-flex p-1 cabecera-actividad bg-light">
+                <label class="text-secondary bg-light" style="font-size:17px !important">'.$indiceActual. '<span>&nbsp;-</span></label>
+                <p class="accordion-button p-0 bg-light" data-bs-toggle="collapse" style="cursor:pointer; border: unset; box-shadow: none; font-size:17px !important; text-align:justify;" data-bs-target="#collapse-accordion-'.$nodo['id'].'" aria-expanded="true" aria-controls="collapse-accordion-'.$contador.'"><span>&nbsp;</span>'.$nodo['actividad'].'</p>
+              </div>
+              <div class="grid-icono input-grop-icons d-flex p-0">
+                <!--AGREGAR ACTIVIDAD-->
+                <span class="input-group-text input-group--mod bg-light border border-0 text-muted" style="cursor:pointer;">            
+                  <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" width="28px" height="33px" viewBox="0 0 554.625 554.625" style="enable-background:new 0 0 554.625 554.625;" xml:space="preserve" onclick="FnModalAgregarInformeActividades('.$nodo['id'].')">
+                    <title>Actividad</title>
+                    <g fill="#6B6C6E" stroke="#6B6C6E" stroke-width="8">
+                      <g>
+                        <polygon points="392.062,439.875 392.062,382.5 372.938,382.5 372.938,439.875 315.562,439.875 315.562,459 372.938,459     372.938,516.375 392.062,516.375 392.062,459 449.438,459 449.438,439.875   "/>
+                        <path d="M430.312,355.725V143.438v-9.562L315.562,0H306H105.188c-21.038,0-38.25,17.212-38.25,38.25v439.875    c0,21.037,17.212,38.25,38.25,38.25h196.987c19.125,22.95,47.812,38.25,80.325,38.25c57.375,0,105.188-47.812,105.188-105.188    C487.688,409.275,464.737,372.938,430.312,355.725z M315.562,28.688l89.888,105.188h-70.763c-9.562,0-19.125-9.562-19.125-19.125    V28.688z M105.188,497.25c-9.562,0-19.125-7.65-19.125-19.125V38.25c0-9.562,7.65-19.125,19.125-19.125h191.25v95.625    c0,21.038,17.213,38.25,38.25,38.25h76.5v195.075c-9.562-1.913-19.125-3.825-28.688-3.825    c-57.375,0-105.188,47.812-105.188,105.188c0,17.213,3.825,32.513,11.475,47.812H105.188z M382.5,535.5    c-47.812,0-86.062-38.25-86.062-86.062s38.25-86.062,86.062-86.062s86.062,38.25,86.062,86.062S430.312,535.5,382.5,535.5z"/>
+                      </g>
                     </g>
-                  </g>
-                </svg>
-              </span>
-              
-              <!--EDITAR-->
-              <span class="input-group-text input-group--mod bg-light border border-0 text-secondary" style="cursor:pointer;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="23" height="28" viewBox="0 0 59 64" onclick="FnModalModificarInformeActividades('.$nodo['id'].')">
-                  <title>Editar</title>
-                  <g fill="none" stroke="#6B6C6E" stroke-width="3">
-                    <path d="M47,45v15c0,1.1-0.9,2-2,2H2c-1.1,0-2-0.9-2-2V2c0-1.1,0.9-2,2-2h25.9L47,18.1V33"/>
-                    <path d="M47,18.9H30c-1.1,0-2-0.9-2-2V1"/>
-                    <path d="M9,17h13"/>
-                    <path d="M9,27h31"/>
-                    <path d="M9,34h31"/>
-                    <path d="M9,43h24"/>
-                    <path d="M9,49h17"/>
-                    <g transform="translate(27, 29)">
-                      <path stroke-linejoin="round" d="M0,30l3.9-9.4L24.2,0.3c0.4-0.4,1.1-0.4,1.6,0l3.9,3.9c0.4,0.4,0.4,1.1,0,1.6L9.4,26.1L0,30z"/>
-                      <path d="M21.9,2.7l5.4,5.4"/>
+                  </svg>
+                </span>
+                <!--EDITAR-->
+                <span class="input-group-text input-group--mod bg-light border border-0 text-secondary" style="cursor:pointer;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="23" height="28" viewBox="0 0 59 64" onclick="FnModalModificarInformeActividades('.$nodo['id'].')">
+                    <title>Editar</title>
+                    <g fill="none" stroke="#6B6C6E" stroke-width="3">
+                      <path d="M47,45v15c0,1.1-0.9,2-2,2H2c-1.1,0-2-0.9-2-2V2c0-1.1,0.9-2,2-2h25.9L47,18.1V33"/>
+                      <path d="M47,18.9H30c-1.1,0-2-0.9-2-2V1"/>
+                      <path d="M9,17h13"/>
+                      <path d="M9,27h31"/>
+                      <path d="M9,34h31"/>
+                      <path d="M9,43h24"/>
+                      <path d="M9,49h17"/>
+                      <g transform="translate(27, 29)">
+                        <path stroke-linejoin="round" d="M0,30l3.9-9.4L24.2,0.3c0.4-0.4,1.1-0.4,1.6,0l3.9,3.9c0.4,0.4,0.4,1.1,0,1.6L9.4,26.1L0,30z"/>
+                        <path d="M21.9,2.7l5.4,5.4"/>
+                      </g>
                     </g>
-                  </g>
-                </svg>
-              </span>
-              
-              <!--AGREGAR ARCHIVO-->
-              <span class="input-group-text input-group--mod bg-light border border-0 text-secondary" style="cursor:pointer;">
-                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" width="23px" height="28px" viewBox="0 0 59 63" version="1.1" onclick="FnModalAgregarArchivo('.$nodo['id'].')">
-                  <title>Archivo</title>
-                  <desc>Created with Sketch.</desc>
-                  <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
-                    <path d="M36.3,46.5 L12.1,22.4 C9.4,19.7 9.1,15.6 11.8,12.9 L11.8,12.9 C14.5,10.2 19.1,10.1 21.8,12.8 L53.6,44.4 C57.8,48.6 58.2,54.9 54.5,58.5 L54.5,58.5 C50.8,62.1 44.5,61.7 40.3,57.6 L4.7,22.1 C-0.1,17.4 -0.2,9.8 4.3,5.3 L5.3,4.3 C9.8,-0.2 17.4,-0.1 22.2,4.7 L46,28.4" id="Archivo" stroke="#6B6C6E" stroke-width="2" sketch:type="MSShapeGroup"/>
-                  </g>
-                </svg>
-              </span>
-
-              <!--ELIMINAR-->
-              <span class="input-group-text input-group--mod bg-light border border-0 text-secondary" style="cursor:pointer;">      
-                <svg xmlns="http://www.w3.org/2000/svg" width="23" height="28" viewBox="0 0 300 343" onclick="FnEliminarInformeActividades('.$nodo['id'].')">
-                  <title>Eliminar</title>
-                  <g fill="none" stroke="#6B6C6E" stroke-width="7">
-                    <path d="M86 2.6c-6.2 2.2-11.7 6.4-15.7 12-4.2 6-5.3 10-5.3 19.5 0 4.9-.4 8-1.3 8.7-.7.6-9.3 1.2-21.2 1.4-20 .3-20 .3-25.3 3.2C10.7 51 6.5 55.6 3.1 63 .6 68.2.5 69.3.5 85.5c0 15.7.2 17.3 2.2 21.2 2.9 5.3 8.1 9.3 14.1 10.8l4.7 1.2.5 95.9c.5 104.8.2 98.4 6.3 108 3.2 5.2 11.4 12.7 16.7 15.4 9.5 4.9 11.5 5 104.6 5 58.8 0 89-.4 93-1.1 16.4-3 29.7-15.2 34-31.3 1.1-4.1 1.4-22.6 1.4-98.9V118h2.3c3.4-.1 10.4-3.6 13.3-6.7 4.7-5.1 5.4-8.3 5.4-25.3 0-20.4-1.1-24.2-9.5-32.6-8.5-8.6-11.3-9.3-35-9.7l-19-.2-.6-10c-.4-8.1-1-11-3.1-15-3.1-6-8.6-11.4-14.8-14.6l-4.5-2.4-61-.2c-53.4-.2-61.6 0-65.5 1.3zM211.6 25.4c3.4 3.4 3.5 3.6 3.2 10.8l-.3 7.3-63.7.2L86 44v-7.8c0-8.1 1.1-10.6 5.5-13 1.4-.8 19.4-1.1 58.8-1.2h56.9l3.4 3.4zM257 210.4c0 101 .2 97.6-5.8 103.9-1.5 1.6-4.5 3.9-6.7 5l-4 2.2H59.4l-4.9-2.6c-3.5-1.8-5.9-3.9-8-7.4l-3-4.8-.3-94.4L43 118h214v92.4z"/>
-                    <path d="M67.9 142.9l-2.9 2.9v26.4c-.1 95 .1 121.1 1 122.9 2.3 4.2 6.3 5.1 21.1 4.7 13.6-.3 13.9-.3 16.6-3.1l2.8-2.7.3-73.6.2-73.6-3.4-3.4-3.4-3.4H70.8l-2.9 2.9zM96 220v70.1l-10.2-.3-10.3-.3-.3-69.8L75 150h21v70zm35.9-77.1l-2.9 2.9v73.9c.1 56.5.3 74.2 1.3 75.3 3.5 4.5 5.7 5 20 5h13.9l3.4-3.4 3.4-3.4v-72.6c0-78.9.1-76.8-5.5-79.4-1.6-.8-7.9-1.2-16.6-1.2h-14.1l-2.9 2.9zm28.6 77.1v69.5h-21l-.3-69.8-.2-69.8 10.7.3 10.8.3V220zm37.6-78.6c-5.2 2.9-5 .9-5.1 79v72.8l3.4 3.4 3.4 3.4h28.4l3.4-3.4 3.4-3.4v-73.3c0-68-.2-73.6-1.8-75.5-.9-1.2-2.7-2.7-3.9-3.3-3.2-1.6-28.1-1.4-31.2.3zm26.4 78.6v69.5h-21l-.3-68.5c-.1-37.7 0-69.1.3-69.8.3-.9 3.1-1.2 10.7-1l10.3.3V220z"/>
-                  </g>
-                </svg>
-              </span>
-              <!--ARRIBA-->
-              <span class="input-group-text input-group--mod bg-light border border-0 text-secondary btn-arriba" style="cursor:pointer; font-size:30px;"><i class="fas fa-arrow-alt-circle-up" style="color: #a3a3a3;"></i></span>
-              <!--ABAJO-->
-              <span class="input-group-text input-group--mod bg-light border border-0 text-secondary btn-abajo" style="cursor:pointer; font-size:30px;"><i class="fas fa-arrow-alt-circle-down" style="color: #a3a3a3;"></i></span>
+                  </svg>
+                </span>
+                <!--AGREGAR ARCHIVO-->
+                <span class="input-group-text input-group--mod bg-light border border-0 text-secondary" style="cursor:pointer;">
+                  <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" width="23px" height="28px" viewBox="0 0 59 63" version="1.1" onclick="FnModalAgregarArchivo('.$nodo['id'].')">
+                    <title>Archivo</title>
+                    <desc>Created with Sketch.</desc>
+                    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+                      <path d="M36.3,46.5 L12.1,22.4 C9.4,19.7 9.1,15.6 11.8,12.9 L11.8,12.9 C14.5,10.2 19.1,10.1 21.8,12.8 L53.6,44.4 C57.8,48.6 58.2,54.9 54.5,58.5 L54.5,58.5 C50.8,62.1 44.5,61.7 40.3,57.6 L4.7,22.1 C-0.1,17.4 -0.2,9.8 4.3,5.3 L5.3,4.3 C9.8,-0.2 17.4,-0.1 22.2,4.7 L46,28.4" id="Archivo" stroke="#6B6C6E" stroke-width="2" sketch:type="MSShapeGroup"/>
+                    </g>
+                  </svg>
+                </span>
+                <!--ELIMINAR-->
+                <span class="input-group-text input-group--mod bg-light border border-0 text-secondary" style="cursor:pointer;">      
+                  <svg xmlns="http://www.w3.org/2000/svg" width="23" height="28" viewBox="0 0 300 343" onclick="FnEliminarInformeActividades('.$nodo['id'].')">
+                    <title>Eliminar</title>
+                    <g fill="none" stroke="#6B6C6E" stroke-width="7">
+                      <path d="M86 2.6c-6.2 2.2-11.7 6.4-15.7 12-4.2 6-5.3 10-5.3 19.5 0 4.9-.4 8-1.3 8.7-.7.6-9.3 1.2-21.2 1.4-20 .3-20 .3-25.3 3.2C10.7 51 6.5 55.6 3.1 63 .6 68.2.5 69.3.5 85.5c0 15.7.2 17.3 2.2 21.2 2.9 5.3 8.1 9.3 14.1 10.8l4.7 1.2.5 95.9c.5 104.8.2 98.4 6.3 108 3.2 5.2 11.4 12.7 16.7 15.4 9.5 4.9 11.5 5 104.6 5 58.8 0 89-.4 93-1.1 16.4-3 29.7-15.2 34-31.3 1.1-4.1 1.4-22.6 1.4-98.9V118h2.3c3.4-.1 10.4-3.6 13.3-6.7 4.7-5.1 5.4-8.3 5.4-25.3 0-20.4-1.1-24.2-9.5-32.6-8.5-8.6-11.3-9.3-35-9.7l-19-.2-.6-10c-.4-8.1-1-11-3.1-15-3.1-6-8.6-11.4-14.8-14.6l-4.5-2.4-61-.2c-53.4-.2-61.6 0-65.5 1.3zM211.6 25.4c3.4 3.4 3.5 3.6 3.2 10.8l-.3 7.3-63.7.2L86 44v-7.8c0-8.1 1.1-10.6 5.5-13 1.4-.8 19.4-1.1 58.8-1.2h56.9l3.4 3.4zM257 210.4c0 101 .2 97.6-5.8 103.9-1.5 1.6-4.5 3.9-6.7 5l-4 2.2H59.4l-4.9-2.6c-3.5-1.8-5.9-3.9-8-7.4l-3-4.8-.3-94.4L43 118h214v92.4z"/>
+                      <path d="M67.9 142.9l-2.9 2.9v26.4c-.1 95 .1 121.1 1 122.9 2.3 4.2 6.3 5.1 21.1 4.7 13.6-.3 13.9-.3 16.6-3.1l2.8-2.7.3-73.6.2-73.6-3.4-3.4-3.4-3.4H70.8l-2.9 2.9zM96 220v70.1l-10.2-.3-10.3-.3-.3-69.8L75 150h21v70zm35.9-77.1l-2.9 2.9v73.9c.1 56.5.3 74.2 1.3 75.3 3.5 4.5 5.7 5 20 5h13.9l3.4-3.4 3.4-3.4v-72.6c0-78.9.1-76.8-5.5-79.4-1.6-.8-7.9-1.2-16.6-1.2h-14.1l-2.9 2.9zm28.6 77.1v69.5h-21l-.3-69.8-.2-69.8 10.7.3 10.8.3V220zm37.6-78.6c-5.2 2.9-5 .9-5.1 79v72.8l3.4 3.4 3.4 3.4h28.4l3.4-3.4 3.4-3.4v-73.3c0-68-.2-73.6-1.8-75.5-.9-1.2-2.7-2.7-3.9-3.3-3.2-1.6-28.1-1.4-31.2.3zm26.4 78.6v69.5h-21l-.3-68.5c-.1-37.7 0-69.1.3-69.8.3-.9 3.1-1.2 10.7-1l10.3.3V220z"/>
+                    </g>
+                  </svg>
+                </span>
+              </div>
             </div>
           </div>
-				</div>
-				<div id="collapse-accordion-'.$nodo['id'].'" class="accordion-collapse collapse show" aria-labelledby="accordion-header-'.$nodo['id'].'" style="border:0.5px solid #e3dede; margin-bottom:30px; margin-top:-7px;">
-					<div class="accordion-body" style="padding-left:10px !important; padding-right: 10px !important">
-						<div class="row mb-2">
-							<div class="col-12 mb-1">
-                <p class="m-0 text-secondary fw-bold">Diagnóstico</p>
-                <p class="mb-1 text-secondary diagnostico" style="font-size=15px; text-align:justify; line-height: 1.2;" id="diagnostico-'.$nodo['id'].'">'.$nodo['diagnostico'].'</p>
+          <div id="collapse-accordion-'.$nodo['id'].'" class="accordion-collapse collapse show" aria-labelledby="accordion-header-'.$nodo['id'].'" style="border:0.5px solid #e3dede; margin-bottom:30px; margin-top:-7px;">
+            <div class="accordion-body" style="padding-left:10px !important; padding-right: 10px !important">
+              <div class="row mb-2">
+                <div class="col-12 mb-1">
+                  <p class="m-0 text-secondary fw-bold">Diagnóstico</p>
+                  <p class="mb-1 text-secondary diagnostico" style="font-size=15px; text-align:justify; line-height: 1.2;" id="diagnostico-'.$nodo['id'].'">'.$nodo['diagnostico'].'</p>
+                </div>
+                <div class="col-12 mb-1">
+                  <p class="m-0 text-secondary fw-bold">Trabajos</p>
+                  <p class="mb-1 text-secondary trabajo" style="font-size=15px; text-align:justify; line-height: 1.2;" id="trabajo-'.$nodo['id'].'">'.$nodo['trabajos'].'</p>
+                </div>
+                <div class="col-12">
+                  <p class="m-0 text-secondary fw-bold">Observaciones</p>
+                  <p class="mb-1 text-secondary observacion" style="font-size=15px; text-align:justify; line-height: 1.2;" id="observacion-'.$nodo['id'].'">'.$nodo['observaciones'].'</p>
+                </div>
               </div>
-							<div class="col-12 mb-1">
-                <p class="m-0 text-secondary fw-bold">Trabajos</p>
-                <p class="mb-1 text-secondary trabajo" style="font-size=15px; text-align:justify; line-height: 1.2;" id="trabajo-'.$nodo['id'].'">'.$nodo['trabajos'].'</p>
-              </div>
-							<div class="col-12">
-                <p class="m-0 text-secondary fw-bold">Observaciones</p>
-                <p class="mb-1 text-secondary observacion" style="font-size=15px; text-align:justify; line-height: 1.2;" id="observacion-'.$nodo['id'].'">'.$nodo['observaciones'].'</p>
-              </div>
-						</div>
-
-            <div class="contenedor-imagen mb-4" id="'.$nodo['id'].'">';
-							if(isset($imagenes[$nodo['id']])){
-								foreach($imagenes[$nodo['id']] as $elemento){
-									$html.='
-                  <div class="d-flex flex-column">
-                    <div class="d-flex justify-content-end align-items-center text-secondary">
-                    <!--BOTON EDITAR-->  
-                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" onclick="FnModalModificarArchivo('.$elemento['id'].')" style="font-size:25px; cursor:pointer; padding:10px">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="23" height="28" viewBox="0 0 59 64">
-                          <g fill="none" stroke="#6B6C6E" stroke-width="3">
-                            <path d="M47,45v15c0,1.1-0.9,2-2,2H2c-1.1,0-2-0.9-2-2V2c0-1.1,0.9-2,2-2h25.9L47,18.1V33"/>
-                            <path d="M47,18.9H30c-1.1,0-2-0.9-2-2V1"/>
-                            <path d="M9,17h13"/>
-                            <path d="M9,27h31"/>
-                            <path d="M9,34h31"/>
-                            <path d="M9,43h24"/>
-                            <path d="M9,49h17"/>
-                            <g transform="translate(27, 29)">
-                              <path stroke-linejoin="round" d="M0,30l3.9-9.4L24.2,0.3c0.4-0.4,1.1-0.4,1.6,0l3.9,3.9c0.4,0.4,0.4,1.1,0,1.6L9.4,26.1L0,30z"/>
-                              <path d="M21.9,2.7l5.4,5.4"/>
+              <div class="contenedor-imagen mb-3" id="'.$nodo['id'].'">';
+                if(isset($imagenes[$nodo['id']])){
+                  foreach($imagenes[$nodo['id']] as $elemento){
+                    $html.='
+                    <div class="d-flex flex-column">
+                      <div class="d-flex justify-content-end align-items-center text-secondary">
+                        <!--BOTON EDITAR-->  
+                        <span data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" onclick="FnModalModificarArchivo('.$elemento['id'].')" style="font-size:25px; cursor:pointer; padding:10px">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="23" height="28" viewBox="0 0 59 64">
+                            <g fill="none" stroke="#6B6C6E" stroke-width="3">
+                              <path d="M47,45v15c0,1.1-0.9,2-2,2H2c-1.1,0-2-0.9-2-2V2c0-1.1,0.9-2,2-2h25.9L47,18.1V33"/>
+                              <path d="M47,18.9H30c-1.1,0-2-0.9-2-2V1"/>
+                              <path d="M9,17h13"/>
+                              <path d="M9,27h31"/>
+                              <path d="M9,34h31"/>
+                              <path d="M9,43h24"/>
+                              <path d="M9,49h17"/>
+                              <g transform="translate(27, 29)">
+                                <path stroke-linejoin="round" d="M0,30l3.9-9.4L24.2,0.3c0.4-0.4,1.1-0.4,1.6,0l3.9,3.9c0.4,0.4,0.4,1.1,0,1.6L9.4,26.1L0,30z"/>
+                                <path d="M21.9,2.7l5.4,5.4"/>
+                              </g>
                             </g>
-                          </g>
-                        </svg>
-                      </span>
-
-                      <!--BOTON ELIMINAR-->
-                      <span data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar" onclick="FnEliminarArchivo('.$elemento['id'].', '.$elemento['refid'].' )" style="font-size:25px; cursor:pointer; padding:10px">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="23" height="28" viewBox="0 0 300 343">
-                          <g fill="none" stroke="#6B6C6E" stroke-width="7">
-                            <path d="M86 2.6c-6.2 2.2-11.7 6.4-15.7 12-4.2 6-5.3 10-5.3 19.5 0 4.9-.4 8-1.3 8.7-.7.6-9.3 1.2-21.2 1.4-20 .3-20 .3-25.3 3.2C10.7 51 6.5 55.6 3.1 63 .6 68.2.5 69.3.5 85.5c0 15.7.2 17.3 2.2 21.2 2.9 5.3 8.1 9.3 14.1 10.8l4.7 1.2.5 95.9c.5 104.8.2 98.4 6.3 108 3.2 5.2 11.4 12.7 16.7 15.4 9.5 4.9 11.5 5 104.6 5 58.8 0 89-.4 93-1.1 16.4-3 29.7-15.2 34-31.3 1.1-4.1 1.4-22.6 1.4-98.9V118h2.3c3.4-.1 10.4-3.6 13.3-6.7 4.7-5.1 5.4-8.3 5.4-25.3 0-20.4-1.1-24.2-9.5-32.6-8.5-8.6-11.3-9.3-35-9.7l-19-.2-.6-10c-.4-8.1-1-11-3.1-15-3.1-6-8.6-11.4-14.8-14.6l-4.5-2.4-61-.2c-53.4-.2-61.6 0-65.5 1.3zM211.6 25.4c3.4 3.4 3.5 3.6 3.2 10.8l-.3 7.3-63.7.2L86 44v-7.8c0-8.1 1.1-10.6 5.5-13 1.4-.8 19.4-1.1 58.8-1.2h56.9l3.4 3.4zM257 210.4c0 101 .2 97.6-5.8 103.9-1.5 1.6-4.5 3.9-6.7 5l-4 2.2H59.4l-4.9-2.6c-3.5-1.8-5.9-3.9-8-7.4l-3-4.8-.3-94.4L43 118h214v92.4z"/>
-                            <path d="M67.9 142.9l-2.9 2.9v26.4c-.1 95 .1 121.1 1 122.9 2.3 4.2 6.3 5.1 21.1 4.7 13.6-.3 13.9-.3 16.6-3.1l2.8-2.7.3-73.6.2-73.6-3.4-3.4-3.4-3.4H70.8l-2.9 2.9zM96 220v70.1l-10.2-.3-10.3-.3-.3-69.8L75 150h21v70zm35.9-77.1l-2.9 2.9v73.9c.1 56.5.3 74.2 1.3 75.3 3.5 4.5 5.7 5 20 5h13.9l3.4-3.4 3.4-3.4v-72.6c0-78.9.1-76.8-5.5-79.4-1.6-.8-7.9-1.2-16.6-1.2h-14.1l-2.9 2.9zm28.6 77.1v69.5h-21l-.3-69.8-.2-69.8 10.7.3 10.8.3V220zm37.6-78.6c-5.2 2.9-5 .9-5.1 79v72.8l3.4 3.4 3.4 3.4h28.4l3.4-3.4 3.4-3.4v-73.3c0-68-.2-73.6-1.8-75.5-.9-1.2-2.7-2.7-3.9-3.3-3.2-1.6-28.1-1.4-31.2.3zm26.4 78.6v69.5h-21l-.3-68.5c-.1-37.7 0-69.1.3-69.8.3-.9 3.1-1.2 10.7-1l10.3.3V220z"/>
-                          </g>
-                        </svg>
-                      </span>
-                    </div>
-                    <div class="card text-center p-0" id="archivo-'.$elemento['id'].'">
-                      <input type="hidden" id="txtRefid" value="'.$elemento['refid'].'">
-                      <input type="hidden" id="txtTabla" value="'.$elemento['tabla'].'">
-                      <input type="hidden" id="txtTipoArchivo" value="'.$elemento['tipo'].'">
-                      <div class="card-header text-secondary" style="text-align:justify;padding-left:5px;" id="tituloArchivo">'.$elemento['titulo'].'</div>
-                      <div class="card-body p-0">
-                        <img src="/mycloud/gesman/files/'.$elemento['nombre'].'" class="imagen-ajustada" alt="" id="imagenArchivo">
+                          </svg>
+                        </span>
+                        <!--BOTON ELIMINAR-->
+                        <span data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar" onclick="FnEliminarArchivo('.$elemento['id'].', '.$elemento['refid'].' )" style="font-size:25px; cursor:pointer; padding:10px">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="23" height="28" viewBox="0 0 300 343">
+                            <g fill="none" stroke="#6B6C6E" stroke-width="7">
+                              <path d="M86 2.6c-6.2 2.2-11.7 6.4-15.7 12-4.2 6-5.3 10-5.3 19.5 0 4.9-.4 8-1.3 8.7-.7.6-9.3 1.2-21.2 1.4-20 .3-20 .3-25.3 3.2C10.7 51 6.5 55.6 3.1 63 .6 68.2.5 69.3.5 85.5c0 15.7.2 17.3 2.2 21.2 2.9 5.3 8.1 9.3 14.1 10.8l4.7 1.2.5 95.9c.5 104.8.2 98.4 6.3 108 3.2 5.2 11.4 12.7 16.7 15.4 9.5 4.9 11.5 5 104.6 5 58.8 0 89-.4 93-1.1 16.4-3 29.7-15.2 34-31.3 1.1-4.1 1.4-22.6 1.4-98.9V118h2.3c3.4-.1 10.4-3.6 13.3-6.7 4.7-5.1 5.4-8.3 5.4-25.3 0-20.4-1.1-24.2-9.5-32.6-8.5-8.6-11.3-9.3-35-9.7l-19-.2-.6-10c-.4-8.1-1-11-3.1-15-3.1-6-8.6-11.4-14.8-14.6l-4.5-2.4-61-.2c-53.4-.2-61.6 0-65.5 1.3zM211.6 25.4c3.4 3.4 3.5 3.6 3.2 10.8l-.3 7.3-63.7.2L86 44v-7.8c0-8.1 1.1-10.6 5.5-13 1.4-.8 19.4-1.1 58.8-1.2h56.9l3.4 3.4zM257 210.4c0 101 .2 97.6-5.8 103.9-1.5 1.6-4.5 3.9-6.7 5l-4 2.2H59.4l-4.9-2.6c-3.5-1.8-5.9-3.9-8-7.4l-3-4.8-.3-94.4L43 118h214v92.4z"/>
+                              <path d="M67.9 142.9l-2.9 2.9v26.4c-.1 95 .1 121.1 1 122.9 2.3 4.2 6.3 5.1 21.1 4.7 13.6-.3 13.9-.3 16.6-3.1l2.8-2.7.3-73.6.2-73.6-3.4-3.4-3.4-3.4H70.8l-2.9 2.9zM96 220v70.1l-10.2-.3-10.3-.3-.3-69.8L75 150h21v70zm35.9-77.1l-2.9 2.9v73.9c.1 56.5.3 74.2 1.3 75.3 3.5 4.5 5.7 5 20 5h13.9l3.4-3.4 3.4-3.4v-72.6c0-78.9.1-76.8-5.5-79.4-1.6-.8-7.9-1.2-16.6-1.2h-14.1l-2.9 2.9zm28.6 77.1v69.5h-21l-.3-69.8-.2-69.8 10.7.3 10.8.3V220zm37.6-78.6c-5.2 2.9-5 .9-5.1 79v72.8l3.4 3.4 3.4 3.4h28.4l3.4-3.4 3.4-3.4v-73.3c0-68-.2-73.6-1.8-75.5-.9-1.2-2.7-2.7-3.9-3.3-3.2-1.6-28.1-1.4-31.2.3zm26.4 78.6v69.5h-21l-.3-68.5c-.1-37.7 0-69.1.3-69.8.3-.9 3.1-1.2 10.7-1l10.3.3V220z"/>
+                            </g>
+                          </svg>
+                        </span>
                       </div>
-                      <div class="card-footer text-secondary" style="text-align:justify;padding-left:5px;" id="descripcionArchivo">'.$elemento['descripcion'].'</div>
+                      <div class="card text-center p-0" id="archivo-'.$elemento['id'].'">
+                        <input type="hidden" id="txtRefid" value="'.$elemento['refid'].'">
+                        <input type="hidden" id="txtTabla" value="'.$elemento['tabla'].'">
+                        <input type="hidden" id="txtTipoArchivo" value="'.$elemento['tipo'].'">
+                        <div class="card-header text-secondary" style="text-align:justify;padding-left:5px;" id="tituloArchivo">'.$elemento['titulo'].'
+                        </div>
+                        <div class="card-body p-0">
+                          <img src="/mycloud/gesman/files/'.$elemento['nombre'].'" class="imagen-ajustada" alt="" id="imagenArchivo">
+                        </div>
+                        <div class="card-footer text-secondary" style="text-align:justify;padding-left:5px;" id="descripcionArchivo">'.$elemento['descripcion'].'
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                ';
+                  ';
+                }
               }
-            }
-        $html.='</div>';
-			if (!empty($nodo['hijos'])) {
-				$html.='<div class="accordion" id="accordion-container-'.$nodo['id'].'">';
-        $html.='<input type="hidden" id="infidHijo" value="'.$nodo['infid'].'">';
-        $html.='<input type="hidden" id="ownidHijo" value="'.$nodo['ownid'].'">';
-        $html.='<input type="hidden" id=""tipoHijo value="'.$nodo['tipo'].'">';
-				$html.=FnGenerarInformeHtmlAcordeon($nodo['hijos'], $imagenes, $nivel+1, $indiceActual );
-				$html.='</div>';  
-			}
-			$html.='</div>';
-			$html.='</div>';
-			$html.='</div>';
+              $html.='
+              </div>';
+          if (!empty($nodo['hijos'])) {
+            $html.='
+              <div class="accordion" id="accordion-container-'.$nodo['id'].'">';
+                $html.=FnGenerarInformeHtmlAcordeon($nodo['hijos'], $imagenes, $nivel+1, $indiceActual );
+            $html.='
+              </div>
+               ';  
+          }
+          $html.='
+        </div>
+      </div>
+    </div>';
 		}
 		return $html;
 	}
@@ -210,7 +202,7 @@
       }
     }
     if($Id2 > 0){
-      $stmt2 = $conmy->prepare("select id, infid, ownid, posicion, tipo, actividad, diagnostico, trabajos, observaciones from tbldetalleinforme where infid=:InfId and tipo='act' ORDER BY posicion");
+      $stmt2 = $conmy->prepare("select id, infid, ownid, orden, tipo, actividad, diagnostico, trabajos, observaciones from tbldetalleinforme where infid=:InfId and tipo='act' order by orden");
       $stmt2->bindParam(':InfId', $ID, PDO::PARAM_INT);
       $stmt2->execute();
       $actividades = $stmt2->fetchAll(PDO::FETCH_ASSOC);
@@ -563,55 +555,12 @@
   <div class="container-loader-full">
     <div class="loader-full"></div>
   </div>
-  </body>
 
-  <script type="text/javascript" charset="utf-8" src="/informes/js/jquery-3.3.1.min.js"></script>
-  <script type="text/javascript" charset="utf-8" src="/informes/js/jquery-ui.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
-
-  <script type="text/javascript">
-  $(document).ready(function() {
-      $('.sortable').sortable({
-          update: function(event, ui) {
-              $(this).children().each(function(index) {
-                  if ($(this).attr('data-position') != (index + 1)) {
-                      $(this).attr('data-position', (index + 1)).addClass('updated');
-                  }
-              });
-              guardandoPosiciones();
-          }
-      });
-  });
-
-  function guardandoPosiciones() {
-      let positions = [];
-      $('.updated').each(function() {
-          positions.push([$(this).attr('data-index'), $(this).attr('data-position')]);
-          $(this).removeClass('updated');
-      });
-      console.log(positions);
-
-      $.ajax({
-          url: '/informes/update/ModificarActividades.php',
-          method: 'POST',
-          dataType: 'text',
-          data: {
-              update: 1,
-              positions: positions
-          },
-          success: function(response) {
-              console.log(response);
-          },
-          error: function(xhr, status, error) {
-              console.error('Error en la actualización: ' + error);
-          }
-      });
-  }
-</script>
-
-
+  <!-- <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script> -->
+  <script src="/mycloud/library/Sortable-1.15.3/Sortable.min.js"></script>
   <script src="/informes/js/EditarInformeActividad.js"></script>
   <script src="/mycloud/library/SweetAlert2/js/sweetalert2.all.min.js"></script>
   <script src="/mycloud/library/bootstrap-5.0.2-dist/js/bootstrap.min.js"></script>
   <script src="/gesman/menu/sidebar.js"></script>
+  </body>
 </html>
