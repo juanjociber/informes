@@ -201,7 +201,7 @@
       }
     }
     if($Id2 > 0){
-      $stmt2 = $conmy->prepare("select id, infid, ownid, orden, tipo, actividad, diagnostico, trabajos, observaciones from tbldetalleinforme where infid=:InfId and tipo='act' order by orden");
+      $stmt2 = $conmy->prepare("select id, infid, ownid, orden, tipo, actividad, diagnostico, trabajos, observaciones from tbldetalleinforme where infid=:InfId and tipo='act' order by orden;");
       $stmt2->bindParam(':InfId', $ID, PDO::PARAM_INT);
       $stmt2->execute();
       $actividades = $stmt2->fetchAll(PDO::FETCH_ASSOC);
@@ -256,9 +256,6 @@
     <link rel="stylesheet" href="/mycloud/library/select-gpem-1.0/css/select-gpem-1.0.css">
     <link rel="stylesheet" href="/mycloud/library/gpemsac/css/gpemsac.css"> 
     <link rel="stylesheet" href="/gesman/menu/sidebar.css">
-
-
-
     <style>
       /* .contenedor-imagen{ display: grid; grid-template-columns:1fr 1fr; gap:5px;} */
       @media(min-width:768px){.contenedor-imagen{display: grid; grid-template-columns:1fr 1fr; gap:15px;}}
@@ -266,33 +263,10 @@
       .accordion .accordion-header { border: none; }
       .accordion .accordion-body { border: none; padding:0}
       .contenedor-actividades{ display:grid; background-color:white !important; }
-      @media(max-width:767px){.input-group--mod{background-color:white !important; }}
-      .grid-icono{ grid-row: 1 / 2; place-self: end }
-      @media(min-width:768px){
-        .contenedor-actividades{ grid-template-columns: 6fr 1fr;}
-        .grid-icono{ grid-column: 2 / 3; place-self: center }
-      } 
-      .cabecera-actividad{
-        border: 0.5px solid #9b9b9b59;
-      }
-      @media(min-width:768px){
-        .cabecera-actividad--mod{
-          border: 0.5px solid #9b9b9b59;
-        }
-        .cabecera-actividad{
-          border: none;
-        }
-      }
-      .imagen-ajustada {
-        width: 100%;
-        height: 200px;
-        object-fit: contain;
-      }
-      .btn-desactivado {
-        color: grey; 
-        pointer-events: none; 
-        opacity: 0.5; 
-      }
+      @media(max-width:767px){.input-group--mod{background-color:white !important; }} .grid-icono{ grid-row: 1 / 2; place-self: end }
+      @media(min-width:768px){ .contenedor-actividades{ grid-template-columns: 6fr 1fr;} .grid-icono{ grid-column: 2 / 3; place-self: center }} 
+      .cabecera-actividad{ border: 0.5px solid #9b9b9b59; }
+      @media(min-width:768px){ .cabecera-actividad--mod{ border: 0.5px solid #9b9b9b59;} .cabecera-actividad{ border: none; } } .imagen-ajustada { width: 100%; height: 200px; object-fit: contain; } .btn-desactivado { color: grey; pointer-events: none; opacity: 0.5; }
     </style>
 </head>
 <body>

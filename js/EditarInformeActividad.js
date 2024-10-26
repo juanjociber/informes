@@ -69,13 +69,13 @@ const FnAgregarInformeActividades2 = async () =>{
   const formData = new FormData();
   formData.append('infid', document.getElementById('txtActividadInfid2').value);
   formData.append('ownid', document.getElementById('txtActividadOwnid').value);
+  formData.append('tipo','act');
   formData.append('actividad', document.getElementById('txtActividad2').value.trim());
   formData.append('diagnostico', document.getElementById('txtDiagnostico2').value.trim());
   formData.append('trabajos', document.getElementById('txtTrabajo2').value.trim());
   formData.append('observaciones', document.getElementById('txtObservacion2').value.trim());
-
   try {
-    const response = await fetch('/informes/insert/AgregarInformeActividad.php', {
+    const response = await fetch('/informes/insert/AgregarInformeActividades.php', {
       method: 'POST',
       body: formData
     });
@@ -91,15 +91,15 @@ const FnAgregarInformeActividades2 = async () =>{
         title: '¡Éxito!',
         text: datos.msg,
         icon: 'success',
-        // timer: 2000
+        timer: 2000
       });
-      // setTimeout(() => { location.reload(); }, 1000);
+      setTimeout(() => { location.reload(); }, 1000);
     } else {
       Swal.fire({
         title: 'Aviso',
         text: datos.msg,
         icon: 'info',
-        // timer: 2000
+        timer: 2000
       });
     }
   } catch (error) {
@@ -110,7 +110,7 @@ const FnAgregarInformeActividades2 = async () =>{
       title: 'Aviso',
       text: error.message,
       icon: 'error',
-      // timer: 2000
+      timer: 2000
     });
   }
 };
@@ -622,17 +622,19 @@ function initSortable() {
   if (!lista) {
     return; // Sale de la función si el elemento no existe
   }
-  if (window.innerWidth >= 768) {
-    if (!sortable) { 
+
+  // Verifica si el ancho de la ventana es >= 768 usando matchMedia
+  const mediaQuery = window.matchMedia('(min-width: 768px)');
+
+  if (mediaQuery.matches) {
+    // Si la media query coincide, inicializa sortable
+    if (!sortable) {
       sortable = Sortable.create(lista, {
         animation: 150,
-        chosenClass: "seleccionado",
-        dragClass: "drag",
         onEnd: () => {
           console.log('Cambio posición');
           const orden = lista.children; 
-          const nuevaOrden = Array.from(orden).map(item => item.id); 
-          
+          const nuevaOrden = Array.from(orden).map(item => item.id);
           // ENVIAR NUEVOS 'id' AL SERVIDOR
           fetch('/informes/update/ModificarActividades.php', {
             method: 'POST',
@@ -643,10 +645,18 @@ function initSortable() {
           })
           .then(response => response.json())
           .then(data => {
-            // console.log('Orden actualizado:', data);
+            setTimeout(() => {
+              vgLoader.classList.add('loader-full-hidden');
+            }, 500);
+            setTimeout(() => { location.reload(); }, 1000);
           })
           .catch(error => {
-            // console.error('Error al actualizar el orden:', error);
+            Swal.fire({
+              title: "Aviso",
+              text: error.message,
+              icon: "error",
+              timer: 2000
+            });
           });
         },
         group: "lista-actividades",
@@ -655,30 +665,30 @@ function initSortable() {
           set: (sortable) => {
             const orden = sortable.toArray();
             localStorage.setItem(sortable.options.group.name, orden.join('|'));
-            // console.log(orden);
           },
           // OBTENER ORDEN DE LISTA 
           get: (sortable) => {
             const orden = localStorage.getItem(sortable.options.group.name);
-            // console.log(orden ? orden.split('|') : []);
             return orden ? orden.split('|') : [];
           }
         }
       });
     }
   } else {
-    if (sortable) { 
-      // DESTRUIR sortable SI EXISTE
+    // Si la media query no coincide, destruye sortable si existe
+    if (sortable) {
       sortable.destroy();
       sortable = null;
     }
   }
 }
 
-// INICIALIZAR sortable AL CARGAR LA PÁGINA
+// Inicializar sortable al cargar la página
 initSortable();
 
-// REINICIA sortable EN CADA CAMBIO DE TAMAÑO
-window.addEventListener('resize', initSortable);
+// Usa matchMedia para escuchar cambios en la media query
+const mediaQuery = window.matchMedia('(min-width: 768px)');
+mediaQuery.addEventListener('change', initSortable);
+
 
 
