@@ -38,7 +38,6 @@
 			$indiceActual = $nivel==0?$contador++:$indice.'.'.($key+1);
 			$html.='
         <div class="accordion-item" id="'.$nodo['id'].'" data-id="'.$nodo['id'].'">
-          <input type="hidden" id="txtOrden" value="'.$nodo['orden'].'">
           <div class="accordion-header" id="accordion-header-'.$nodo['id'].'">
             <div class="contenedor-actividades bg-light mb-2 cabecera-actividad--mod" style="margin:0 auto;">
               <div class="d-flex p-1 cabecera-actividad bg-light">

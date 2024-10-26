@@ -73,6 +73,7 @@ const FnAgregarInformeActividades2 = async () =>{
   formData.append('diagnostico', document.getElementById('txtDiagnostico2').value.trim());
   formData.append('trabajos', document.getElementById('txtTrabajo2').value.trim());
   formData.append('observaciones', document.getElementById('txtObservacion2').value.trim());
+
   try {
     const response = await fetch('/informes/insert/AgregarInformeActividad.php', {
       method: 'POST',
@@ -90,15 +91,15 @@ const FnAgregarInformeActividades2 = async () =>{
         title: '¡Éxito!',
         text: datos.msg,
         icon: 'success',
-        timer: 2000
+        // timer: 2000
       });
-      setTimeout(() => { location.reload(); }, 1000);
+      // setTimeout(() => { location.reload(); }, 1000);
     } else {
       Swal.fire({
         title: 'Aviso',
         text: datos.msg,
         icon: 'info',
-        timer: 2000
+        // timer: 2000
       });
     }
   } catch (error) {
@@ -109,7 +110,7 @@ const FnAgregarInformeActividades2 = async () =>{
       title: 'Aviso',
       text: error.message,
       icon: 'error',
-      timer: 2000
+      // timer: 2000
     });
   }
 };
@@ -613,52 +614,14 @@ function FnListarInformes(){
   return false;
 };
 
-// const lista = document.getElementById('accordion-container');
-// Sortable.create(lista, {
-//   animation: 150,
-//   choseClass:"seleccionado",
-//   dragClass: "drag",
-//   onEnd:() =>{
-//     console.log('Cambio posicion');
-//     const orden = lista.children; 
-//     const nuevaOrden = Array.from(orden).map(item => item.id); 
-//     // ENVIAR NNUEVOS 'id' AL SERVIDOR
-//     fetch('/informes/update/ModificarActividades.php', {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({ orden: nuevaOrden })
-//     })
-//     .then(response => response.json())
-//     .then(data => {
-//         console.log('Orden actualizado:', data);
-//     })
-//     .catch(error => {
-//         console.error('Error al actualizar el orden:', error);
-//     });
-//   },
-//   group:"lista-actividades",
-//   store:{
-//     //GUARDAR ORDEN DE ACTIVIDADES
-//     set: (sortable) => {
-//       const orden = sortable.toArray();
-//       localStorage.setItem(sortable.options.group.name, orden.join('|'));
-//       console.log(orden);
-//     },
-//     // OBTENER ORDEN DE LISTA 
-//     get: (sortable) => {
-//       const orden = localStorage.getItem(sortable.options.group.name);
-//       console.log(orden ? orden.split('|') : []);
-//       return orden ? orden.split('|') : [];
-//     }
-//   }
-// })
-
+/** EVENTO CAMBIO DE POSICIÓN */
 const lista = document.getElementById('accordion-container');
 let sortable;
 
 function initSortable() {
+  if (!lista) {
+    return; // Sale de la función si el elemento no existe
+  }
   if (window.innerWidth >= 768) {
     if (!sortable) { 
       sortable = Sortable.create(lista, {
@@ -669,6 +632,7 @@ function initSortable() {
           console.log('Cambio posición');
           const orden = lista.children; 
           const nuevaOrden = Array.from(orden).map(item => item.id); 
+          
           // ENVIAR NUEVOS 'id' AL SERVIDOR
           fetch('/informes/update/ModificarActividades.php', {
             method: 'POST',
@@ -710,8 +674,10 @@ function initSortable() {
     }
   }
 }
+
 // INICIALIZAR sortable AL CARGAR LA PÁGINA
 initSortable();
+
 // REINICIA sortable EN CADA CAMBIO DE TAMAÑO
 window.addEventListener('resize', initSortable);
 

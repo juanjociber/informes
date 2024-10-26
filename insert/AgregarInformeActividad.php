@@ -16,11 +16,12 @@
     $actividad = new stdClass();
     $actividad->infid = $_POST['infid'];
     $actividad->ownid = empty($_POST['ownid']) ? 0 : $_POST['ownid'];
+    // $actividad->orden = $_POST['orden'];
+    $actividad->tipo = 'act'; 
     $actividad->actividad = $_POST['actividad'];
     $actividad->diagnostico = empty($_POST['diagnostico']) ? null : $_POST['diagnostico'];
     $actividad->trabajos = empty($_POST['trabajos']) ? null : $_POST['trabajos'];
     $actividad->observaciones = empty($_POST['observaciones']) ? null : $_POST['observaciones'];
-    $actividad->tipo = 'act'; 
     $actividad->usuario = $USUARIO;
 
     $conmy->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

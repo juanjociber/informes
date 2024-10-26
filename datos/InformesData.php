@@ -177,10 +177,28 @@
   function FnRegistrarInformeActividad($conmy, $actividad) {
     try {
       $res = false;
-      $stmt = $conmy->prepare("INSERT INTO tbldetalleinforme (infid, ownid, orden, tipo, actividad, diagnostico, trabajos, observaciones, creacion, actualizacion) VALUES (:InfId, :OwnId, :Actividad, :Diagnostico, :Trabajos, :Observaciones, :Tipo,:Creacion, :Actualizacion);");
-      $params = array(':InfId' => $actividad->infid,':OwnId' => $actividad->ownid,':Orden' => $actividad->orden, ':Tipo' => $actividad->tipo, ':Actividad' => $actividad->actividad,':Diagnostico' => $actividad->diagnostico,':Trabajos' => $actividad->trabajos,':Observaciones' => $actividad->observaciones,':Creacion' => $actividad->usuario,':Actualizacion' => $actividad->usuario);
+      // OBTENER VALOR MÁXIMO DE 'ORDEN' Y SUMAR 1
+      $stmtMaxOrden = $conmy->prepare("SELECT COALESCE(MAX(orden), 0) + 1 AS nuevo_orden FROM tbldetalleinforme WHERE infid = :InfId");
+      $stmtMaxOrden->execute([':InfId' => $actividad->infid]);
+      $nuevoOrden = $stmtMaxOrden->fetch(PDO::FETCH_ASSOC)['nuevo_orden'];
+      
+      // INSERTAR ACTIVIDAD CON CAMPO 'orden' ACTUALIZADO
+      $stmt = $conmy->prepare("INSERT INTO tbldetalleinforme (infid, ownid, orden, tipo, actividad, diagnostico, trabajos, observaciones, creacion, actualizacion) 
+                               VALUES (:InfId, :OwnId, :Orden, :Tipo, :Actividad, :Diagnostico, :Trabajos, :Observaciones, :Creacion, :Actualizacion);");
+      $params = array(
+        ':InfId' => $actividad->infid,
+        ':OwnId' => $actividad->ownid,
+        ':Orden' => $nuevoOrden,
+        ':Tipo' => $actividad->tipo,
+        ':Actividad' => $actividad->actividad,
+        ':Diagnostico' => $actividad->diagnostico,
+        ':Trabajos' => $actividad->trabajos,
+        ':Observaciones' => $actividad->observaciones,
+        ':Creacion' => $actividad->usuario,
+        ':Actualizacion' => $actividad->usuario
+      );
       if ($stmt->execute($params)) {
-          $res = true;
+        $res = true;
       }
       return $res;
     } catch (PDOException $e) {
@@ -188,19 +206,42 @@
     }
   }
 
-  function FnRegistrarInformeActividades($conmy, $actividad) {
+function FnRegistrarInformeActividades($conmy, $actividad) {
     try {
-      $res = false;
-      $stmt = $conmy->prepare("INSERT INTO tbldetalleinforme (infid, ownid, actividad, diagnostico, trabajos, observaciones, tipo, creacion, actualizacion) VALUES (:InfId, :OwnId, :Actividad, :Diagnostico, :Trabajos, :Observaciones, :Tipo,:Creacion, :Actualizacion);");
-      $params = array(':InfId' => $actividad->infid,':OwnId' => $actividad->ownid,':Actividad' => $actividad->actividad,':Diagnostico' => $actividad->diagnostico,':Trabajos' => $actividad->trabajos,':Observaciones' => $actividad->observaciones,':Tipo' => $actividad->tipo, ':Creacion' => $actividad->usuario,':Actualizacion' => $actividad->usuario);
-      if ($stmt->execute($params)) {
-          $res = true;
-      }
-      return $res;
+        $res = false;
+
+        // Preparar la consulta SQL
+        $stmt = $conmy->prepare("INSERT INTO tbldetalleinforme 
+            (infid, ownid, orden, tipo, actividad, diagnostico, trabajos, observaciones, creacion, actualizacion) 
+            VALUES 
+            (:InfId, :OwnId, :Orden, :Tipo, :Actividad, :Diagnostico, :Trabajos, :Observaciones, :Creacion, :Actualizacion);");
+
+        // Asociar los parámetros
+        $params = array(
+            ':InfId' => $actividad->infid,
+            ':OwnId' => $actividad->ownid,
+            ':Orden' => $actividad->orden,
+            ':Tipo' => $actividad->tipo,
+            ':Actividad' => $actividad->actividad,
+            ':Diagnostico' => $actividad->diagnostico,
+            ':Trabajos' => $actividad->trabajos,
+            ':Observaciones' => $actividad->observaciones,
+            ':Creacion' => $actividad->usuario,
+            ':Actualizacion' => $actividad->usuario
+        );
+
+        // Ejecutar la consulta
+        if ($stmt->execute($params)) {
+            $res = true; // Se registró correctamente
+        }
+
+        return $res; // Retorna el resultado
     } catch (PDOException $e) {
-      throw new Exception($e->getMessage());
+        // Manejo de excepciones: lanza un mensaje de error
+        throw new Exception("Error en el registro: " . $e->getMessage());
     }
-  }
+}
+
 
   function FnBuscarInformeActividad($conmy, $id) {
     try {
