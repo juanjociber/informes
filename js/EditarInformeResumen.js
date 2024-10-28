@@ -102,6 +102,8 @@ const FnAgregarInformeActividades = async () => {
     vgLoader.classList.remove('loader-full-hidden');
     const formData = new FormData();
     formData.append('infid', document.getElementById('txtIdInforme').value);
+    formData.append('ownid', 0);
+    formData.append('orden', 0);
     formData.append('actividad', document.getElementById('registroActividadInput').value.trim());
     formData.append('tipo', tipoSeleccionado);
     
@@ -159,7 +161,6 @@ const FnModalModificarActividad = async (id, cabecera) => {
     if (!datos.res) { 
       throw new Error(datos.msg); 
     }
-    //console.log(datos);
     // MOSTRANDO DATA RECIBIDA DE SERVIDOR
     document.getElementById('actividadModalInput').value = datos.data.actividad;
     document.getElementById('diagnosticoModalInput').value = datos.data.diagnostico;

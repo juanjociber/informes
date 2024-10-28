@@ -115,13 +115,11 @@
                   <p class="mb-1 text-secondary observacion" style="font-size=15px; text-align:justify; line-height: 1.2;" id="observacion-'.$nodo['id'].'">'.$nodo['observaciones'].'</p>
                 </div>
               </div>
-              <div class="contenedor-imagen mb-3" id="'.$nodo['id'].'">
-              <div class="archivo-container" id="archivo">';
-              
+              <div class="contenedor-imagen mb-3" id="'.$nodo['id'].'">';
+              // <div class="archivo-container" id="archivo">;
                 if(isset($imagenes[$nodo['id']])){
                   foreach($imagenes[$nodo['id']] as $elemento){
                     $html.='
-
                     <div class="d-flex flex-column" id="'.$elemento['id'].'">
                       <div class="d-flex justify-content-end align-items-center text-secondary">
                         <!--BOTON EDITAR-->  
@@ -165,13 +163,12 @@
                         </div>
                       </div>
                     </div>
-                    
                   ';
                 }
               }
               $html.='
-              </div>
               </div>';
+              // </div>;
           if (!empty($nodo['hijos'])) {
             $html.='
               <div class="accordion" id="accordion-container-'.$nodo['id'].'">';
@@ -219,13 +216,12 @@
           $cadenaIds = implode(',', $ids);
           $imagenes=array();
 
-          $stmt3 = $conmy->prepare("select id, refid, orden, tabla, nombre, titulo, descripcion, tipo from tblarchivos where refid IN(".$cadenaIds.") and tabla=:Tabla and tipo=:Tipo;");				
+          $stmt3 = $conmy->prepare("select id, refid, tabla, nombre, titulo, descripcion, tipo from tblarchivos where refid IN(".$cadenaIds.") and tabla=:Tabla and tipo=:Tipo;");				
           $stmt3->execute(array(':Tabla'=>'INFD', ':Tipo'=>'IMG'));
           while($row3=$stmt3->fetch(PDO::FETCH_ASSOC)){
             $imagenes[$row3['refid']][]=array(
               'id'=>(int)$row3['id'],
               'refid'=>$row3['refid'],
-              'orden'=>$row3['orden'],
               'tabla'=>$row3['tabla'],
               'nombre'=>$row3['nombre'],
               'titulo'=>$row3['titulo'],

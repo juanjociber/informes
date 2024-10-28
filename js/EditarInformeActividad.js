@@ -261,28 +261,26 @@ const $divImagen = document.getElementById("divImagen");
 
 document.getElementById('fileImagen').addEventListener('change', function(event) {
   vgLoader.classList.remove('loader-full-hidden');
-  
   const file = event.target.files[0];
 
   if (!isValidFileType(file)) {
-      console.log('El archivo', file.name, 'Tipo de archivo no permitido.');
+    //console.log('El archivo', file.name, 'Tipo de archivo no permitido.');
   }
 
   if (!isValidFileSize(file)) {
-      console.log('El archivo', file.name, 'El tamaño del archivo excede los 3MB.');
+    //console.log('El archivo', file.name, 'El tamaño del archivo excede los 3MB.');
   }
 
   while ($divImagen.firstChild) {
-      $divImagen.removeChild($divImagen.firstChild);
+    $divImagen.removeChild($divImagen.firstChild);
   }
 
   if (file.type.startsWith('image/')) {
       displayImage(file);
   }
-
-  console.log('Nombre del archivo:', file.name);
-  console.log('Tipo del archivo:', file.type);
-  console.log('Tamaño del archivo:', file.size, 'bytes');
+  // console.log('Nombre del archivo:', file.name);
+  // console.log('Tipo del archivo:', file.type);
+  // console.log('Tamaño del archivo:', file.size, 'bytes');
 
   setTimeout(function() {
     vgLoader.classList.add('loader-full-hidden');
@@ -478,7 +476,6 @@ const FnModificarArchivo = async () => {
       throw new Error(`${response.status} ${response.statusText}`);
     }
     const datos = await response.json();
-    console.log(datos);
     if (!datos.res) {
       throw new Error(datos.msg);
     }
@@ -514,7 +511,6 @@ const FnEliminarArchivo = async (id,refid) => {
     const formData = new FormData();
     formData.append('id', id);
     formData.append('refid', refid);
-    console.log(id, refid);
     const response = await fetch('/gesman/delete/EliminarArchivo.php', {
       method: 'POST',
       body: formData,
@@ -582,28 +578,21 @@ mostrarTitulo('observacion');
 
 function editarTitulo(id) {
   const titulo = document.getElementById(`titulo-${id}`).innerText;
-  // Aquí podrías agregar lógica para guardar el nuevo título, por ejemplo, enviarlo a un servidor
-  console.log("Nuevo título:", titulo);
 }
 
 function editarDescripcion(id) {
   const descripcion = document.getElementById(`descripcion-${id}`).innerText;
-  // Aquí podrías agregar lógica para guardar la nueva descripción
-  console.log("Nueva descripción:", descripcion);
 }
 
 function editarImagen(id) {
   const nuevaImagen = prompt("Introduce la URL de la nueva imagen:");
   if (nuevaImagen) {
     document.getElementById(`imagen-${id}`).src = nuevaImagen;
-    // Aquí podrías agregar lógica para guardar la nueva imagen en el servidor
-    console.log("Nueva imagen:", nuevaImagen);
   }
 }
 
 function FnResumenInforme(){
   id = document.getElementById('txtInformeId').value;
-  console.log(0, id)
   if(id > 0){
       window.location.href='/informes/Informe.php?id='+id;
   }
@@ -617,10 +606,10 @@ function FnListarInformes(){
 
 /** EVENTO CAMBIO DE POSICIÓN */
 const lista = document.getElementById('accordion-container');
-const archivo = document.getElementById('archivo');
+// const archivo = document.getElementById('archivo');
 
 let sortableActividades;
-let sortableArchivos;
+// let sortableArchivos;
 
 function FnInitSorteable() {
   if (!lista) {
@@ -635,7 +624,6 @@ function FnInitSorteable() {
         onEnd: () => {
           const orden = lista.children; 
           const nuevaOrden = Array.from(orden).map(item => item.id);
-          console.log(nuevaOrden);
           // ENVIAR NUEVOS 'id' AL SERVIDOR
           fetch('/informes/update/ModificarActividades.php', {
             method: 'POST',
@@ -683,78 +671,78 @@ function FnInitSorteable() {
   }
 }
 
-function FnInitSorteableArchivo() {
-  if (!archivo) {
-    return; 
-  }
+// function FnInitSorteableArchivo() {
+//   if (!archivo) {
+//     return; 
+//   }
 
-  const mediaQuery = window.matchMedia('(min-width: 768px)');
+//   const mediaQuery = window.matchMedia('(min-width: 768px)');
 
-  if (mediaQuery.matches) {
-    if (!sortableArchivos) {
-      sortableArchivos = Sortable.create(archivo, {
-        animation: 150,
-        onEnd: () => {
-          const orden = archivo.children; 
-          const nuevaOrden = Array.from(orden).map(item => item.id);
-          console.log(nuevaOrden);
-          // ENVIAR NUEVOS 'id' AL SERVIDOR
-          fetch('/gesman/update/ModificarArchivoPosicion.php', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ orden: nuevaOrden })
-          })
-          .then(response => response.json())
-          .then(data => {
-            console.log(data);
-            setTimeout(() => {
-              vgLoader.classList.add('loader-full-hidden');
-            }, 500);
-            setTimeout(() => { location.reload(); }, 1000);
-          })
-          .catch(error => {
-            Swal.fire({
-              title: "Aviso",
-              text: error.message,
-              icon: "error",
-              timer: 2000
-            });
-          });
-        },
-        group: "lista-archivos",
-        store: {
-          // GUARDAR ORDEN DE ARCHIVOS
-          set: (sortable) => {
-            const orden = sortable.toArray();
-            localStorage.setItem(sortable.options.group.name, orden.join('|'));
-          },
-          // OBTENER ORDEN DE LISTA 
-          get: (sortable) => {
-            const orden = localStorage.getItem(sortable.options.group.name);
-            return orden ? orden.split('|') : [];
-          }
-        }
-      });
-    }
-  } else {
-    if (sortableArchivos) {
-      sortableArchivos.destroy();
-      sortableArchivos = null;
-    }
-  }
-}
+//   if (mediaQuery.matches) {
+//     if (!sortableArchivos) {
+//       sortableArchivos = Sortable.create(archivo, {
+//         animation: 150,
+//         onEnd: () => {
+//           const orden = archivo.children; 
+//           const nuevaOrden = Array.from(orden).map(item => item.id);
+//           console.log(nuevaOrden);
+//           // ENVIAR NUEVOS 'id' AL SERVIDOR
+//           fetch('/gesman/update/ModificarArchivoPosicion.php', {
+//             method: 'POST',
+//             headers: {
+//               'Content-Type': 'application/json',
+//             },
+//             body: JSON.stringify({ orden: nuevaOrden })
+//           })
+//           .then(response => response.json())
+//           .then(data => {
+//             console.log(data);
+//             setTimeout(() => {
+//               vgLoader.classList.add('loader-full-hidden');
+//             }, 500);
+//             setTimeout(() => { location.reload(); }, 1000);
+//           })
+//           .catch(error => {
+//             Swal.fire({
+//               title: "Aviso",
+//               text: error.message,
+//               icon: "error",
+//               timer: 2000
+//             });
+//           });
+//         },
+//         group: "lista-archivos",
+//         store: {
+//           // GUARDAR ORDEN DE ARCHIVOS
+//           set: (sortable) => {
+//             const orden = sortable.toArray();
+//             localStorage.setItem(sortable.options.group.name, orden.join('|'));
+//           },
+//           // OBTENER ORDEN DE LISTA 
+//           get: (sortable) => {
+//             const orden = localStorage.getItem(sortable.options.group.name);
+//             return orden ? orden.split('|') : [];
+//           }
+//         }
+//       });
+//     }
+//   } else {
+//     if (sortableArchivos) {
+//       sortableArchivos.destroy();
+//       sortableArchivos = null;
+//     }
+//   }
+// }
 
 // Inicializar las funciones
 FnInitSorteable();
-FnInitSorteableArchivo();
+// FnInitSorteableArchivo();
 
 // Escuchar cambios en el tamaño de la ventana
 const mediaQuery = window.matchMedia('(min-width: 768px)');
 mediaQuery.addEventListener('change', (e) => {
   FnInitSorteable();
-  FnInitSorteableArchivo();
+  // FnInitSorteableArchivo();
 });
 
 

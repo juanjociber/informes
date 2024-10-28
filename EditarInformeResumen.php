@@ -33,13 +33,13 @@
         $analisis=array();
         foreach($datos as $dato){
           if($dato['tipo']=='con'){
-            $conclusiones[]=array('actividad'=>$dato['actividad'],'id'=>$dato['id'],'tipo'=>$dato['tipo']);
+            $conclusiones[]=array('actividad'=>$dato['actividad'],'id'=>$dato['id'], 'ownid'=>$dato['ownid'],'tipo'=>$dato['tipo']);
           }else if($dato['tipo']=='rec'){
-            $recomendaciones[]=array('actividad'=>$dato['actividad'],'id'=>$dato['id'],'tipo'=>$dato['tipo']);
+            $recomendaciones[]=array('actividad'=>$dato['actividad'],'id'=>$dato['id'], 'ownid'=>$dato['ownid'],'tipo'=>$dato['tipo']);
           }else if($dato['tipo']=='ant'){
-            $antecedentes[]=array('actividad'=>$dato['actividad'],'id'=>$dato['id'],'tipo'=>$dato['tipo']);
+            $antecedentes[]=array('actividad'=>$dato['actividad'],'id'=>$dato['id'], 'ownid'=>$dato['ownid'],'tipo'=>$dato['tipo']);
           }else if($dato['tipo']=='ana'){
-            $analisis[]=array('actividad'=>$dato['actividad'],'id'=>$dato['id'],'tipo'=>$dato['tipo']);
+            $analisis[]=array('actividad'=>$dato['actividad'],'id'=>$dato['id'], 'ownid'=>$dato['ownid'],'tipo'=>$dato['tipo']);
           }	
         }
       } 

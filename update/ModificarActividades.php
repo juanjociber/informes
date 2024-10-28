@@ -4,7 +4,7 @@
     header("location:/gesman");
     exit();
   }
-  require_once $_SERVER['DOCUMENT_ROOT'] . "/gesman/connection/ConnGesmanDb.php";
+  require_once $_SERVER['DOCUMENT_ROOT']."/gesman/connection/ConnGesmanDb.php";
   $conmy->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
   $data = json_decode(file_get_contents("php://input"), true);

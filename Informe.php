@@ -67,36 +67,9 @@
           <div class="row m-0 mt-2 mb-2 p-0 d-flex justify-content-center" id="'.$nodo['id'].'">';
             if(isset($imagenes[$nodo['id']])){
               $html.='
-              <div id="carouselImages'.$nodo['id'].'" class="carousel slide d-md-none" data-bs-interval="false">
-                <div class="carousel-inner">';
-                  foreach($imagenes[$nodo['id']] as $key => $elemento){
-                    $html.='
-                    <div class="carousel-item '.($key === 0 ? 'active' : '').'">
-                      <div class="card text-center p-0" id="archivo-'.$elemento['id'].'">
-                        <div class="card-header text-secondary" style="text-align:justify;padding-left:5px;">'.$elemento['titulo'].'</div>
-                          <div class="card-body p-0">
-                            <img src="/mycloud/gesman/files/'.$elemento['nombre'].'" class="imagen-ajustada" alt="">
-                          </div>
-                        <div class="card-footer text-secondary" style="text-align:justify;padding-left:5px;">'.$elemento['descripcion'].'</div>
-                      </div>
-                    </div>';
-                  }
-                  $html.='
-                </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselImages'.$nodo['id'].'" data-bs-slide="prev" style="background-color: #1b2346c7; width:25px; height: 45px; margin-top:25%;margin-left: 12px">
-                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                  <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselImages'.$nodo['id'].'" data-bs-slide="next" style="background-color: #1b2346c7; width:25px; height: 45px; margin-top:25%;margin-right: 12px">
-                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                  <span class="visually-hidden">Next</span>
-                </button>
-              </div>
-
-              <!-- Diseño de dos columnas para pantallas grandes -->
-              <div class="row d-none d-md-flex caja-imagenes">';               
+              <div class="row caja-imagenes">';               
               foreach($imagenes[$nodo['id']] as $elemento){
-                $html .= '<div class="col-md-6 mb-2">
+                $html .= '<div class="col-6 mb-2">
                   <div class="card text-center p-0" id="archivo-'.$elemento['id'].'">
                     <div class="card-header text-secondary" style="text-align:justify;padding-left:5px;">'.$elemento['titulo'].'</div>
                     <div class="card-body p-0">
@@ -347,56 +320,23 @@
             <p class="m-0 text-secondary fw-bold"><?php echo  $informe->EquDatos  ; ?></p>
           </div>
         </div>
-        <!-- Carrusel para pantallas pequeñas -->
+      
         <?php
-          $html='';
-          $html.=
-          '<div id="carouselExample" class="carousel slide d-md-none" data-bs-ride="carousel" data-bs-interval="false">
-            <div class="carousel-inner">';
-              foreach ($imagenInformes as $key => $imagenInforme) {
-                $activeClass = $key === 0 ? 'active' : '';
-                $nombreImagen = !empty($imagenInforme['nombre']) ? $imagenInforme['nombre'] : '0.jpg';
-                $html .= '
-                <div class="carousel-item ' . $activeClass . '">
-                  <div class="card text-center p-0">
-                    <div class="card-header text-secondary" style="text-align:justify;padding-left:5px; line-height: 1.2">' . $imagenInforme['titulo'] . '</div>
-                    <div class="card-body p-0">
-                      <img src="/mycloud/gesman/files/' . $nombreImagen . '" class="imagen-ajustada" alt="">
-                    </div>
-                    <div class="card-footer text-secondary" style="text-align:justify;padding-left:5px;">' . $imagenInforme['descripcion'] . '</div>
+          $html=''; 
+          $html.='<div class="row caja-imagenes mt-4">';
+            foreach($imagenInformes as $imagenInforme){
+              $html.='<div class="col-6 mb-2">
+                <div class="card text-center p-0">
+                  <div class="card-header text-secondary" style="text-align:justify;padding-left:5px; line-height: 1.2">'.$imagenInforme['titulo'].'</div>
+                  <div class="card-body p-0">
+                    <img src="/mycloud/gesman/files/'.$imagenInforme['nombre'].'" class="imagen-ajustada" alt="">
                   </div>
-                </div>';
-              }
-            $html.='
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev" style="background-color: #1b2346c7; width:25px; height: 45px; margin-top:25%;">
-              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next" style="background-color: #1b2346c7; width:25px; height: 45px; margin-top:25%;">
-              <span class="carousel-control-next-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Next</span>
-            </button>
-          </div>';
-          echo $html;
-        ?>
-        <!-- Diseño de dos columnas para pantallas grandes -->
-        <?php
-        $html=''; 
-        $html.='<div class="row d-none d-md-flex caja-imagenes mt-4">';
-          foreach($imagenInformes as $imagenInforme){
-            $html.='<div class="col-md-6 mb-2">
-              <div class="card text-center p-0">
-                <div class="card-header text-secondary" style="text-align:justify;padding-left:5px; line-height: 1.2">'.$imagenInforme['titulo'].'</div>
-                <div class="card-body p-0">
-                  <img src="/mycloud/gesman/files/'.$imagenInforme['nombre'].'" class="imagen-ajustada" alt="">
+                  <div class="card-footer text-secondary" style="text-align:justify;padding-left:5px;">'.$imagenInforme['descripcion'].'</div>
                 </div>
-                <div class="card-footer text-secondary" style="text-align:justify;padding-left:5px;">'.$imagenInforme['descripcion'].'</div>
-              </div>
-            </div>';
-          }
-        $html.='</div>';
-        echo $html;
+              </div>';
+            }
+          $html.='</div>';
+          echo $html;
         ?>
 
         <?php $NUMERO+=1; ?>
