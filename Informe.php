@@ -317,7 +317,7 @@
           </div>
           <div class="col-12 col-lg-6 mb-1">
             <p class="m-0 text-secondary" style="font-size: 15px;">Caraterísticas</p> 
-            <p class="m-0 text-secondary fw-bold"><?php echo  $informe->EquDatos  ; ?></p>
+            <p class="m-0 text-secondary fw-bold"><?php echo  $informe->EquDatos ; ?></p>
           </div>
         </div>
       

@@ -117,7 +117,7 @@
             <div class="custom-select-container col-6 col-md-4 col-lg-3">
               <label for="cbCliContacto" class="form-label mb-0">Contacto :</label>
               <div class="custom-select-wrapper">
-                <input type="text" id="cbCliContacto" class="custom-select-input text-secondary text-uppercase fw-bold" value="'.$informe->CliContacto.'" />
+                <input type="text" id="cbCliContacto" class="custom-select-input text-secondary fw-bold" value="'.$informe->CliContacto.'" />
                 <span class="custom-select-arrow text-secondary fw-bold"><i class="bi bi-chevron-down"></i></span>
                 <div id="contactoList" class="custom-select-list ">';
                   foreach ($contactos as $contacto){
