@@ -10,13 +10,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // AGREGAR INFORME ACTIVIDAD
 const FnAgregarInformeActividades = async () => {
-  const formData = new FormData();
-  formData.append('infid', document.getElementById('txtActividadInfid1').value);
-  formData.append('actividad', document.getElementById('txtActividad1').value.trim());
-  formData.append('diagnostico', document.getElementById('txtDiagnostico1').value.trim());
-  formData.append('trabajos', document.getElementById('txtTrabajo1').value.trim());
-  formData.append('observaciones', document.getElementById('txtObservacion1').value.trim());
   try {
+    const formData = new FormData();
+    formData.append('infid', document.getElementById('txtActividadInfid1').value);
+    formData.append('actividad', document.getElementById('txtActividad1').value.trim());
+    formData.append('diagnostico', document.getElementById('txtDiagnostico1').value.trim());
+    formData.append('trabajos', document.getElementById('txtTrabajo1').value.trim());
+    formData.append('observaciones', document.getElementById('txtObservacion1').value.trim());
     const response = await fetch('/informes/insert/AgregarInformeActividad.php', {
       method: 'POST',
       body: formData
@@ -56,6 +56,7 @@ const FnAgregarInformeActividades = async () => {
     });
   }
 };
+
 
 // ABRIR MODAL INFORME SUB-ACTIVIDAD
 const FnModalAgregarInformeActividades = async (id) => {
@@ -616,30 +617,30 @@ function FnListarInformes(){
 
 /** EVENTO CAMBIO DE POSICIÓN */
 const lista = document.getElementById('accordion-container');
-let sortable;
+const archivo = document.getElementById('archivo');
 
-function initSortable() {
+let sortableActividades;
+let sortableArchivos;
+
+function FnInitSorteable() {
   if (!lista) {
-    return; // Sale de la función si el elemento no existe
+    return; 
   }
-
-  // Verifica si el ancho de la ventana es >= 768 usando matchMedia
   const mediaQuery = window.matchMedia('(min-width: 768px)');
 
   if (mediaQuery.matches) {
-    // Si la media query coincide, inicializa sortable
-    if (!sortable) {
-      sortable = Sortable.create(lista, {
+    if (!sortableActividades) {
+      sortableActividades = Sortable.create(lista, {
         animation: 150,
         onEnd: () => {
-          console.log('Cambio posición');
           const orden = lista.children; 
           const nuevaOrden = Array.from(orden).map(item => item.id);
+          console.log(nuevaOrden);
           // ENVIAR NUEVOS 'id' AL SERVIDOR
           fetch('/informes/update/ModificarActividades.php', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+              'Content-Type': 'application/json',
             },
             body: JSON.stringify({ orden: nuevaOrden })
           })
@@ -675,20 +676,91 @@ function initSortable() {
       });
     }
   } else {
-    // Si la media query no coincide, destruye sortable si existe
-    if (sortable) {
-      sortable.destroy();
-      sortable = null;
+    if (sortableActividades) {
+      sortableActividades.destroy();
+      sortableActividades = null;
     }
   }
 }
 
-// Inicializar sortable al cargar la página
-initSortable();
+function FnInitSorteableArchivo() {
+  if (!archivo) {
+    return; 
+  }
 
-// Usa matchMedia para escuchar cambios en la media query
+  const mediaQuery = window.matchMedia('(min-width: 768px)');
+
+  if (mediaQuery.matches) {
+    if (!sortableArchivos) {
+      sortableArchivos = Sortable.create(archivo, {
+        animation: 150,
+        onEnd: () => {
+          const orden = archivo.children; 
+          const nuevaOrden = Array.from(orden).map(item => item.id);
+          console.log(nuevaOrden);
+          // ENVIAR NUEVOS 'id' AL SERVIDOR
+          fetch('/gesman/update/ModificarArchivoPosicion.php', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ orden: nuevaOrden })
+          })
+          .then(response => response.json())
+          .then(data => {
+            console.log(data);
+            setTimeout(() => {
+              vgLoader.classList.add('loader-full-hidden');
+            }, 500);
+            setTimeout(() => { location.reload(); }, 1000);
+          })
+          .catch(error => {
+            Swal.fire({
+              title: "Aviso",
+              text: error.message,
+              icon: "error",
+              timer: 2000
+            });
+          });
+        },
+        group: "lista-archivos",
+        store: {
+          // GUARDAR ORDEN DE ARCHIVOS
+          set: (sortable) => {
+            const orden = sortable.toArray();
+            localStorage.setItem(sortable.options.group.name, orden.join('|'));
+          },
+          // OBTENER ORDEN DE LISTA 
+          get: (sortable) => {
+            const orden = localStorage.getItem(sortable.options.group.name);
+            return orden ? orden.split('|') : [];
+          }
+        }
+      });
+    }
+  } else {
+    if (sortableArchivos) {
+      sortableArchivos.destroy();
+      sortableArchivos = null;
+    }
+  }
+}
+
+// Inicializar las funciones
+FnInitSorteable();
+FnInitSorteableArchivo();
+
+// Escuchar cambios en el tamaño de la ventana
 const mediaQuery = window.matchMedia('(min-width: 768px)');
-mediaQuery.addEventListener('change', initSortable);
+mediaQuery.addEventListener('change', (e) => {
+  FnInitSorteable();
+  FnInitSorteableArchivo();
+});
+
+
+
+
+
 
 
 

@@ -115,11 +115,14 @@
                   <p class="mb-1 text-secondary observacion" style="font-size=15px; text-align:justify; line-height: 1.2;" id="observacion-'.$nodo['id'].'">'.$nodo['observaciones'].'</p>
                 </div>
               </div>
-              <div class="contenedor-imagen mb-3" id="'.$nodo['id'].'">';
+              <div class="contenedor-imagen mb-3" id="'.$nodo['id'].'">
+              <div class="archivo-container" id="archivo">';
+              
                 if(isset($imagenes[$nodo['id']])){
                   foreach($imagenes[$nodo['id']] as $elemento){
                     $html.='
-                    <div class="d-flex flex-column">
+
+                    <div class="d-flex flex-column" id="'.$elemento['id'].'">
                       <div class="d-flex justify-content-end align-items-center text-secondary">
                         <!--BOTON EDITAR-->  
                         <span data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" onclick="FnModalModificarArchivo('.$elemento['id'].')" style="font-size:25px; cursor:pointer; padding:10px">
@@ -162,10 +165,12 @@
                         </div>
                       </div>
                     </div>
+                    
                   ';
                 }
               }
               $html.='
+              </div>
               </div>';
           if (!empty($nodo['hijos'])) {
             $html.='
@@ -201,7 +206,7 @@
       }
     }
     if($Id2 > 0){
-      $stmt2 = $conmy->prepare("select id, infid, ownid, orden, tipo, actividad, diagnostico, trabajos, observaciones from tbldetalleinforme where infid=:InfId and tipo='act' order by orden;");
+      $stmt2 = $conmy->prepare("select id, infid, ownid, orden, tipo, actividad, diagnostico, trabajos, observaciones from tbldetalleinforme where infid=:InfId and tipo='act' order by orden");
       $stmt2->bindParam(':InfId', $ID, PDO::PARAM_INT);
       $stmt2->execute();
       $actividades = $stmt2->fetchAll(PDO::FETCH_ASSOC);
@@ -214,12 +219,13 @@
           $cadenaIds = implode(',', $ids);
           $imagenes=array();
 
-          $stmt3 = $conmy->prepare("select id, refid, tabla, nombre, titulo, descripcion, tipo from tblarchivos where refid IN(".$cadenaIds.") and tabla=:Tabla and tipo=:Tipo;");				
+          $stmt3 = $conmy->prepare("select id, refid, orden, tabla, nombre, titulo, descripcion, tipo from tblarchivos where refid IN(".$cadenaIds.") and tabla=:Tabla and tipo=:Tipo;");				
           $stmt3->execute(array(':Tabla'=>'INFD', ':Tipo'=>'IMG'));
           while($row3=$stmt3->fetch(PDO::FETCH_ASSOC)){
             $imagenes[$row3['refid']][]=array(
               'id'=>(int)$row3['id'],
               'refid'=>$row3['refid'],
+              'orden'=>$row3['orden'],
               'tabla'=>$row3['tabla'],
               'nombre'=>$row3['nombre'],
               'titulo'=>$row3['titulo'],
