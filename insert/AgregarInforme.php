@@ -5,6 +5,9 @@
 	$msg='Error general creando el Informe.';
     require_once $_SERVER['DOCUMENT_ROOT']."/gesman/connection/ConnGesmanDb.php";
     require_once $_SERVER['DOCUMENT_ROOT']."/informes/datos/InformesData.php";
+    require_once $_SERVER['DOCUMENT_ROOT']."/gesman/data/OrdenesData.php";
+    require_once $_SERVER['DOCUMENT_ROOT']."/gesman/data/EquiposData.php";
+    require_once $_SERVER['DOCUMENT_ROOT']."/gesman/data/ClientesData.php";
 
     try {
         $conmy->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
