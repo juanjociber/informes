@@ -1,6 +1,22 @@
 <?php
   session_start();
-  if(!isset($_SESSION['UserName']) || !isset($_SESSION['CliId'])){ header("location:/gesman"); exit(); }
+  require_once $_SERVER['DOCUMENT_ROOT']."/gesman/data/SesionData.php";
+  
+  if(!FnValidarSesion()){
+    header("location:/gesman/Salir.php");
+    exit();
+  }
+
+  if(!FnValidarSesionManNivel3()){
+    header("HTTP/1.1 403 Forbidden");
+    exit();
+  }
+
+  if(empty($_GET['id'])){
+    header("HTTP/1.1 404 Not Found");
+    exit();
+  }
+  
   require_once $_SERVER['DOCUMENT_ROOT']."/gesman/connection/ConnGesmanDb.php";
   require_once $_SERVER['DOCUMENT_ROOT']."/informes/datos/InformesData.php";
   require_once $_SERVER['DOCUMENT_ROOT']."/informes/datos/SupervisoresData.php";
@@ -18,14 +34,14 @@
     $conmy->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     if (is_numeric($ID) && $ID > 0) {
-      $informe = FnBuscarInforme($conmy, $ID, $_SESSION['CliId']);
+      $informe = FnBuscarInforme($conmy, $ID, $_SESSION['gesman']['CliId']);
       if($informe && $informe->Estado !=3){
         $isAuthorized = true;
         $Nombre = $informe->Nombre;
         $claseHabilitado = "btn-outline-primary";
         $atributoHabilitado = ""; 
         $supervisores = FnBuscarSupervisores($conmy);
-        $contactos = FnBuscarContacto($conmy, $_SESSION['CliId']);
+        $contactos = FnBuscarContacto($conmy, $_SESSION['gesman']['CliId']);
       }
     } 
     $conmy = null;
@@ -46,6 +62,7 @@
     }
   }
   $supervisorInputValue = $supervisorValido ? $informe->Supervisor : '';
+
 ?>
 <!doctype html>
 <html lang="es">
@@ -78,7 +95,7 @@
       </div>
       <div class="row border-bottom mb-3 fs-5">
         <div class="col-12 fw-bold d-flex justify-content-between">
-          <p class="m-0 p-0 text-secondary"><?php echo $isAuthorized ? $_SESSION['CliNombre'] : 'UNKNOWN'; ?></p>
+          <p class="m-0 p-0 text-secondary"><?php echo $isAuthorized ? $_SESSION['gesman']['CliNombre'] : 'UNKNOWN'; ?></p>
           <input type="hidden" id="txtInformeId" value="<?php echo $ID;?>" readonly/>
           <p class="m-0 p-0 text-center text-secondary"><?php echo $isAuthorized ? $Nombre : 'UNKNOWN'; ?></p>
         </div>

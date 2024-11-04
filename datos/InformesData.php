@@ -99,9 +99,9 @@
           if(!empty($informe->Equipo)){$query .=" and equid=".$informe->Equipo;}
           $query.=" and fecha between '".$informe->FechaInicial."' and '".$informe->FechaFinal."'";
       }
-      $query.=" limit ".$informe->Pagina.", 2";
+      $query.=" limit ".$informe->Pagina.", 15";
 
-      $stmt = $conmy->prepare("select id, nombre, fecha, cli_nombre, actividad, estado from tblinforme where cliid=:CliId".$query.";");
+      $stmt = $conmy->prepare("select id, cliid, nombre, fecha, cli_nombre, actividad, estado from tblinforme where cliid=:CliId".$query.";");
       $stmt->bindParam(':CliId', $informe->CliId, PDO::PARAM_INT);
       $stmt->execute();
 
@@ -110,6 +110,7 @@
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
           $informes['data'][]=array(
             'id'=>(int)$row['id'],
+            'cliid'=>(int)$row['cliid'],
             'nombre'=>$row['nombre'],
             'fecha'=>$row['fecha'],
             'clinombre'=>$row['cli_nombre'],
@@ -121,7 +122,7 @@
       }
       return $informes;
     } catch (PDOException $e) {
-      throw new Exception($e->getMessage().$msg);
+      throw new Exception($e->getMessage());
     }
   }
 

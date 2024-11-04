@@ -1,18 +1,31 @@
 <?php 
   session_start();
-  if(!isset($_SESSION['UserName']) || !isset($_SESSION['CliId'])){
-    header("location:/gesman");
+  require_once $_SERVER['DOCUMENT_ROOT']."/gesman/data/SesionData.php";
+  
+  if(!FnValidarSesion()){
+    header("location:/gesman/Salir.php");
     exit();
   }
-  $ID2=0;
-  $Nombre='UNKNOWN';
-  $ID = empty($_GET['id'])?0:$_GET['id'];
-  $CLI_ID = $_SESSION['CliId'];
-?>
-<?php
+
+  if(!FnValidarSesionManNivel1()){
+    header("HTTP/1.1 403 Forbidden");
+    exit();
+  }
+
+  if(empty($_GET['id'])){
+      header("HTTP/1.1 404 Not Found");
+      exit();
+  }
+
   require_once $_SERVER['DOCUMENT_ROOT']."/gesman/connection/ConnGesmanDb.php";
   require_once $_SERVER['DOCUMENT_ROOT']."/gesman/data/ArchivosData.php";
   require_once $_SERVER['DOCUMENT_ROOT']."/informes/datos/InformesData.php";
+  
+  $ID2=0;
+  $Nombre='UNKNOWN';
+  $ID = empty($_GET['id'])?0:$_GET['id'];
+  $CLI_ID = $_SESSION['gesman']['CliId'];
+  
   $isAuthorized = false;
   $errorMessage = ''; 
   $Estado=0;
@@ -185,7 +198,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Informe | GPEM SAC</title>
+    <title>Informe | GPEM S.A.C</title>
     <link rel="shortcut icon" href="/mycloud/logos/favicon.ico">
     <link rel="stylesheet" href="/mycloud/library/fontawesome-free-5.9.0-web/css/all.css">
     <link rel="stylesheet" href="/mycloud/library/bootstrap-5.0.2-dist/css/bootstrap.min.css">
@@ -219,7 +232,7 @@
   
       <div class="row border-bottom mb-2 fs-5">
         <div class="col-12 fw-bold d-flex justify-content-between">
-          <p class="m-0 text-secondary"><?php echo $isAuthorized ? $_SESSION['CliNombre'] : 'UNKNOWN'; ?></p>
+          <p class="m-0 text-secondary"><?php echo $isAuthorized ? $_SESSION['gesman']['CliNombre'] : 'UNKNOWN'; ?></p>
           <input type="text" class="d-none" id="idInforme" value="<?php echo $ID;?>">
           <p class="m-0 text-secondary"><?php echo $isAuthorized ? $Nombre :'UNKNOWN' ; ?></p>
         </div>

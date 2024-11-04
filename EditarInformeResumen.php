@@ -1,13 +1,26 @@
 <?php
   session_start();
-  if(!isset($_SESSION['UserName']) || !isset($_SESSION['CliId'])){
-    header("location:/gesman");
+  require_once $_SERVER['DOCUMENT_ROOT']."/gesman/data/SesionData.php";
+  
+  if(!FnValidarSesion()){
+    header("location:/gesman/Salir.php");
     exit();
   }
+
+  if(!FnValidarSesionManNivel3()){
+    header("HTTP/1.1 403 Forbidden");
+    exit();
+  }
+
+  if(empty($_GET['id'])){
+    header("HTTP/1.1 404 Not Found");
+    exit();
+  }
+
   require_once $_SERVER['DOCUMENT_ROOT']."/gesman/connection/ConnGesmanDb.php";
   require_once $_SERVER['DOCUMENT_ROOT']."/informes/datos/InformesData.php";
 
-  $CLI_ID = $_SESSION['CliId'];
+  $CLI_ID = $_SESSION['gesman']['CliId'];
   $ID = empty($_GET['id'])?0:$_GET['id'];
   $isAuthorized = false;
   $errorMessage = ''; 
@@ -83,7 +96,7 @@
       </div>
       <div class="row border-bottom mb-3 fs-5">
         <div class="col-12 fw-bold d-flex justify-content-between">
-          <p class="m-0 p-0 text-secondary"><?php echo $isAuthorized ? $_SESSION['CliNombre'] : 'UNKNOWN'; ?></p>
+          <p class="m-0 p-0 text-secondary"><?php echo $isAuthorized ? $_SESSION['gesman']['CliNombre'] : 'UNKNOWN'; ?></p>
           <input type="text" class="d-none" id="txtIdInforme" value="<?php echo $ID; ?>" readonly/>
           <input type="text" class="d-none" id="txtIdtblDetalleInf">
           <p class="m-0 p-0 text-center text-secondary"><?php echo $isAuthorized ? $Nombre : 'UNKNOWN'; ?></p>

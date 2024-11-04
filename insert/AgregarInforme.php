@@ -3,6 +3,7 @@
 	$res=false;
     $id=0;
 	$msg='Error general creando el Informe.';
+    require_once $_SERVER['DOCUMENT_ROOT']."/gesman/data/SesionData.php";
     require_once $_SERVER['DOCUMENT_ROOT']."/gesman/connection/ConnGesmanDb.php";
     require_once $_SERVER['DOCUMENT_ROOT']."/informes/datos/InformesData.php";
     require_once $_SERVER['DOCUMENT_ROOT']."/gesman/data/OrdenesData.php";
@@ -11,8 +12,7 @@
 
     try {
         $conmy->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        if(!isset($_SESSION)){throw new Exception("Se ha perdido la conexión.");}
-        //if(empty($_POST['ordid']) || empty($_POST['fecha']) || empty($_POST['actividad'])){throw new Exception("La información esta incompleta.");} 
+        if(!FnValidarSesion()){throw new Exception("Usuario no tiene Autorización.");}
 
         $orden=FnBuscarOrden($conmy, $_POST['ordid']);
         if(empty($orden->id)){ throw new Exception("No se encontró la Orden."); }
@@ -23,7 +23,7 @@
         $cliente=FnBuscarCliente($conmy, $orden->cliid);
         if(empty($orden->id)){ throw new Exception("No se encontró el Cliente."); }
 
-        $usuario=date('Ymd-His (').$_SESSION['UserName'].')';
+        $usuario=date('Ymd-His (').$_SESSION['gesman']['Nombre'].')';
 
         $id=FnRegistrarInforme($conmy, $orden, $cliente, $equipo, $_POST['fecha'], $_POST['actividad'], $usuario);
         if($id>0){
@@ -32,6 +32,7 @@
         }else{
             throw new Exception("Error generando el Informe.");  
         }
+        $conmy=null;
     } catch(PDOException $ex){
         $msg=$ex->getMessage();
         $conmy=null;

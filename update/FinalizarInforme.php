@@ -1,11 +1,15 @@
 <?php
     session_start();
+    require_once $_SERVER['DOCUMENT_ROOT']."/gesman/data/SesionData.php";
     require_once $_SERVER['DOCUMENT_ROOT'].'/gesman/connection/ConnGesmanDb.php';
 
     $Bandera = false;
-	if(isset($_SESSION['CliId']) && isset($_SESSION['UserName'])){
-		$Bandera = true;
-	}
+
+    if(!FnValidarSesion()){throw new Exception("Usuario no tiene Autorización.");}
+
+	// if(isset($_SESSION['CliId']) && isset($_SESSION['UserName'])){
+	$Bandera = true;
+	// }
 
     $data = array();
     $data['res'] = false;

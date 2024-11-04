@@ -7,7 +7,7 @@ var PaginaActual = 0;
 
 const vgLoader = document.querySelector('.container-loader-full');
 window.onload = function() {
-  // document.getElementById('MenuInformes').classList.add('menu-activo','fw-bold');
+  document.getElementById('MenuInformes').classList.add('menu-activo','fw-bold');
   vgLoader.classList.add('loader-full-hidden');
 };
 
@@ -16,18 +16,23 @@ $(document).ready(function() {
     width: 'resolve', //Personalizar el alto del select, aplicar estilo.
     ajax: {
         delay: 450, //Tiempo de demora para buscar
-        url: '/gesman/search/ListarActivos.php',
+        url: '/gesman/search/ListarEquipos.php',
         type: 'POST',
         dataType: 'json',
         data: function (params) {
           return {
-              nombre: params.term // parametros a enviar al server. params.term captura lo que se escribe en el input
+              codigo: params.term // parametros a enviar al server. params.term captura lo que se escribe en el input
           };
         },
-        processResults: function (data) {
-            return {
-                results: data.data //Retornar el json obtenido
-            }
+        processResults: function (datos) {
+          return {
+            results:datos.data.map(function(elem) {
+                return {
+                    id:elem.id,
+                    text:elem.codigo,
+                };
+            })
+          }
         },
         cache: true
     },
@@ -35,29 +40,35 @@ $(document).ready(function() {
     allowClear: true, // Permite borrar la selección
     minimumInputLength:1 //Caracteres minimos para buscar
   });
+});
 
+$(document).ready(function() {
   $('#cbEquipo2').select2({
     dropdownParent: $('#modalAgregarInforme'),
     width: 'resolve', //Personalizar el alto del select, aplicar estilo.
     ajax: {
       delay: 450, //Tiempo de demora para buscar
-      url: '/gesman/search/ListarActivos.php',
+      url: '/gesman/search/ListarEquipos.php',
       type: 'POST',
       dataType: 'json',
       data: function (params) {
           return {
-              nombre: params.term // parametros a enviar al server. params.term captura lo que se escribe en el input
+              codigo: params.term // parametros a enviar al server. params.term captura lo que se escribe en el input
           };
       },
-      processResults: function (data) {
-          return {
-              results: data.data //Retornar el json obtenido
-          }
+      processResults: function (datos) {
+        return {
+          results:datos.data.map(function(elem) {
+              return {
+                id: elem.id,
+                text: elem.codigo,
+              };
+          })
+        }
       },
       cache: true
     },
     placeholder: 'Seleccionar',
-    // allowClear: true, // Permite borrar la selección
     minimumInputLength:1 //Caracteres minimos para buscar
   });
 });

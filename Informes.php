@@ -1,16 +1,24 @@
 <?php 
   session_start();
-  if(!isset($_SESSION['UserName']) || !isset($_SESSION['CliId'])){
-    header("location:/gesman");
+  require_once $_SERVER['DOCUMENT_ROOT']."/gesman/data/SesionData.php";
+  
+  if(!FnValidarSesion()){
+    header("location:/gesman/Salir.php");
     exit();
   }
+
+  if(!FnValidarSesionManNivel1()){
+    header("HTTP/1.1 403 Forbidden");
+    exit();
+  }
+
   require_once $_SERVER['DOCUMENT_ROOT']."/gesman/connection/ConnGesmanDb.php";
   require_once $_SERVER['DOCUMENT_ROOT']."/informes/datos/InformesData.php";
   require_once $_SERVER['DOCUMENT_ROOT']."/informes/datos/SupervisoresData.php";
 
   try {
     $conmy->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $supervisores = FnBuscarContacto($conmy, $_SESSION['CliId']);
+    $supervisores = FnBuscarContacto($conmy, $_SESSION['gesman']['CliId']);
     $conmy = null;
 
   } catch (PDOException $ex) {
@@ -20,6 +28,7 @@
     $errorMessage = $ex->getMessage();
     $conmy = null;
   }
+
 ?>
 
 <!DOCTYPE html>
@@ -85,7 +94,7 @@
   <div class="container section-top">
     <div class="row p-1 mb-3">
       <div class="col-12 border-bottom fw-bold fs-5">
-        <p class="m-0 p-0 text-secondary"><?php echo $_SESSION['CliNombre'];?></p>
+        <p class="m-0 p-0 text-secondary"><?php echo $_SESSION['gesman']['CliNombre'];?></p>
       </div>
     </div>
     <div class="row mb-1 border-bottom">
@@ -188,13 +197,11 @@
   </div>
 
   <script src="/mycloud/library/jquery-3.5.1/jquery-3.5.1.js"></script>
-  <script src="/informes/js/Informes.js"></script>
   <script src="/mycloud/library/bootstrap-5.0.2-dist/js/bootstrap.min.js"></script>
   <script src="/mycloud/library/SweetAlert2/js/sweetalert2.all.min.js"></script>
   <script src="/mycloud/library/bootstrap-5-alerta-1.0/js/bootstrap-5-alerta-1.0.js"></script>
   <script src="/mycloud/library/select2-4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <script src="/informes/js/Informes.js"></script>
   <script src="/gesman/menu/sidebar.js"></script>
-   
-   
 </body>
 </html>

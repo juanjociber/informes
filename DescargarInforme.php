@@ -1,4 +1,5 @@
 <?php
+	  require_once $_SERVER['DOCUMENT_ROOT']."/gesman/data/SesionData.php";
     require_once $_SERVER['DOCUMENT_ROOT']."/gesman/connection/ConnGesmanDb.php";
 	require_once '../Datos/InformesData.php';
 

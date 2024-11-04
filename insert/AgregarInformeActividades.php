@@ -1,13 +1,15 @@
 <?php 
 session_start();
+require_once $_SERVER['DOCUMENT_ROOT']."/gesman/data/SesionData.php";
 require_once $_SERVER['DOCUMENT_ROOT']."/gesman/connection/ConnGesmanDb.php";
 require_once $_SERVER['DOCUMENT_ROOT']."/informes/datos/InformesData.php";
 $data = array('res' => false, 'msg' => 'Error general.');
 
 try {
-    if (empty($_SESSION['CliId']) && empty($_SESSION['UserName'])) { 
-        throw new Exception("Usuario no tiene Autorización."); 
-    }
+    // if (empty($_SESSION['CliId']) && empty($_SESSION['UserName'])) { 
+    //     throw new Exception("Usuario no tiene Autorización."); 
+    // }
+    if(!FnValidarSesion()){throw new Exception("Usuario no tiene Autorización.");}
     if (empty($_POST['infid']) || empty($_POST['actividad']) || empty($_POST['tipo'])) { 
         throw new Exception("La información está incompleta.");
     }
@@ -15,7 +17,7 @@ try {
         throw new Exception("El campo solo permite 500 caracteres.");
     }
 
-    $USUARIO = date('Ymd-His ('.$_SESSION['UserName'].')');
+    $USUARIO = date('Ymd-His ('.$_SESSION['gesman']['Nombre'].')');
     $actividad = new stdClass();
     $actividad->infid = $_POST['infid'];
     $actividad->ownid = empty($_POST['ownid']) ? 0 : $_POST['ownid'];

@@ -1,11 +1,12 @@
 <?php
 	session_start();
+	require_once $_SERVER['DOCUMENT_ROOT']."/gesman/data/SesionData.php";
 	require_once $_SERVER['DOCUMENT_ROOT']."/gesman/connection/ConnGesmanDb.php";
 	require_once $_SERVER['DOCUMENT_ROOT']."/informes/datos/InformesData.php";
 
 	$ID2=0;
 	$ID = empty($_GET['id'])?0:$_GET['id'];
-    $CLI_ID = empty($_SESSION['CliId'])?0:$_SESSION['CliId'];
+    $CLI_ID = empty($_SESSION['gesman']['CliId'])?0:$_SESSION['gesman']['CliId'];
 	$NOMBRE='UNKNOWN';
 	$MSG='';
 	$html5='';
