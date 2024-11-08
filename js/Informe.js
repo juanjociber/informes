@@ -21,7 +21,7 @@ function FnEditarInforme() {
 function FnDescargarInforme() {
   let id = document.getElementById('idInforme').value;
   if (id > 0) {
-      window.location.href = '/informes/pdf/DescargarInforme.php?id=' + id;
+      window.location.href = '/informes/download/DescargarInformePdf.php?id=' + id;
   }
   return false;
 }
