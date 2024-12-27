@@ -7,7 +7,7 @@
     exit();
   }
 
-  if(!FnValidarSesionManNivel3()){
+  if(!FnValidarSesionManNivel2()){
     header("HTTP/1.1 403 Forbidden");
     exit();
   }
@@ -20,7 +20,7 @@
   $ID = empty($_GET['id'])?0:$_GET['id'];
   $CLI_ID = $_SESSION['gesman']['CliId'];
   require_once $_SERVER['DOCUMENT_ROOT']."/gesman/connection/ConnGesmanDb.php";
-  require_once $_SERVER['DOCUMENT_ROOT']."/informes/datos/InformesData.php";
+  require_once $_SERVER['DOCUMENT_ROOT']."/informes/data/InformesData.php";
   require_once $_SERVER['DOCUMENT_ROOT']."/gesman/data/ArchivosData.php";
 
   $isAuthorized = false;
@@ -39,7 +39,7 @@
         $Nombre = $informe->Nombre;
         $claseHabilitado = "btn-outline-primary";
         $atributoHabilitado = ""; 
-        $archivos = FnBuscarArchivos2($conmy, $ID);
+        $archivos = FnBuscarReferenciaArchivos($conmy, $ID);
       } 
     } else {
       throw new Exception('El ID es inválido.');
@@ -155,7 +155,7 @@
                         </svg>
                       </span>
                       <!--ELIMINAR-->
-                      <span class="input-group-text bg-light border border-0 text-secondary" style="cursor:pointer;" onclick="FnEliminarArchivo(<?php echo ($archivo['id'])?>, <?php echo ($archivo['refid']) ?>)">      
+                      <span class="input-group-text bg-light border border-0 text-secondary" style="cursor:pointer;" onclick="FnEliminarArchivo(<?php echo $archivo['id']?>)">      
                         <svg xmlns="http://www.w3.org/2000/svg" width="23" height="28" viewBox="0 0 300 343">
                           <title>Eliminar</title>
                           <g fill="none" stroke="#6B6C6E" stroke-width="7">
@@ -172,9 +172,9 @@
                     <div class="card-footer bg-transparent text-secondary"><?php echo ($archivo['descripcion']); ?></div>
                   </div>
                 </div>
-              <?php endif; ?>
-            <?php endforeach; ?>
-          </div>
+                <?php endif; ?>
+                <?php endforeach; ?>
+            </div>
         </div>
       <?php endif; ?>
 

@@ -2,7 +2,7 @@
   session_start();
   require_once $_SERVER['DOCUMENT_ROOT']."/gesman/data/SesionData.php";    
   require_once $_SERVER['DOCUMENT_ROOT']."/gesman/connection/ConnGesmanDb.php";
-  require_once $_SERVER['DOCUMENT_ROOT']."/informes/datos/InformesData.php";
+  require_once $_SERVER['DOCUMENT_ROOT']."/informes/data/InformesData.php";
   $data = array('res' => false, 'msg' => 'Error general.');
 
   try {
@@ -14,6 +14,7 @@
     $USUARIO = date('Ymd-His (').$_SESSION['gesman']['Nombre'].')';
     $informe = new stdClass();
     $informe->id = $_POST['Id'];
+    $informe->equid = $_POST['Equid'];
     $informe->equnombre = empty($_POST['EquNombre']) ? null : $_POST['EquNombre'];
     $informe->equmarca = empty($_POST['EquMarca']) ? null : $_POST['EquMarca'];
     $informe->equmodelo = empty($_POST['EquModelo']) ? null : $_POST['EquModelo'];

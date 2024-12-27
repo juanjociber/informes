@@ -7,7 +7,7 @@
     exit();
   }
 
-  if(!FnValidarSesionManNivel3()){
+  if(!FnValidarSesionManNivel2()){
     header("HTTP/1.1 403 Forbidden");
     exit();
   }
@@ -136,7 +136,7 @@
                     <div class="d-flex flex-column" id="'.$elemento['id'].'">
                       <div class="d-flex justify-content-end align-items-center text-secondary">
                         <!--BOTON EDITAR-->  
-                        <span data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" onclick="FnModalModificarArchivo('.$elemento['id'].')" style="font-size:25px; cursor:pointer; padding:10px">
+                        <span data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" onclick="FnModalModificarArchivo('.$elemento['id'].','.$elemento['refid'].' )" style="font-size:25px; cursor:pointer; padding:10px">
                           <svg xmlns="http://www.w3.org/2000/svg" width="23" height="28" viewBox="0 0 59 64">
                             <g fill="none" stroke="#6B6C6E" stroke-width="3">
                               <path d="M47,45v15c0,1.1-0.9,2-2,2H2c-1.1,0-2-0.9-2-2V2c0-1.1,0.9-2,2-2h25.9L47,18.1V33"/>
@@ -264,13 +264,17 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Editar Actividades | GPEM S.A.C</title>
     <link rel="shortcut icon" href="/mycloud/logos/favicon.ico">
-
     <link rel="stylesheet" href="/mycloud/library/fontawesome-free-5.9.0-web/css/all.css">
     <link rel="stylesheet" href="/mycloud/library/SweetAlert2/css/sweetalert2.min.css">
     <link rel="stylesheet" href="/mycloud/library/bootstrap-5.0.2-dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/mycloud/library/select-gpem-1.0/css/select-gpem-1.0.css">
     <link rel="stylesheet" href="/mycloud/library/gpemsac/css/gpemsac.css"> 
     <link rel="stylesheet" href="/gesman/menu/sidebar.css">
+    <link rel="stylesheet" href="/recortar/croppie/croppie.css">
+
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <script src="/recortar/croppie/croppie.js"></script>
+
     <style>
       /* .contenedor-imagen{ display: grid; grid-template-columns:1fr 1fr; gap:5px;} */
       @media(min-width:768px){.contenedor-imagen{display: grid; grid-template-columns:1fr 1fr; gap:15px;}}
@@ -282,6 +286,9 @@
       @media(min-width:768px){ .contenedor-actividades{ grid-template-columns: 6fr 1fr;} .grid-icono{ grid-column: 2 / 3; place-self: center }} 
       .cabecera-actividad{ border: 0.5px solid #9b9b9b59; }
       @media(min-width:768px){ .cabecera-actividad--mod{ border: 0.5px solid #9b9b9b59;} .cabecera-actividad{ border: none; } } .imagen-ajustada { width: 100%; height: 200px; object-fit: contain; } .btn-desactivado { color: grey; pointer-events: none; opacity: 0.5; }
+    
+    
+    
     </style>
 </head>
 <body>
@@ -457,15 +464,16 @@
     </div>
     <!-- START IMAGENES - M O D A L -->
     <div class="modal fade" id="modalAgregarImagen" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
-      <div class="modal-dialog modal-dialog-scrollable ">
+      <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header bg-primary text-white">
             <h5 class="modal-title fs-5 fw-bold" id="modalAgregarImagenLabel">AGREGAR</h5>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body pb-1">
-          <input type="hidden" id="txtActividadOwnid"/>
+            <input type="hidden" id="txtActividadOwnid"/>
             <div class="row">
+              
               <div class="col-12 mb-2">
                 <label class="form-label mb-0">Título</label>
                 <input type="text" class="form-control text-secondary" id="txtTitulo">
@@ -473,14 +481,46 @@
               <div class="col-12 mb-2">
                 <label class="form-label mb-0">Descripción</label>
                 <input type="text" class="form-control text-secondary" id="txtDescripcion">
-              </div>                        
-              <div class="col-12">
-                <label for="adjuntarImagenInput" class="form-label mb-0">Imagen</label>
-                <input id="fileImagen" type="file" accept="image/*,.pdf" class="form-control mb-2"/>
               </div>
               <div class="col-12 m-0">
-                  <div class="col-md-12 text-center" id="divImagen"><i class="fas fa-images fs-2"></i></div>
+                <label for="fileImagen" class="form-label mb-0">Imagen</label>
+                <input id="fileImagen" type="file" accept="image/jpeg, image/png" class="form-control mb-2"/>
               </div>
+
+              <!-- <div class="col-12 m-0">
+                <div class="col-md-12 text-center" id="divImagen"><i class="fas fa-images fs-2"></i></div>
+              </div> -->
+
+
+
+              <div class="card rounded-0">
+                <div class="card-body rounded-0">
+                  <!-- <form action="upload.php" method="POST" enctype="multipart/form-data"> -->
+                    <!-- <div class="col-lg-6 col-md-8 col-sm-12 mx-auto">
+                      <div class="mb-3">
+                        <label for="upload" class="form-label">Subir Imagen</label>
+                        <input class="form-control" type="file" name="upload" accept="image/jpeg, image/png" id="upload">
+                      </div>
+                    </div> -->
+                  <!-- </form> -->
+                  <div id="croppie-editor" class="d-none">
+                    <div id="croppie-field"></div>
+                    <div class="mx-0 text-center">
+                      <button class="btn btn-sm btn-light border border-dark rounded-0" id="rotate-left" type="button">Rotate Left</button>
+                      <button class="btn btn-sm btn-light border border-dark rounded-0" id="rotate-right" type="button">Rotate Right</button>
+                      <!-- <button class="btn btn-sm btn-primary rounded-0" id="upload-btn" type="button">Guardar</button> -->
+                      <button class="btn btn-sm btn-primary rounded-0" onclick="FnAgregarArchivo(); return false;" type="button">Guardar</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+
+
+
+
+
             </div>
           </div>
           <div class="modal-footer">
@@ -506,7 +546,8 @@
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body pb-1">
-          <input type="hidden" id="txtArchivoId"/>
+            <input type="hidden" id="txtArchivoId"/>
+            <input type="hidden" id="txtArchivoRefId"/>
             <div class="row">
               <div class="col-12 mb-2">
                 <label class="form-label mb-0">Título</label>
@@ -543,6 +584,67 @@
   <div class="container-loader-full">
     <div class="loader-full"></div>
   </div>
+
+  <script>
+    var $croppie = new Croppie($('#croppie-field')[0], {
+      enableExif: true,
+      enableResize:true,
+      enableZoom:true,
+      boundary: { width: 400, height: 400 },
+      viewport: {
+          height: 300,
+          width: 300
+      },
+      enableOrientation: true
+    });
+    $(document).ready(function(){
+      var img_name;
+      $('#fileImagen').on('change', function(e){
+        var reader = new FileReader();
+          img_name = e.target.files[0].name;
+        reader.onload = function (e) {
+          $croppie.bind({
+            url: e.target.result
+          });
+          $('#croppie-editor').removeClass('d-none')
+        }
+        reader.readAsDataURL(this.files[0]);
+      })
+      $('#rotate-left').click(function(){
+        $croppie.rotate(90);
+      });
+      $('#rotate-right').click(function(){
+        $croppie.rotate(-90);
+      });
+
+
+      $('#upload-btn').click(function(){
+        $croppie.result({
+          type:'base64',
+          format: 'png'
+        }).then((imgBase64)=>{
+          $.ajax({
+            url:'/gesman/insert/AgregarArchivo.php',
+            method:'POST',
+            data: { 'img' : imgBase64, 'fname' : img_name },
+            dataType: 'json',
+            error: err => {
+              console.error(err)
+            },
+            success: function(response){
+              if(response.status == 'success'){
+                alert("Imagen cargada satisfactoriamente.")
+                location.reload()
+              }else{
+                console.error(response)
+              }
+            }
+          })
+        })
+      });
+
+    });
+  </script>
 
   <!-- <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script> -->
   <script src="/mycloud/library/Sortable-1.15.3/Sortable.min.js"></script>

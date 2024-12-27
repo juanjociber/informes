@@ -7,7 +7,7 @@
     exit();
   }
 
-  if(!FnValidarSesionManNivel3()){
+  if(!FnValidarSesionManNivel2()){
     header("HTTP/1.1 403 Forbidden");
     exit();
   }
@@ -18,7 +18,7 @@
   }
 
   require_once $_SERVER['DOCUMENT_ROOT']."/gesman/connection/ConnGesmanDb.php";
-  require_once $_SERVER['DOCUMENT_ROOT']."/informes/datos/InformesData.php";
+  require_once $_SERVER['DOCUMENT_ROOT']."/informes/data/InformesData.php";
   require_once $_SERVER['DOCUMENT_ROOT']."/gesman/data/ArchivosData.php";
 
   $CLI_ID = $_SESSION['gesman']['CliId'];
@@ -39,7 +39,7 @@
         $Nombre = $informe->Nombre;
         $claseHabilitado = "btn-outline-primary";
         $atributoHabilitado = "";
-        $archivos = FnBuscarArchivos2($conmy, $ID);
+        $archivos = FnBuscarReferenciaArchivos($conmy, $ID);
       }
     }
   } catch (PDOException $e) {
@@ -49,6 +49,7 @@
       $errorMessage = $e->getMessage();
       $conmy = null;
   }
+
 ?>
 <!doctype html>
 <html lang="es">
@@ -60,6 +61,7 @@
     <link rel="stylesheet" href="/mycloud/library/fontawesome-free-5.9.0-web/css/all.css">
     <link rel="stylesheet" href="/mycloud/library/SweetAlert2/css/sweetalert2.min.css">
     <link rel="stylesheet" href="/mycloud/library/bootstrap-5.0.2-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/mycloud/library/select2-4.1.0-rc.0/dist/css/select2.min.css">
     <link rel="stylesheet" href="/mycloud/library/select-gpem-1.0/css/select-gpem-1.0.css">
     <link rel="stylesheet" href="/mycloud/library/gpemsac/css/gpemsac.css">
     <link rel="stylesheet" href="/gesman/menu/sidebar.css">
@@ -79,6 +81,41 @@
       }
       #adjuntarInformeEquipoArchivo:hover svg #Archivo {
         stroke: #FFFFFF; 
+      }
+      .divselect {
+          cursor: pointer;
+          transition: all .25s ease-in-out;
+      }
+      .divselect:hover {
+          background-color: #ccd1d1;
+          transition: background-color .5s;
+      }
+
+      .select2-selection__rendered {
+          line-height: 36px !important;
+          background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+          background-repeat: no-repeat;
+          background-position: right 0.75rem center;
+          background-size: 16px 12px;
+      }
+      .select2-search__field{
+          border: 1px solid #ced4da !important;
+          height: 37px !important;
+      }
+      .select2-search__field:focus{
+          color: #212529;
+          background-color: #fff !important;
+          border-color: #86b7fe !important;
+          outline: 0 !important;
+          box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25) !important;
+      }
+      .select2-container .select2-selection--single {
+          height: 37px !important;
+          border: 1px solid #ced4da !important;
+      }
+      .select2-selection__arrow {
+          display: none !important;
+          /*height: 34px !important;*/
       }
     </style>
   </head>
@@ -228,8 +265,10 @@
           <div class="modal-body mb-2" id='modal-body'>
             <div class="row">
               <div class="col-12 col-md-6 mt-2">
-                <label for="" class="form-label mb-0">Nombre :</label>
-                <input type="text" id="txtEquNombre2" class="form-control text-secondary" value="<?php echo $informe->EquNombre;?>"/>
+                <label for="cbEquipo" class="form-label mb-0">Nombre :</label>
+                <select class="js-example-responsive" name="cbEquipo" id="cbEquipo" style="width: 100%">
+                  <option value="<?php echo $informe->EquId?>"><?php echo $informe->EquNombre;?></option>
+                </select>
               </div>
               <div class ="col-12 col-md-6 mt-2">
                 <label for="" class="form-label mb-0">Marca :</label>
@@ -317,9 +356,11 @@
       <div class="loader-full"></div>
     </div>
 
-    <script src="/informes/js/EditarInformeEquipo.js"></script>
+    <script src="/mycloud/library/jquery-3.5.1/jquery-3.5.1.js"></script>
     <script src="/mycloud/library/bootstrap-5.0.2-dist/js/bootstrap.min.js"></script>
     <script src="/mycloud/library/SweetAlert2/js/sweetalert2.all.min.js"></script>
+    <script src="/mycloud/library/select2-4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="/informes/js/EditarInformeEquipo.js"></script>
     <script src="/gesman/menu/sidebar.js"></script>
   </body>
 </html>

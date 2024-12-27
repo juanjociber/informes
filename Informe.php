@@ -19,7 +19,7 @@
 
   require_once $_SERVER['DOCUMENT_ROOT']."/gesman/connection/ConnGesmanDb.php";
   require_once $_SERVER['DOCUMENT_ROOT']."/gesman/data/ArchivosData.php";
-  require_once $_SERVER['DOCUMENT_ROOT']."/informes/datos/InformesData.php";
+  require_once $_SERVER['DOCUMENT_ROOT']."/informes/data/InformesData.php";
   
   $ID2=0;
   $Nombre='UNKNOWN';
@@ -32,6 +32,7 @@
   $NUMERO=1;
 	$tablaHTML ='';
   $actividades = array();
+  $analisis= array();
   $conclusiones = array();
   $recomendaciones = array();
   $antecedentes = array();
@@ -106,17 +107,18 @@
 		}
 		return $html;
 	}
+
     
   try {
     $conmy->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     if (is_numeric($ID) && $ID > 0) {
       $informe = FnBuscarInforme($conmy, $ID, $CLI_ID);
-      if ($informe && $informe->Estado !=3) {
+      if ($informe) {
         $ID2=$informe->Id;
         $isAuthorized = true;
         $Nombre = $informe->Nombre;
         $Estado = $informe->Estado;
-        $archivos = FnBuscarArchivos2($conmy, $ID);
+        $archivos = FnBuscarReferenciaArchivos($conmy, $ID);
         $datos = FnBuscarInformeActividades($conmy, $ID);
         if (!empty($datos)) {        
           foreach ($datos as $dato) {
@@ -130,6 +132,8 @@
                 'trabajos' => $dato['trabajos'],
                 'observaciones' => $dato['observaciones'],
               );
+            } else if ($dato['tipo'] == 'ana') {
+              $analisis[] = array('actividad' => $dato['actividad']);
             } else if ($dato['tipo'] == 'con') {
               $conclusiones[] = array('actividad' => $dato['actividad']);
             } else if ($dato['tipo'] == 'rec') {
@@ -138,6 +142,7 @@
               $antecedentes[] = array('actividad' => $dato['actividad']);
             }    
           };
+          
           foreach ($archivos as $archivo) {
             if ($archivo['tabla'] == "INFE") {
               $imagenInformes[] = array(
@@ -153,6 +158,7 @@
               );
             }
           };
+          
           $arbol = construirArbol($actividades);
           $ids = array_map(function($elemento) {
             return $elemento['id'];
@@ -188,9 +194,13 @@
 
   $claseHabilitado = "btn-outline-secondary";
   $atributoHabilitado = " disabled";
-  if($Estado == 1 || $Estado == 2){
+  if($Estado == 2){
       $claseHabilitado = "btn-outline-primary";
       $atributoHabilitado = "";
+  }
+  if($Estado == 1){
+    $desabilitar = "btn-outline-secondary";
+    $atributodesabilitar = " disabled";
   }
 ?>
 <!doctype html>
@@ -226,7 +236,7 @@
           <button type="button" class="btn btn-outline-primary fw-bold" onclick="FnListarInformes(); return false;"><i class="fas fa-list"></i><span class="d-none d-sm-block"> Informes</span></button>
           <button type="button" class="btn btn-outline-primary fw-bold <?php echo $claseHabilitado;?> <?php echo $atributoHabilitado;?>" onclick="FnEditarInforme(); return false;"><i class="fas fa-edit"></i><span class="d-none d-sm-block"> Editar</span></button>
           <button type="button" class="btn btn-outline-primary fw-bold <?php echo $claseHabilitado;?> <?php echo $atributoHabilitado;?>" onclick="FnModalFinalizarInforme(); return false;"><i class="fas fa-check-square"></i><span class="d-none d-sm-block"> Finalizar</span></button>
-          <button type="button" class="btn btn-outline-primary fw-bold" onclick="FnDescargarInforme(); return false;"><i class="fas fa-download"></i><span class="d-none d-sm-block"> Descargar</span></button>
+          <button type="button" class="btn btn-outline-primary fw-bold <?php echo $desabilitar;?> <?php echo $atributodesabilitar;?>" onclick="FnDescargarInforme(); return false;"><i class="fas fa-download"></i><span class="d-none d-sm-block"> Descargar</span></button>
         </div>
       </div>
   
@@ -301,10 +311,6 @@
         </div>
         <div class="row p-1 m-0">
           <div class="col-6 col-sm-4 col-lg-4 mb-1">
-            <p class="m-0 text-secondary" style="font-size: 15px;">Activo</p>
-            <p class="m-0 text-secondary fw-bold"><?php echo  $informe->EquCodigo;?></p>              
-          </div>
-          <div class="col-6 col-sm-4 col-lg-4 mb-1">
             <p class="m-0 text-secondary" style="font-size: 15px;">Nombre Equipo</p>
             <p class="m-0 text-secondary fw-bold"><?php echo  $informe->EquNombre  ; ?></p>              
           </div>
@@ -364,8 +370,8 @@
             </div>
           </div>
         </div>
-        <?php $NUMERO+=1; ?>
 
+        <?php $NUMERO+=1; ?>
         <!-- ANTECEDENTES-->
         <div class="row p-1 mb-2 mt-2">
           <div class="col-12 mb-0 border-bottom bg-light">
@@ -400,6 +406,29 @@
             ?>
         </div>
         
+        <?php $NUMERO+=1; ?>
+        <!-- ANÁLISIS -->
+        <div class="row p-1 mb-2 mt-2">
+          <div class="col-12 mb-0 border-bottom bg-light">
+            <p class="mt-2 mb-2 fw-bold text-secondary"><?php echo $NUMERO; ?>- ANÁLISIS</p>
+          </div>
+          <?php
+            $html=''; 
+            $html.='
+            <div class="row p-1 m-0">';
+              foreach($analisis as $analisi){
+                $html.='
+                <div class="d-flex">
+                  <span class="text-secondary" style="margin-right:10px;">&#x2713</span>
+                  <p class="m-0 mb-2 p-0" style="text-align: justify;">'.$analisi['actividad'].'</p>
+                </div>';
+              }
+            $html.='
+            </div>';
+            echo $html;
+          ?>
+        </div>
+
         <?php $NUMERO+=1; ?>
         <!-- CONCLUSIONES -->
         <div class="row p-1 mb-2 mt-2">

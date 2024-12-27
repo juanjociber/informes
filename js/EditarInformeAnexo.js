@@ -124,6 +124,7 @@ function calculateSize(img, maxWidth, maxHeight) {
 }
 
 async function FnModalModificarArchivo(id){
+  console.log(id);
   document.getElementById('txtArchivoId').value = id;  
   const formData = new FormData();
   formData.append('id', id);
@@ -139,9 +140,10 @@ async function FnModalModificarArchivo(id){
     if (!datos.res) {
       throw new Error(datos.msg);
     }
-    document.getElementById('txtTitulo2').value = datos.data.titulo;
-    document.getElementById('txtDescripcion2').value = datos.data.descripcion;
-    document.getElementById('divImagen2').innerHTML = datos.data.nombre;
+    console.log(datos.data);
+    document.getElementById('txtTitulo2').value = datos.data[0].titulo;
+    document.getElementById('txtDescripcion2').value = datos.data[0].descripcion;
+    document.getElementById('divImagen2').innerHTML = datos.data[0].nombre;
   } catch (error) {
     Swal.fire({
       title: 'Aviso',
@@ -163,6 +165,8 @@ async function FnModificarArchivo(){
     formData.append('titulo', document.getElementById('txtTitulo2').value);
     formData.append('descripcion', document.getElementById('txtDescripcion2').value);
     formData.append('tipo','INFA')
+
+    console.log(formData.entries)
 
     const fileInput = document.getElementById('fileImagen2');
     if (fileInput.files.length === 1) {
@@ -243,12 +247,13 @@ async function FnAgregarArchivo() {
 }
 
 //ELIMINAR ARCHIVO
-async function FnEliminarArchivo(id, refid){
+async function FnEliminarArchivo(id){
+  console.log(id);
   try {
     vgLoader.classList.remove('loader-full-hidden');
     const formData = new FormData();
     formData.append('id', id);
-    formData.append('refid', refid);
+    // formData.append('refid', refid);
     const response = await fetch('/gesman/delete/EliminarArchivo.php', {
       method: 'POST',
       body: formData,

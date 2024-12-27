@@ -7,7 +7,7 @@
     exit();
   }
 
-  if(!FnValidarSesionManNivel3()){
+  if(!FnValidarSesionManNivel2()){
     header("HTTP/1.1 403 Forbidden");
     exit();
   }
@@ -18,8 +18,8 @@
   }
   
   require_once $_SERVER['DOCUMENT_ROOT']."/gesman/connection/ConnGesmanDb.php";
-  require_once $_SERVER['DOCUMENT_ROOT']."/informes/datos/InformesData.php";
-  require_once $_SERVER['DOCUMENT_ROOT']."/informes/datos/SupervisoresData.php";
+  require_once $_SERVER['DOCUMENT_ROOT']."/informes/data/InformesData.php";
+  require_once $_SERVER['DOCUMENT_ROOT']."/informes/data/SupervisoresData.php";
  
   $ID = empty($_GET['id'])?0:$_GET['id'];
   $isAuthorized = false;

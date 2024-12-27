@@ -39,7 +39,7 @@ const FnAgregarInformeActividades = async () => {
     } else {
       Swal.fire({
         title: 'Aviso',
-        text: result.msg,
+        text: datos.msg,
         icon: 'info',
         timer: 2000
       });
@@ -56,7 +56,6 @@ const FnAgregarInformeActividades = async () => {
     });
   }
 };
-
 
 // ABRIR MODAL INFORME SUB-ACTIVIDAD
 const FnModalAgregarInformeActividades = async (id) => {
@@ -248,58 +247,43 @@ const FnModalAgregarArchivo = (id) => {
   document.getElementById('txtActividadOwnid').value = id;
 };
 
-/**================================
- FUNCIONES PARA CARGA DE IMÁGENES
-===================================* 
-*/
-const MAX_WIDTH = 1080;
-const MAX_HEIGHT = 720;
-const MIME_TYPE = "image/jpeg";
-const QUALITY = 0.7;
+/*================================
+  FUNCIONES PARA CARGA DE IMÁGENES
+  ================================*/
+function FnRedimensionImagen(fileInputId, divId) {
+  const MAX_WIDTH = 1080;
+  const MAX_HEIGHT = 720;
+  const MIME_TYPE = "image/jpeg";
+  const QUALITY = 0.7;
 
-const $divImagen = document.getElementById("divImagen");
+  const $divImagen = document.getElementById(divId);
 
-document.getElementById('fileImagen').addEventListener('change', function(event) {
-  vgLoader.classList.remove('loader-full-hidden');
-  const file = event.target.files[0];
+  document.getElementById(fileInputId).addEventListener('change', function (event) {
+    const file = event.target.files[0];
 
-  if (!isValidFileType(file)) {
-    //console.log('El archivo', file.name, 'Tipo de archivo no permitido.');
-  }
+    if (!isValidFileType(file)) {
+      alert('Tipo de archivo no permitido.');
+      return;
+    }
 
-  if (!isValidFileSize(file)) {
-    //console.log('El archivo', file.name, 'El tamaño del archivo excede los 3MB.');
-  }
+    if (!isValidFileSize(file)) {
+      alert('El tamaño del archivo excede los 3MB.');
+      return;
+    }
 
-  while ($divImagen.firstChild) {
-    $divImagen.removeChild($divImagen.firstChild);
-  }
+    while ($divImagen.firstChild) {
+      $divImagen.removeChild($divImagen.firstChild);
+    }
 
-  if (file.type.startsWith('image/')) {
-      displayImage(file);
-  }
-  // console.log('Nombre del archivo:', file.name);
-  // console.log('Tipo del archivo:', file.type);
-  // console.log('Tamaño del archivo:', file.size, 'bytes');
-
-  setTimeout(function() {
-    vgLoader.classList.add('loader-full-hidden');
-  }, 1000)
-});
-
-function isValidFileType(file) {
-  const acceptedTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf'];
-  return acceptedTypes.includes(file.type);
+    if (file.type.startsWith('image/')) {
+      displayImage(file, $divImagen, MAX_WIDTH, MAX_HEIGHT, MIME_TYPE, QUALITY);
+    }
+  });
 }
 
-function isValidFileSize(file) {
-  const maxSize = 3 * 1024 * 1024; // 4MB en bytes
-  return file.size <= maxSize;
-}
-
-function displayImage(file) {
+function displayImage(file, $divImagen, maxWidth, maxHeight, mimeType, quality) {
   const reader = new FileReader();
-  reader.onload = function(event) {
+  reader.onload = function (event) {
     const imageUrl = event.target.result;
     const canvas = document.createElement('canvas');
     canvas.style.border = '1px solid black';
@@ -308,51 +292,51 @@ function displayImage(file) {
     const context = canvas.getContext('2d');
 
     const image = new Image();
-    image.onload = function() {
-      const [newWidth, newHeight] = calculateSize(image, MAX_WIDTH, MAX_HEIGHT);
+    image.onload = function () {
+      const [newWidth, newHeight] = calculateSize(image, maxWidth, maxHeight);
       canvas.width = newWidth;
       canvas.height = newHeight;
-      canvas.id="canvas";
+      canvas.id = "canvas";
       context.drawImage(image, 0, 0, newWidth, newHeight);
-
-      // Agregar texto como marca de agua
-      context.strokeStyle = 'rgba(216, 216, 216, 0.7)';// color del texto (blanco con opacidad)
-      context.font = '15px Verdana'; // fuente y tamaño del texto
-      context.strokeText("GPEM SAC", 10, newHeight-10);// texto y posición
+      // Agregar marca de agua
+      context.strokeStyle = 'rgba(216, 216, 216, 0.7)';
+      context.font = '15px Verdana';
+      context.strokeText("GPEM SAC", 10, newHeight - 10);
 
       canvas.toBlob(
         (blob) => {
-          // Handle the compressed image. es. upload or save in local state
-          displayInfo('Original: ', file);
-          displayInfo('Comprimido: ', blob);
+          displayInfo('Original: ', file, $divImagen);
+          displayInfo('Comprimido: ', blob, $divImagen);
         },
-        MIME_TYPE,
-        QUALITY
+        mimeType,
+        quality
       );
-
     };
     image.src = imageUrl;
   };
   reader.readAsDataURL(file);
 }
 
-function displayInfo(label, file) {
+function displayInfo(label, file, $divImagen) {
   const p = document.createElement('p');
   p.classList.add('text-secondary', 'm-0', 'fs-6');
   p.innerText = `${label} ${readableBytes(file.size)}`;
   $divImagen.append(p);
 }
 
-function readableBytes(bytes) {
-  const i = Math.floor(Math.log(bytes) / Math.log(1024)),
-  sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-  return (bytes / Math.pow(1024, i)).toFixed(2) + ' ' + sizes[i];
+function isValidFileType(file) {
+  const acceptedTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf'];
+  return acceptedTypes.includes(file.type);
+}
+
+function isValidFileSize(file) {
+  const maxSize = 3 * 1024 * 1024; // 3MB
+  return file.size <= maxSize;
 }
 
 function calculateSize(img, maxWidth, maxHeight) {
   let width = img.width;
   let height = img.height;
-  // calculate the width and height, constraining the proportions
   if (width > height) {
     if (width > maxWidth) {
       height = Math.round((height * maxWidth) / width);
@@ -367,17 +351,30 @@ function calculateSize(img, maxWidth, maxHeight) {
   return [width, height];
 }
 
+function readableBytes(bytes) {
+  const i = Math.floor(Math.log(bytes) / Math.log(1024)),
+    sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+  return (bytes / Math.pow(1024, i)).toFixed(2) + ' ' + sizes[i];
+}
+
+FnRedimensionImagen('fileImagen', 'divImagen');
+FnRedimensionImagen('fileImagen2', 'divImagen2');
+
+
 async function FnAgregarArchivo(){
   try {
     vgLoader.classList.remove('loader-full-hidden');
-    var archivo;
-    if(document.getElementById('canvas')){
-      archivo = document.querySelector("#canvas").toDataURL("image/jpeg");
-    }else if(document.getElementById('fileImagen').files.length == 1){
-      archivo = fileOrCanvasData = document.getElementById('fileImagen').files[0];
-    }else{
-      throw new Error('No se reconoce el archivo');
-    }
+    // var archivo;
+    // if(document.getElementById('canvas')){
+    //   archivo = document.querySelector("#canvas").toDataURL("image/jpeg");
+    // }else if(document.getElementById('fileImagen').files.length == 1){
+    //   archivo = fileOrCanvasData = document.getElementById('fileImagen').files[0];
+    // }else{
+    //   throw new Error('No se reconoce el archivo');
+    // }
+    archivo = document.getElementById('fileImagen').files[0];
+
+    console.log(archivo);
     const formData = new FormData();
     formData.append('refid', document.getElementById('txtActividadOwnid').value);
     formData.append('titulo', document.getElementById('txtTitulo').value);
@@ -399,15 +396,15 @@ async function FnAgregarArchivo(){
         title: '¡Éxito!', 
         text: datos.msg, 
         icon: 'success', 
-        timer:2000 
+        // timer:2000 
       });
-      setTimeout(() => { location.reload(); }, 1000);
+      // setTimeout(() => { location.reload(); }, 1000);
     }else {
       Swal.fire({
         title: 'Aviso',
         text: datos.msg,
         icon: 'info',
-        timer: 2000
+        // timer: 2000
       });
     }
   } catch (error) {
@@ -418,16 +415,16 @@ async function FnAgregarArchivo(){
       title: 'Aviso',
       text: error.message,
       icon: 'error',
-      timer:2000
+      // timer:2000
     });
   }
 }
-
-const FnModalModificarArchivo = async (id)=>{
+const FnModalModificarArchivo = async (id,refid)=>{
   document.getElementById('txtArchivoId').value = id;
-  
+  document.getElementById('txtArchivoRefId').value = refid;
   const formData = new FormData();
   formData.append('id', id);
+  formData.append('refid', refid);
   try {
     const response = await fetch('/gesman/search/BuscarArchivo.php', {
       method: 'POST',
@@ -440,9 +437,9 @@ const FnModalModificarArchivo = async (id)=>{
     if (!datos.res) {
       throw new Error(datos.msg);
     }
-    document.getElementById('txtTitulo2').value = datos.data.titulo;
-    document.getElementById('txtDescripcion2').value = datos.data.descripcion;
-    document.getElementById('divImagen2').innerHTML = datos.data.nombre;
+    document.getElementById('txtTitulo2').value = datos.data[0].titulo;
+    document.getElementById('txtDescripcion2').value = datos.data[0].descripcion;
+    document.getElementById('divImagen2').innerHTML = datos.data[0].nombre;
   } catch (error) {
     Swal.fire({
       title: 'Aviso',
@@ -463,12 +460,11 @@ const FnModificarArchivo = async () => {
     formData.append('titulo', document.getElementById('txtTitulo2').value);
     formData.append('descripcion', document.getElementById('txtDescripcion2').value);
     formData.append('tipo','INFD')
-    // AGREGAR ARCHIVO SI SE HA CARGADO
     const fileInput = document.getElementById('fileImagen2');
     if (fileInput.files.length === 1) {
       formData.append('archivo', fileInput.files[0]); 
     }
-    const response = await fetch('/gesman/update/ModificarArchivo.php', {
+    const response = await fetch('/gesman/update/ModificarActividadArchivo.php', {
       method: 'POST',
       body: formData
     });
@@ -571,7 +567,6 @@ function mostrarTitulo(clase) {
     }
   });
 }
-
 mostrarTitulo('diagnostico');
 mostrarTitulo('trabajo');
 mostrarTitulo('observacion');
@@ -670,69 +665,6 @@ function FnInitSorteable() {
     }
   }
 }
-
-// function FnInitSorteableArchivo() {
-//   if (!archivo) {
-//     return; 
-//   }
-
-//   const mediaQuery = window.matchMedia('(min-width: 768px)');
-
-//   if (mediaQuery.matches) {
-//     if (!sortableArchivos) {
-//       sortableArchivos = Sortable.create(archivo, {
-//         animation: 150,
-//         onEnd: () => {
-//           const orden = archivo.children; 
-//           const nuevaOrden = Array.from(orden).map(item => item.id);
-//           console.log(nuevaOrden);
-//           // ENVIAR NUEVOS 'id' AL SERVIDOR
-//           fetch('/gesman/update/ModificarArchivoPosicion.php', {
-//             method: 'POST',
-//             headers: {
-//               'Content-Type': 'application/json',
-//             },
-//             body: JSON.stringify({ orden: nuevaOrden })
-//           })
-//           .then(response => response.json())
-//           .then(data => {
-//             console.log(data);
-//             setTimeout(() => {
-//               vgLoader.classList.add('loader-full-hidden');
-//             }, 500);
-//             setTimeout(() => { location.reload(); }, 1000);
-//           })
-//           .catch(error => {
-//             Swal.fire({
-//               title: "Aviso",
-//               text: error.message,
-//               icon: "error",
-//               timer: 2000
-//             });
-//           });
-//         },
-//         group: "lista-archivos",
-//         store: {
-//           // GUARDAR ORDEN DE ARCHIVOS
-//           set: (sortable) => {
-//             const orden = sortable.toArray();
-//             localStorage.setItem(sortable.options.group.name, orden.join('|'));
-//           },
-//           // OBTENER ORDEN DE LISTA 
-//           get: (sortable) => {
-//             const orden = localStorage.getItem(sortable.options.group.name);
-//             return orden ? orden.split('|') : [];
-//           }
-//         }
-//       });
-//     }
-//   } else {
-//     if (sortableArchivos) {
-//       sortableArchivos.destroy();
-//       sortableArchivos = null;
-//     }
-//   }
-// }
 
 // Inicializar las funciones
 FnInitSorteable();

@@ -1,8 +1,9 @@
 <?php 
   session_start();
+  date_default_timezone_set('America/Lima'); 
   require_once $_SERVER['DOCUMENT_ROOT']."/gesman/data/SesionData.php";
   require_once $_SERVER['DOCUMENT_ROOT']."/gesman/connection/ConnGesmanDb.php";
-  require_once $_SERVER['DOCUMENT_ROOT']."/informes/datos/InformesData.php";
+  require_once $_SERVER['DOCUMENT_ROOT']."/informes/data/InformesData.php";
   $data = array('res' => false, 'msg' => 'Error general.');
   
   try {
@@ -14,7 +15,7 @@
       throw new Exception("El campo solo permite 500 caracteres.");
     }
 
-    $USUARIO = date('Ymd-His (').$_SESSION['gesman']['Nombre'].')';
+    $USUARIO = date('Ymd-His').'('.$_SESSION['gesman']['Nombre'].')';
     $actividad = new stdClass();
     $actividad->infid = $_POST['infid'];
     $actividad->ownid = empty($_POST['ownid']) ? 0 : $_POST['ownid'];

@@ -13,8 +13,8 @@
   }
 
   require_once $_SERVER['DOCUMENT_ROOT']."/gesman/connection/ConnGesmanDb.php";
-  require_once $_SERVER['DOCUMENT_ROOT']."/informes/datos/InformesData.php";
-  require_once $_SERVER['DOCUMENT_ROOT']."/informes/datos/SupervisoresData.php";
+  require_once $_SERVER['DOCUMENT_ROOT']."/informes/data/InformesData.php";
+  require_once $_SERVER['DOCUMENT_ROOT']."/informes/data/SupervisoresData.php";
 
   try {
     $conmy->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -28,7 +28,6 @@
     $errorMessage = $ex->getMessage();
     $conmy = null;
   }
-
 ?>
 
 <!DOCTYPE html>

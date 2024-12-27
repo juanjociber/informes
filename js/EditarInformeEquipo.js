@@ -242,21 +242,55 @@ const FnModalModificarInformeEquipo = async (id)=>{
   modalEquipo.show();
 };
 
+$(document).ready(function() {
+  $('#cbEquipo').select2({
+    dropdownParent: $('#modal-body'),
+    width: 'resolve', //Personalizar el alto del select, aplicar estilo.
+    ajax: {
+        delay: 450, //Tiempo de demora para buscar
+        url: '/gesman/search/ListarEquipos.php',
+        type: 'POST',
+        dataType: 'json',
+        data: function (params) {
+          return {
+              nombre: params.term // parametros a enviar al server. params.term captura lo que se escribe en el input
+          };
+        },
+        processResults: function (datos) {
+          console.log(datos);
+          return {
+            results:datos.data.map(function(elem) {
+                return {
+                    id:elem.id,
+                    text:elem.nombre,
+                };
+            })
+          }
+        },
+        cache: true
+    },
+    placeholder: 'Seleccionar',
+    // allowClear: true, 
+    minimumInputLength:1 //Caracteres minimos para buscar
+  });
+});
+
 // FUNCIÓN MÓDIFICAR EQUIPO
 const FnModificarInformeEquipo = async () => {
   try {
     vgLoader.classList.remove('loader-full-hidden');
-    const id = document.getElementById('txtInformeId').value;
-    const equnombre = document.getElementById('txtEquNombre2').value;
-    const equmarca = document.getElementById('txtEquMarca2').value;
-    const equmodelo = document.getElementById('txtEquModelo2').value;
-    const equserie = document.getElementById('txtEquSerie2').value;
-    const equdatos = document.getElementById('txtEquDatos2').value;
-    const equkm = document.getElementById('txtEquKm2').value;
-    const equhm = document.getElementById('txtEquHm2').value;
+    id = document.getElementById('txtInformeId').value;
+    equnombre = document.getElementById('cbEquipo').options[document.getElementById('cbEquipo').selectedIndex].text;
+    equmarca = document.getElementById('txtEquMarca2').value;
+    equmodelo = document.getElementById('txtEquModelo2').value;
+    equserie = document.getElementById('txtEquSerie2').value;
+    equdatos = document.getElementById('txtEquDatos2').value;
+    equkm = document.getElementById('txtEquKm2').value;
+    equhm = document.getElementById('txtEquHm2').value;
 
     const formData = new FormData();
     formData.append('Id', id);
+    formData.append('Equid', document.getElementById('cbEquipo').value);
     formData.append('EquNombre', equnombre);
     formData.append('EquMarca', equmarca);
     formData.append('EquModelo', equmodelo);

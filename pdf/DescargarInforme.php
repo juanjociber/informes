@@ -2,7 +2,7 @@
 	session_start();
 	require_once $_SERVER['DOCUMENT_ROOT']."/gesman/data/SesionData.php";
 	require_once $_SERVER['DOCUMENT_ROOT']."/gesman/connection/ConnGesmanDb.php";
-	require_once $_SERVER['DOCUMENT_ROOT']."/informes/datos/InformesData.php";
+	require_once $_SERVER['DOCUMENT_ROOT']."/informes/data/InformesData.php";
 
 	$ID2=0;
 	$ID = empty($_GET['id'])?0:$_GET['id'];
