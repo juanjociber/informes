@@ -57,6 +57,7 @@ const FnAgregarInformeActividades = async () => {
   }
 };
 
+
 // ABRIR MODAL INFORME SUB-ACTIVIDAD
 const FnModalAgregarInformeActividades = async (id) => {
   const modal = new bootstrap.Modal(document.getElementById('modalNuevaSubActividad'), { keyboard: false });
@@ -239,7 +240,6 @@ const FnEliminarInformeActividades = async (id) => {
     });
   }
 };
-
 // ABRIR MODAL REGISTRAR IMAGEN
 const FnModalAgregarArchivo = (id) => {
   var modal = new bootstrap.Modal(document.getElementById('modalAgregarImagen'), { keyboard: false });
@@ -250,131 +250,273 @@ const FnModalAgregarArchivo = (id) => {
 /*================================
   FUNCIONES PARA CARGA DE IMÁGENES
   ================================*/
-function FnRedimensionImagen(fileInputId, divId) {
-  const MAX_WIDTH = 1080;
-  const MAX_HEIGHT = 720;
-  const MIME_TYPE = "image/jpeg";
-  const QUALITY = 0.7;
+// function FnRedimensionImagen(fileInputId, divId) {
+//   const MAX_WIDTH = 1080;
+//   const MAX_HEIGHT = 720;
+//   const MIME_TYPE = "image/jpeg";
+//   const QUALITY = 0.7;
 
-  const $divImagen = document.getElementById(divId);
+//   const $divImagen = document.getElementById(divId);
 
-  document.getElementById(fileInputId).addEventListener('change', function (event) {
-    const file = event.target.files[0];
+//   document.getElementById(fileInputId).addEventListener('change', function (event) {
+//     const file = event.target.files[0];
 
-    if (!isValidFileType(file)) {
-      alert('Tipo de archivo no permitido.');
-      return;
+//     if (!isValidFileType(file)) {
+//       alert('Tipo de archivo no permitido.');
+//       return;
+//     }
+
+//     if (!isValidFileSize(file)) {
+//       alert('El tamaño del archivo excede los 3MB.');
+//       return;
+//     }
+
+//     while ($divImagen.firstChild) {
+//       $divImagen.removeChild($divImagen.firstChild);
+//     }
+
+//     if (file.type.startsWith('image/')) {
+//       displayImage(file, $divImagen, MAX_WIDTH, MAX_HEIGHT, MIME_TYPE, QUALITY);
+//     }
+//   });
+// }
+
+// function displayImage(file, $divImagen, maxWidth, maxHeight, mimeType, quality) {
+//   const reader = new FileReader();
+//   reader.onload = function (event) {
+//     const imageUrl = event.target.result;
+//     const canvas = document.createElement('canvas');
+//     canvas.style.border = '1px solid black';
+
+//     $divImagen.appendChild(canvas);
+//     const context = canvas.getContext('2d');
+
+//     const image = new Image();
+//     image.onload = function () {
+//       const [newWidth, newHeight] = calculateSize(image, maxWidth, maxHeight);
+//       canvas.width = newWidth;
+//       canvas.height = newHeight;
+//       canvas.id = "canvas";
+//       context.drawImage(image, 0, 0, newWidth, newHeight);
+      
+//       context.strokeStyle = 'rgba(216, 216, 216, 0.7)';
+//       context.font = '15px Verdana';
+//       context.strokeText("GPEM SAC", 10, newHeight - 10);
+
+//       canvas.toBlob(
+//         (blob) => {
+//           displayInfo('Original: ', file, $divImagen);
+//           displayInfo('Comprimido: ', blob, $divImagen);
+//         },
+//         mimeType,
+//         quality
+//       );
+//     };
+//     image.src = imageUrl;
+//   };
+//   reader.readAsDataURL(file);
+// }
+
+// function displayInfo(label, file, $divImagen) {
+//   const p = document.createElement('p');
+//   p.classList.add('text-secondary', 'm-0', 'fs-6');
+//   p.innerText = `${label} ${readableBytes(file.size)}`;
+//   $divImagen.append(p);
+// }
+
+// function isValidFileType(file) {
+//   const acceptedTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf'];
+//   return acceptedTypes.includes(file.type);
+// }
+
+// function isValidFileSize(file) {
+//   const maxSize = 3 * 1024 * 1024; 
+//   return file.size <= maxSize;
+// }
+
+// function calculateSize(img, maxWidth, maxHeight) {
+//   let width = img.width;
+//   let height = img.height;
+//   if (width > height) {
+//     if (width > maxWidth) {
+//       height = Math.round((height * maxWidth) / width);
+//       width = maxWidth;
+//     }
+//   } else {
+//     if (height > maxHeight) {
+//       width = Math.round((width * maxHeight) / height);
+//       height = maxHeight;
+//     }
+//   }
+//   return [width, height];
+// }
+
+// function readableBytes(bytes) {
+//   const i = Math.floor(Math.log(bytes) / Math.log(1024)),
+//     sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+//   return (bytes / Math.pow(1024, i)).toFixed(2) + ' ' + sizes[i];
+// }
+
+// FnRedimensionImagen('fileImagen', 'divImagen');
+// FnRedimensionImagen('fileImagen2', 'divImagen2');
+
+
+/**=============================================
+ * FUNCIÓN: RECORTAR, ROTAR, ZOOM y TRAZAR
+ * =============================================
+ */
+function FnInitCroppieDrawing(instanceId) {
+  let croppieInstance;
+  const controles = document.getElementById(`controles${instanceId}`);
+  const cropArea = document.getElementById(`crop-area${instanceId}`);
+  const canvas = document.getElementById(`dibujoCanvas${instanceId}`);
+  const ctx = canvas.getContext('2d');
+  let drawing = false;
+  let img;
+  let lastX = 0, lastY = 0, lastTime = 0;
+
+  // Permite darle precisión cuando se dibuja el canvas
+  function calcularVelocidad(x, y) {
+    const now = Date.now();
+    const deltaX = x - lastX;
+    const deltaY = y - lastY;
+    const distancia = Math.sqrt(deltaX ** 2 + deltaY ** 2);
+    const tiempo = now - lastTime || 1;
+    const velocidad = distancia / tiempo;
+    lastX = x;
+    lastY = y;
+    lastTime = now;
+    return velocidad;
+  }
+
+  document.getElementById(`fileImagen${instanceId}`).addEventListener('change', function (event) {
+    let reader = new FileReader();
+    reader.onload = function (e) {
+      if (croppieInstance) croppieInstance.destroy();
+      croppieInstance = new Croppie(cropArea, {
+        viewport: { width: 300, height: 300, type: 'square' },
+        boundary: { width: 400, height: 400 },
+        showZoomer: true,
+        enableOrientation: true
+      });
+      croppieInstance.bind({ url: e.target.result });
+      controles.classList.remove('oculto');
+      cropArea.classList.remove('oculto');
+    };
+    reader.readAsDataURL(event.target.files[0]);
+  });
+
+  document.getElementById(`rotateLeft${instanceId}`).addEventListener('click', () => croppieInstance.rotate(-90));
+  document.getElementById(`rotateRight${instanceId}`).addEventListener('click', () => croppieInstance.rotate(90));
+
+  document.getElementById(`save${instanceId}`).addEventListener('click', function () {
+    croppieInstance.result({ type: 'base64', size: 'viewport', format: 'jpeg' }).then(function (base64) {
+      img = new Image();
+      img.onload = function () {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+        canvas.classList.remove('oculto');
+        document.getElementById(`trazado${instanceId}`).classList.remove('oculto');
+      };
+      img.src = base64;
+    });
+    cropArea.classList.add('oculto');
+    controles.classList.add('oculto');
+  });
+
+  function getCoordenadas(event) {
+    let x, y;
+    if (event.touches) {
+      const touch = event.touches[0];
+      const rect = canvas.getBoundingClientRect();
+      x = touch.clientX - rect.left;
+      y = touch.clientY - rect.top;
+    } else {
+      x = event.offsetX;
+      y = event.offsetY;
     }
+    return { x, y };
+  }
 
-    if (!isValidFileSize(file)) {
-      alert('El tamaño del archivo excede los 3MB.');
-      return;
-    }
+  function iniciarDibujo(event) {
+    drawing = true;
+    const { x, y } = getCoordenadas(event);
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    lastX = x;
+    lastY = y;
+    lastTime = Date.now();
+  }
 
-    while ($divImagen.firstChild) {
-      $divImagen.removeChild($divImagen.firstChild);
+  function dibujar(event) {
+    if (!drawing) return;
+    const { x, y } = getCoordenadas(event);
+    const velocidad = calcularVelocidad(x, y);
+    ctx.strokeStyle = document.getElementById(`colorPicker${instanceId}`).value;
+    ctx.lineWidth = Math.max(2, Math.min(5, 5 - velocidad * 2));
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    const pasos = Math.max(1, Math.round(velocidad * 10));
+    for (let i = 0; i < pasos; i++) {
+      const interpolX = lastX + (x - lastX) * (i / pasos);
+      const interpolY = lastY + (y - lastY) * (i / pasos);
+      ctx.lineTo(interpolX, interpolY);
+      ctx.stroke();
     }
+    lastX = x;
+    lastY = y;
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+  }
+  function finalizarDibujo() { drawing = false; }
 
-    if (file.type.startsWith('image/')) {
-      displayImage(file, $divImagen, MAX_WIDTH, MAX_HEIGHT, MIME_TYPE, QUALITY);
-    }
+  canvas.addEventListener('mousedown', iniciarDibujo);
+  canvas.addEventListener('mousemove', dibujar);
+  canvas.addEventListener('mouseup', finalizarDibujo);
+  canvas.addEventListener('mouseleave', finalizarDibujo);
+  canvas.addEventListener('touchstart', (event) => { iniciarDibujo(event); event.preventDefault(); });
+  canvas.addEventListener('touchmove', (event) => { dibujar(event); event.preventDefault(); });
+  canvas.addEventListener('touchend', finalizarDibujo);
+  canvas.addEventListener('touchcancel', finalizarDibujo);
+
+  document.getElementById(`clearCanvas${instanceId}`).addEventListener('click', () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, 0, 0);
+  });
+
+  document.getElementById(`guardarTrazo${instanceId}`).addEventListener('click', function () {
+    document.getElementById(`trazado${instanceId}`).classList.add('oculto');
+    document.getElementById(`btn-guardar-archivo${instanceId}`).removeAttribute('disabled');
+    const newCanvas = document.createElement('canvas');
+    newCanvas.setAttribute('id', `canvas${instanceId}`);
+    const newCtx = newCanvas.getContext('2d');
+    newCanvas.width = canvas.width;
+    newCanvas.height = canvas.height;
+    newCtx.drawImage(img, 0, 0);
+    newCtx.drawImage(canvas, 0, 0);
+    newCtx.font = '15px Verdana';
+    newCtx.fillStyle = 'rgba(216, 216, 216, 0.7)';
+    newCtx.fillText("GPEM SAC", newCanvas.width - 100, newCanvas.height - 10);
+    document.getElementById(`divImagen${instanceId}`).innerHTML = '';
+    document.getElementById(`divImagen${instanceId}`).appendChild(newCanvas);
+    canvas.classList.add('oculto');
   });
 }
-
-function displayImage(file, $divImagen, maxWidth, maxHeight, mimeType, quality) {
-  const reader = new FileReader();
-  reader.onload = function (event) {
-    const imageUrl = event.target.result;
-    const canvas = document.createElement('canvas');
-    canvas.style.border = '1px solid black';
-
-    $divImagen.appendChild(canvas);
-    const context = canvas.getContext('2d');
-
-    const image = new Image();
-    image.onload = function () {
-      const [newWidth, newHeight] = calculateSize(image, maxWidth, maxHeight);
-      canvas.width = newWidth;
-      canvas.height = newHeight;
-      canvas.id = "canvas";
-      context.drawImage(image, 0, 0, newWidth, newHeight);
-      // Agregar marca de agua
-      context.strokeStyle = 'rgba(216, 216, 216, 0.7)';
-      context.font = '15px Verdana';
-      context.strokeText("GPEM SAC", 10, newHeight - 10);
-
-      canvas.toBlob(
-        (blob) => {
-          displayInfo('Original: ', file, $divImagen);
-          displayInfo('Comprimido: ', blob, $divImagen);
-        },
-        mimeType,
-        quality
-      );
-    };
-    image.src = imageUrl;
-  };
-  reader.readAsDataURL(file);
-}
-
-function displayInfo(label, file, $divImagen) {
-  const p = document.createElement('p');
-  p.classList.add('text-secondary', 'm-0', 'fs-6');
-  p.innerText = `${label} ${readableBytes(file.size)}`;
-  $divImagen.append(p);
-}
-
-function isValidFileType(file) {
-  const acceptedTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf'];
-  return acceptedTypes.includes(file.type);
-}
-
-function isValidFileSize(file) {
-  const maxSize = 3 * 1024 * 1024; // 3MB
-  return file.size <= maxSize;
-}
-
-function calculateSize(img, maxWidth, maxHeight) {
-  let width = img.width;
-  let height = img.height;
-  if (width > height) {
-    if (width > maxWidth) {
-      height = Math.round((height * maxWidth) / width);
-      width = maxWidth;
-    }
-  } else {
-    if (height > maxHeight) {
-      width = Math.round((width * maxHeight) / height);
-      height = maxHeight;
-    }
-  }
-  return [width, height];
-}
-
-function readableBytes(bytes) {
-  const i = Math.floor(Math.log(bytes) / Math.log(1024)),
-    sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
-  return (bytes / Math.pow(1024, i)).toFixed(2) + ' ' + sizes[i];
-}
-
-FnRedimensionImagen('fileImagen', 'divImagen');
-FnRedimensionImagen('fileImagen2', 'divImagen2');
-
+FnInitCroppieDrawing('');
+FnInitCroppieDrawing('2');
 
 async function FnAgregarArchivo(){
   try {
     vgLoader.classList.remove('loader-full-hidden');
-    // var archivo;
-    // if(document.getElementById('canvas')){
-    //   archivo = document.querySelector("#canvas").toDataURL("image/jpeg");
-    // }else if(document.getElementById('fileImagen').files.length == 1){
-    //   archivo = fileOrCanvasData = document.getElementById('fileImagen').files[0];
-    // }else{
-    //   throw new Error('No se reconoce el archivo');
-    // }
-    archivo = document.getElementById('fileImagen').files[0];
-
-    console.log(archivo);
+    var archivo;
+    if(document.getElementById('canvas')){
+      archivo = document.querySelector("#canvas").toDataURL("image/jpeg");
+    }else if(document.getElementById('fileImagen').files.length == 1){
+      archivo = fileOrCanvasData = document.getElementById('fileImagen').files[0];
+    }else{
+      throw new Error('No se reconoce el archivo');
+    }
     const formData = new FormData();
     formData.append('refid', document.getElementById('txtActividadOwnid').value);
     formData.append('titulo', document.getElementById('txtTitulo').value);
@@ -396,15 +538,15 @@ async function FnAgregarArchivo(){
         title: '¡Éxito!', 
         text: datos.msg, 
         icon: 'success', 
-        // timer:2000 
+        timer:2000 
       });
-      // setTimeout(() => { location.reload(); }, 1000);
+      setTimeout(() => { location.reload(); }, 1000);
     }else {
       Swal.fire({
         title: 'Aviso',
         text: datos.msg,
         icon: 'info',
-        // timer: 2000
+        timer: 2000
       });
     }
   } catch (error) {
@@ -415,7 +557,7 @@ async function FnAgregarArchivo(){
       title: 'Aviso',
       text: error.message,
       icon: 'error',
-      // timer:2000
+      timer:2000
     });
   }
 }
@@ -456,13 +598,21 @@ const FnModificarArchivo = async () => {
   try {
     vgLoader.classList.remove('loader-full-hidden');
     const formData = new FormData();
+    const archivoInput = document.getElementById('fileImagen2');
+    const canvas = document.getElementById('canvas2');
+    let archivo = null;
+    if (canvas) {
+      archivo = canvas.toDataURL("image/jpeg");
+    } else if (archivoInput && archivoInput.files.length === 1) {
+      archivo = archivoInput.files[0];
+    }
     formData.append('id', document.getElementById('txtArchivoId').value);
     formData.append('titulo', document.getElementById('txtTitulo2').value);
     formData.append('descripcion', document.getElementById('txtDescripcion2').value);
     formData.append('tipo','INFD')
-    const fileInput = document.getElementById('fileImagen2');
-    if (fileInput.files.length === 1) {
-      formData.append('archivo', fileInput.files[0]); 
+
+    if (archivo) {
+      formData.append('archivo', archivo);
     }
     const response = await fetch('/gesman/update/ModificarActividadArchivo.php', {
       method: 'POST',
@@ -601,10 +751,7 @@ function FnListarInformes(){
 
 /** EVENTO CAMBIO DE POSICIÓN */
 const lista = document.getElementById('accordion-container');
-// const archivo = document.getElementById('archivo');
-
 let sortableActividades;
-// let sortableArchivos;
 
 function FnInitSorteable() {
   if (!lista) {
@@ -668,13 +815,11 @@ function FnInitSorteable() {
 
 // Inicializar las funciones
 FnInitSorteable();
-// FnInitSorteableArchivo();
 
 // Escuchar cambios en el tamaño de la ventana
 const mediaQuery = window.matchMedia('(min-width: 768px)');
 mediaQuery.addEventListener('change', (e) => {
   FnInitSorteable();
-  // FnInitSorteableArchivo();
 });
 
 

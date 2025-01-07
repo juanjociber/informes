@@ -264,31 +264,74 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Editar Actividades | GPEM S.A.C</title>
     <link rel="shortcut icon" href="/mycloud/logos/favicon.ico">
+    <link rel="stylesheet" href="/mycloud/library/croppie_2.6.5/css/croppie.min.css">
     <link rel="stylesheet" href="/mycloud/library/fontawesome-free-5.9.0-web/css/all.css">
     <link rel="stylesheet" href="/mycloud/library/SweetAlert2/css/sweetalert2.min.css">
     <link rel="stylesheet" href="/mycloud/library/bootstrap-5.0.2-dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/mycloud/library/select-gpem-1.0/css/select-gpem-1.0.css">
     <link rel="stylesheet" href="/mycloud/library/gpemsac/css/gpemsac.css"> 
     <link rel="stylesheet" href="/gesman/menu/sidebar.css">
-    <link rel="stylesheet" href="/recortar/croppie/croppie.css">
-
-    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
-    <script src="/recortar/croppie/croppie.js"></script>
-
     <style>
-      /* .contenedor-imagen{ display: grid; grid-template-columns:1fr 1fr; gap:5px;} */
-      @media(min-width:768px){.contenedor-imagen{display: grid; grid-template-columns:1fr 1fr; gap:15px;}}
+      @media( min-width:768px){.contenedor-imagen{display: grid; grid-template-columns:1fr 1fr; gap:15px;}}
       .accordion .accordion-item { border: none; }
       .accordion .accordion-header { border: none; }
       .accordion .accordion-body { border: none; padding:0}
       .contenedor-actividades{ display:grid; background-color:white !important; }
-      @media(max-width:767px){.input-group--mod{background-color:white !important; }} .grid-icono{ grid-row: 1 / 2; place-self: end }
-      @media(min-width:768px){ .contenedor-actividades{ grid-template-columns: 6fr 1fr;} .grid-icono{ grid-column: 2 / 3; place-self: center }} 
+      @media( max-width:767px){.input-group--mod{background-color:white !important; }} .grid-icono{ grid-row: 1 / 2; place-self: end }
+      @media( min-width:768px){ .contenedor-actividades{ grid-template-columns: 6fr 1fr;} .grid-icono{ grid-column: 2 / 3; place-self: center }} 
       .cabecera-actividad{ border: 0.5px solid #9b9b9b59; }
-      @media(min-width:768px){ .cabecera-actividad--mod{ border: 0.5px solid #9b9b9b59;} .cabecera-actividad{ border: none; } } .imagen-ajustada { width: 100%; height: 200px; object-fit: contain; } .btn-desactivado { color: grey; pointer-events: none; opacity: 0.5; }
-    
-    
-    
+      @media( min-width:768px){ .cabecera-actividad--mod{ border: 0.5px solid #9b9b9b59;} .cabecera-actividad{ border: none; } } .imagen-ajustada { width: 100%; height: 200px; object-fit: contain; } .btn-desactivado { color: grey; pointer-events: none; opacity: 0.5; }
+      .mostrar { display: block; }
+      .oculto { display: none; }
+      #controles, #trazado, #controles2, #trazado2{ text-align: center; padding: 10px; }
+      #divImagen{ padding: 0 250px; }
+      /*ESTILOS IMAGEN DE ICONO DE CARGA*/
+      .profile-img {
+        width: 80px; /* alto y ancho específico para que el círculo sea redondo */
+        height: 80px;
+        border-radius: 50%; 
+        overflow: hidden; /* oculta todo el contenido fuera de la caja */
+        position: relative;
+        margin-left: 15px;
+      }
+      .profile-img img {
+        position: absolute;
+        width: 100%;
+      }
+      .profile-img .file {
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+        font-size: 14px;
+        background: #212529b8;
+        color: #fff;
+        text-align: center;
+        padding: 2px 0 10px;
+      }
+      .profile-img .file input {
+        position: absolute;
+        display: block;
+        width: 100%;
+        opacity: 0;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        cursor: pointer; 
+      }
+      .contenedor-dibujoCanvas{
+        text-align:center;
+      }
+      .contenedor-btn-trazado{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .contenedor-btn-trazado input{
+        margin-right: 5px;
+      }
+      .contenedor-btn-trazado button{
+        margin-right: 5px;
+      }
     </style>
 </head>
 <body>
@@ -341,7 +384,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header bg-primary text-white">
-            <h5 class="modal-title fs-5 fw-bold" id="modalNuevaActividadLabel">ACTIVIDAD</h5>
+            <h5 class="modal-title fs-5 fw-bold" id="modalNuevaActividadLabel">AGREGAR ACTIVIDAD</h5>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
@@ -383,7 +426,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header bg-primary text-white">
-            <h5 class="modal-title fs-5 fw-bold" id="modalNuevaSubActividadLabel">SUBACTIVIDAD</h5>
+            <h5 class="modal-title fs-5 fw-bold" id="modalNuevaSubActividadLabel">AGREGAR SUBACTIVIDAD</h5>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
@@ -425,7 +468,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header bg-primary text-white">
-            <h5 class="modal-title fs-5 fw-bold" id="modalEditarActividadLabel">EDITAR</h5>
+            <h5 class="modal-title fs-5 fw-bold" id="modalEditarActividadLabel">MODIFICAR ACTIVIDAD</h5>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
@@ -462,18 +505,18 @@
         </div>
       </div>
     </div>
-    <!-- START IMAGENES - M O D A L -->
+
+    <!-- AGREGAR ARCHIVO - M O D A L -->
     <div class="modal fade" id="modalAgregarImagen" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-fullscreen-sm-down modal-lg modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header bg-primary text-white">
-            <h5 class="modal-title fs-5 fw-bold" id="modalAgregarImagenLabel">AGREGAR</h5>
+            <h5 class="modal-title fs-5 fw-bold" id="modalAgregarImagenLabel">AGREGAR ARCHIVO</h5>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body pb-1">
-            <input type="hidden" id="txtActividadOwnid"/>
+          <input type="hidden" id="txtActividadOwnid"/>
             <div class="row">
-              
               <div class="col-12 mb-2">
                 <label class="form-label mb-0">Título</label>
                 <input type="text" class="form-control text-secondary" id="txtTitulo">
@@ -481,50 +524,43 @@
               <div class="col-12 mb-2">
                 <label class="form-label mb-0">Descripción</label>
                 <input type="text" class="form-control text-secondary" id="txtDescripcion">
-              </div>
-              <div class="col-12 m-0">
-                <label for="fileImagen" class="form-label mb-0">Imagen</label>
-                <input id="fileImagen" type="file" accept="image/jpeg, image/png" class="form-control mb-2"/>
-              </div>
-
-              <!-- <div class="col-12 m-0">
-                <div class="col-md-12 text-center" id="divImagen"><i class="fas fa-images fs-2"></i></div>
-              </div> -->
-
-
-
-              <div class="card rounded-0">
-                <div class="card-body rounded-0">
-                  <!-- <form action="upload.php" method="POST" enctype="multipart/form-data"> -->
-                    <!-- <div class="col-lg-6 col-md-8 col-sm-12 mx-auto">
-                      <div class="mb-3">
-                        <label for="upload" class="form-label">Subir Imagen</label>
-                        <input class="form-control" type="file" name="upload" accept="image/jpeg, image/png" id="upload">
-                      </div>
-                    </div> -->
-                  <!-- </form> -->
-                  <div id="croppie-editor" class="d-none">
-                    <div id="croppie-field"></div>
-                    <div class="mx-0 text-center">
-                      <button class="btn btn-sm btn-light border border-dark rounded-0" id="rotate-left" type="button">Rotate Left</button>
-                      <button class="btn btn-sm btn-light border border-dark rounded-0" id="rotate-right" type="button">Rotate Right</button>
-                      <!-- <button class="btn btn-sm btn-primary rounded-0" id="upload-btn" type="button">Guardar</button> -->
-                      <button class="btn btn-sm btn-primary rounded-0" onclick="FnAgregarArchivo(); return false;" type="button">Guardar</button>
-                    </div>
+              </div>                        
+              <div class="col-12">
+                <div class="profile-img">
+                  <img src="/mycloud/icos/logo-gpem.jpg" alt="" />
+                  <div class="file btn btn-lg btn-primary">
+                    Cargar Imagen
+                    <input type="file" id="fileImagen" accept="image/*,.pdf" />
                   </div>
                 </div>
+                <!-- Controles (Inicialmente ocultos) -->
+                <div id="controles" class="oculto">
+                  <p class="m-0 mb-2 fw-bold text-secondary">HERRAMIENTAS PARA RECORTAR Y ROTAR</p>
+                  <button style="border: none !important;border-radius: 5px; padding:0px 15px; font-size:25px; background-color: #095dfa; color: #FFFFFF" id="rotateLeft">&#8634;</button>
+                  <button style="border: none !important;border-radius: 5px; padding:0px 15px; font-size:25px; background-color: #095dfa; color: #FFFFFF" id="rotateRight">&#8635;</button>
+                  <button style="border: none !important;border-radius: 5px; padding:0px 15px; font-size:25px; background-color: #00d500; color: #FFFFFF" id="save">&#10003;</button>
+                </div>
+                <!--Botones (inicialmente ocultos, aparecen despues de recortar imagen)-->
+                <div id="trazado" class="oculto">
+                  <p class="m-0 mb-2 fw-bold text-secondary">HERRAMIENTAS PARA REALIZAR TRAZADO</p>
+                  <div class="contenedor-btn-trazado">
+                    <input type="color" id="colorPicker" value="#ff0000">
+                    <button style="border: none !important;border-radius: 5px; padding:8px 15px; font-size:14px; background-color: #095dfa; color: #FFFFFF" id="clearCanvas">Limpiar</button>
+                    <button style="border: none !important;border-radius: 5px; padding:0px 15px; font-size:25px; background-color: #00d500; color: #FFFFFF" id="guardarTrazo">&#10003;</button>
+                  </div>
+                </div>
+                <div id="crop-area"></div>
+                <div class="contenedor-dibujoCanvas">
+                  <canvas id="dibujoCanvas" class="oculto" style="border: 1px solid #d2d2d2;"></canvas>
+                </div>
               </div>
-
-
-
-
-
-
-
+              <div class="col-12 m-0">
+                <div class="col-md-12 text-center" id="divImagen"></div>
+              </div>
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary pt-2 pb-2 col-12 fw-bold" onclick="FnAgregarArchivo(); return false;">
+            <button type="button" id="btn-guardar-archivo" class="btn btn-primary pt-2 pb-2 col-12 fw-bold" onclick="FnAgregarArchivo(); return false;" disabled>
               <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" widht="18px" height="23px" x="0px" y="0px" viewBox="0 0 611.923 611.923" xml:space="preserve" style='margin-right:10px'>
                 <g fill="none" stroke="#FFFFFF" stroke-width="20">
                   <path d="M606.157,120.824L489.908,4.575c-2.46-2.46-6.612-4.152-10.764-4.152H434.32H175.988H40.672   C18.222,0.423,0,18.721,0,41.095v529.734c0,22.45,18.298,40.672,40.672,40.672h86.341h368.661h75.577   c22.45,0,40.672-18.299,40.672-40.672V131.665C611.077,128.359,609.463,124.207,606.157,120.824z M419.328,31.177v136.162   c0,0.846-0.846,0.846-0.846,0.846h-42.363V31.177H419.328z M344.596,31.177v137.008H192.595c-0.846,0-0.846-0.846-0.846-0.846   V31.177H344.596z M141.929,580.9V390.688c0-35.674,29.062-64.737,64.737-64.737h208.434c35.674,0,64.737,29.062,64.737,64.737   v190.135H141.929V580.9z M580.401,570.905c0,4.997-4.152,9.995-9.995,9.995h-59.816V390.688c0-52.281-43.209-95.49-95.49-95.49   H207.511c-52.281,0-95.49,43.209-95.49,95.49v190.135H40.595c-4.997,0-9.995-4.152-9.995-9.995V41.095   c0-4.997,4.152-9.995,9.995-9.995h120.401v136.162c0,17.453,14.147,31.523,31.523,31.523h225.886   c17.453,0,31.523-14.147,31.523-31.523V31.177h23.219l107.1,107.1L580.401,570.905L580.401,570.905z M422.634,490.33   c0,8.304-6.612,14.916-14.916,14.916H217.506c-8.304,0-14.916-6.612-14.916-14.916c0-8.303,6.612-14.916,14.916-14.916h189.289   C415.945,475.415,422.634,482.027,422.634,490.33z M422.634,410.678c0,8.303-6.612,14.916-14.916,14.916H217.506   c-8.304,0-14.916-6.612-14.916-14.916s6.612-14.916,14.916-14.916h189.289C415.945,394.84,422.634,401.529,422.634,410.678z"/>
@@ -535,14 +571,14 @@
           </div>
         </div>
       </div>
-    </div><!-- END IMAGENES - M O D A L -->
+    </div>
 
-    <!-- MODAL MODIFICAR TITULO-DESCRIPCION -->
+    <!-- MODIFICAR ARCHIVO - M O D A L -->
     <div class="modal fade" id="modalModificarArchivoTituloDescripcion" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
-      <div class="modal-dialog modal-dialog-scrollable ">
+      <div class="modal-dialog modal-fullscreen-sm-down modal-lg modal-dialog-scrollable">
         <div class="modal-content">
           <div class="modal-header bg-primary text-white">
-            <h5 class="modal-title fs-5 fw-bold" id="modalModificarArchivoTituloDescripcionLabel">MODIFICAR </h5>
+            <h5 class="modal-title fs-5 fw-bold" id="modalModificarArchivoTituloDescripcionLabel">MODIFICAR ARCHIVO</h5>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body pb-1">
@@ -558,16 +594,41 @@
                 <input type="text" class="form-control text-secondary" id="txtDescripcion2">
               </div>
               <div class="col-12">
-                <label for="fileImagen2" class="form-label mb-0">Imagen</label>
-                <input id="fileImagen2" type="file" accept="image/*,.pdf" class="form-control mb-2"/>
+                <div class="profile-img">
+                  <img src="/mycloud/icos/logo-gpem.jpg" alt="" />
+                  <div class="file btn btn-lg btn-primary">
+                    Cargar Imagen
+                    <input type="file" id="fileImagen2" accept="image/*,.pdf" />
+                  </div>
+                </div>
+                <!-- Controles (Inicialmente ocultos) -->
+                <div id="controles2" class="oculto">
+                  <p class="m-0 mb-2 fw-bold text-secondary">HERRAMIENTAS PARA RECORTAR Y ROTAR</p>
+                  <button style="border: none !important;border-radius: 5px; padding:0px 15px; font-size:25px; background-color: #095dfa; color: #FFFFFF" id="rotateLeft2">&#8634;</button>
+                  <button style="border: none !important;border-radius: 5px; padding:0px 15px; font-size:25px; background-color: #095dfa; color: #FFFFFF" id="rotateRight2">&#8635;</button>
+                  <button style="border: none !important;border-radius: 5px; padding:0px 15px; font-size:25px; background-color: #00d500; color: #FFFFFF" id="save2">&#10003;</button>
+                </div>
+                <!--Botones (inicialmente ocultos, aparecen despues de recortar imagen)-->
+                <div id="trazado2" class="oculto">
+                  <p class="m-0 mb-2 fw-bold text-secondary">HERRAMIENTAS PARA REALIZAR TRAZADO</p>
+                  <div class="contenedor-btn-trazado">
+                    <input type="color" id="colorPicker2" value="#ff0000">
+                    <button style="border: none !important;border-radius: 5px; padding:8px 15px; font-size:14px; background-color: #095dfa; color: #FFFFFF" id="clearCanvas2">Limpiar</button>
+                    <button style="border: none !important;border-radius: 5px; padding:0px 15px; font-size:25px; background-color: #00d500; color: #FFFFFF" id="guardarTrazo2">&#10003;</button>
+                  </div>
+                </div>
+                <div id="crop-area2"></div>
+                <div class="contenedor-dibujoCanvas">
+                  <canvas id="dibujoCanvas2" class="oculto" style="border: 1px solid #d2d2d2;"></canvas>
+                </div>
               </div>
               <div class="col-12 m-0">
-                  <div class="col-md-12 text-center" id="divImagen2"><i class="fas fa-images fs-2"></i></div>
+                  <div class="col-md-12 text-center" id="divImagen2"></div>
               </div>                        
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary pt-2 pb-2 col-12 fw-bold" onclick="FnModificarArchivo(); return false;">
+            <button type="button" id="btn-guardar-archivo2" class="btn btn-primary pt-2 pb-2 col-12 fw-bold" onclick="FnModificarArchivo(); return false;" disabled>
               <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" widht="18px" height="23px" x="0px" y="0px" viewBox="0 0 611.923 611.923" xml:space="preserve" style='margin-right:10px'>
                 <g fill="none" stroke="#FFFFFF" stroke-width="20">
                   <path d="M606.157,120.824L489.908,4.575c-2.46-2.46-6.612-4.152-10.764-4.152H434.32H175.988H40.672   C18.222,0.423,0,18.721,0,41.095v529.734c0,22.45,18.298,40.672,40.672,40.672h86.341h368.661h75.577   c22.45,0,40.672-18.299,40.672-40.672V131.665C611.077,128.359,609.463,124.207,606.157,120.824z M419.328,31.177v136.162   c0,0.846-0.846,0.846-0.846,0.846h-42.363V31.177H419.328z M344.596,31.177v137.008H192.595c-0.846,0-0.846-0.846-0.846-0.846   V31.177H344.596z M141.929,580.9V390.688c0-35.674,29.062-64.737,64.737-64.737h208.434c35.674,0,64.737,29.062,64.737,64.737   v190.135H141.929V580.9z M580.401,570.905c0,4.997-4.152,9.995-9.995,9.995h-59.816V390.688c0-52.281-43.209-95.49-95.49-95.49   H207.511c-52.281,0-95.49,43.209-95.49,95.49v190.135H40.595c-4.997,0-9.995-4.152-9.995-9.995V41.095   c0-4.997,4.152-9.995,9.995-9.995h120.401v136.162c0,17.453,14.147,31.523,31.523,31.523h225.886   c17.453,0,31.523-14.147,31.523-31.523V31.177h23.219l107.1,107.1L580.401,570.905L580.401,570.905z M422.634,490.33   c0,8.304-6.612,14.916-14.916,14.916H217.506c-8.304,0-14.916-6.612-14.916-14.916c0-8.303,6.612-14.916,14.916-14.916h189.289   C415.945,475.415,422.634,482.027,422.634,490.33z M422.634,410.678c0,8.303-6.612,14.916-14.916,14.916H217.506   c-8.304,0-14.916-6.612-14.916-14.916s6.612-14.916,14.916-14.916h189.289C415.945,394.84,422.634,401.529,422.634,410.678z"/>
@@ -578,76 +639,15 @@
           </div>
         </div>
       </div>
-    </div><!-- END IMAGENES - M O D A L -->
+    </div>
 	</div>
 
   <div class="container-loader-full">
     <div class="loader-full"></div>
   </div>
 
-  <script>
-    var $croppie = new Croppie($('#croppie-field')[0], {
-      enableExif: true,
-      enableResize:true,
-      enableZoom:true,
-      boundary: { width: 400, height: 400 },
-      viewport: {
-          height: 300,
-          width: 300
-      },
-      enableOrientation: true
-    });
-    $(document).ready(function(){
-      var img_name;
-      $('#fileImagen').on('change', function(e){
-        var reader = new FileReader();
-          img_name = e.target.files[0].name;
-        reader.onload = function (e) {
-          $croppie.bind({
-            url: e.target.result
-          });
-          $('#croppie-editor').removeClass('d-none')
-        }
-        reader.readAsDataURL(this.files[0]);
-      })
-      $('#rotate-left').click(function(){
-        $croppie.rotate(90);
-      });
-      $('#rotate-right').click(function(){
-        $croppie.rotate(-90);
-      });
-
-
-      $('#upload-btn').click(function(){
-        $croppie.result({
-          type:'base64',
-          format: 'png'
-        }).then((imgBase64)=>{
-          $.ajax({
-            url:'/gesman/insert/AgregarArchivo.php',
-            method:'POST',
-            data: { 'img' : imgBase64, 'fname' : img_name },
-            dataType: 'json',
-            error: err => {
-              console.error(err)
-            },
-            success: function(response){
-              if(response.status == 'success'){
-                alert("Imagen cargada satisfactoriamente.")
-                location.reload()
-              }else{
-                console.error(response)
-              }
-            }
-          })
-        })
-      });
-
-    });
-  </script>
-
-  <!-- <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script> -->
   <script src="/mycloud/library/Sortable-1.15.3/Sortable.min.js"></script>
+  <script src="/mycloud/library/croppie_2.6.5/js/croppie.min.js"></script>
   <script src="/informes/js/EditarInformeActividad.js"></script>
   <script src="/mycloud/library/SweetAlert2/js/sweetalert2.all.min.js"></script>
   <script src="/mycloud/library/bootstrap-5.0.2-dist/js/bootstrap.min.js"></script>
