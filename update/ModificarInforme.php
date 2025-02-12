@@ -16,6 +16,7 @@
     $USUARIO = date('Ymd-His (').$_SESSION['gesman']['Nombre'].')';
     $informe = new stdClass();
     $informe->id = $_POST['id'];
+    $informe->supid = $_POST['supid'];
     $informe->fecha = $_POST['fecha'];
     $informe->clicontacto = $_POST['clicontacto'];
     $informe->clidireccion = $_POST['clidireccion'] ;

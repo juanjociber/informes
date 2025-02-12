@@ -20,6 +20,7 @@
     $informe->equmodelo = empty($_POST['EquModelo']) ? null : $_POST['EquModelo'];
     $informe->equserie = empty($_POST['EquSerie']) ? null :$_POST['EquSerie'];
     $informe->equdatos = empty($_POST['EquDatos']) ? null : $_POST['EquDatos'];
+    $informe->equreferencia = empty($_POST['EquReferencia']) ? null : $_POST['EquReferencia'];
     $informe->equkm = empty($_POST['EquKm']) ? 0 : $_POST['EquKm'];
     $informe->equhm = empty($_POST['EquHm']) ? 0 : $_POST['EquHm'];
     $informe->actualizacion = $USUARIO;

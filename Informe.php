@@ -81,9 +81,9 @@
           <div class="row m-0 mt-2 mb-2 p-0 d-flex justify-content-center" id="'.$nodo['id'].'">';
             if(isset($imagenes[$nodo['id']])){
               $html.='
-              <div class="row caja-imagenes">';               
+              <div class="caja-imagenes">';               
               foreach($imagenes[$nodo['id']] as $elemento){
-                $html .= '<div class="col-6 mb-2">
+                $html .= '<div class="mb-2">
                   <div class="card text-center p-0" id="archivo-'.$elemento['id'].'">
                     <div class="card-header text-secondary" style="text-align:justify;padding-left:5px;">'.$elemento['titulo'].'</div>
                     <div class="card-body p-0">
@@ -202,6 +202,7 @@
     $desabilitar = "btn-outline-secondary";
     $atributodesabilitar = " disabled";
   }
+
 ?>
 <!doctype html>
 <html lang="es">
@@ -217,13 +218,15 @@
     <link rel="stylesheet" href="/gesman/menu/sidebar.css">
     <style>
       .hijos p:first-child{ padding-top: 10px;}
-      .imagen-ajustada { width: 100%; height: 200px; object-fit: contain;}
+      .imagen-ajustada { width: 100%; height: 100%; object-fit: cover;}
       .imagen-ajustada2 { width: 100%; height: 800px; object-fit: contain;}
       .accordion .accordion-item { border: none; }
       .accordion .accordion-header { border: none; }
       .accordion .accordion-body { border: none; padding:0}
-      @media(min-width:1200px){.caja-imagenes{padding:0 80px;}}
-      @media(min-width:1400px){.caja-imagenes{padding:0 150px;}}
+      .caja-imagenes{margin-top:1rem;}
+      @media(min-width:768px){.caja-imagenes{display:grid; grid-template-columns: 1fr 1fr; column-gap:1rem;}}
+      @media(min-width:1200px){.caja-imagenes{grid-template-columns: 1fr 1fr 1fr;}}
+      @media(min-width:1400px){.caja-imagenes{grid-template-columns: 1fr 1fr 1fr 1fr;}}
       @media(min-width:992px){.caja-anexos{width: 60%; margin:0 auto;}}
     </style>
   </head>
@@ -311,6 +314,10 @@
         </div>
         <div class="row p-1 m-0">
           <div class="col-6 col-sm-4 col-lg-4 mb-1">
+            <p class="m-0 text-secondary" style="font-size: 15px;">Referencia</p>
+            <p class="m-0 text-secondary fw-bold"><?php echo  $informe->EquReferencia  ; ?></p>              
+          </div>
+          <div class="col-6 col-sm-4 col-lg-4 mb-1">
             <p class="m-0 text-secondary" style="font-size: 15px;">Nombre Equipo</p>
             <p class="m-0 text-secondary fw-bold"><?php echo  $informe->EquNombre  ; ?></p>              
           </div>
@@ -342,9 +349,9 @@
       
         <?php
           $html=''; 
-          $html.='<div class="row caja-imagenes mt-4">';
+          $html.='<div class="caja-imagenes mt-4">';
             foreach($imagenInformes as $imagenInforme){
-              $html.='<div class="col-6 mb-2">
+              $html.='<div class="mb-2">
                 <div class="card text-center p-0">
                   <div class="card-header text-secondary" style="text-align:justify;padding-left:5px; line-height: 1.2">'.$imagenInforme['titulo'].'</div>
                   <div class="card-body p-0">

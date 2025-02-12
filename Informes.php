@@ -152,18 +152,7 @@
               <label for="txtActividadInforme" class="form-label text-secondary" style="font-size:12px;">Actividad:</label>
               <input type="text" class="form-control" id="txtActividadInforme" value="" required/>
             </div>
-            <!-- Supervisor -->
-            <div class="col-12 mt-2">
-              <label for="cbSupervisorInforme" class="form-label text-secondary" style="font-size:12px;">Supervisor:</label>
-              <select class="form-control" name="cbSupervisorInforme" id="cbSupervisorInforme" required placeholder="SELECCIONAR">
-                <!-- <option value="0">SELECCIONAR</option> -->
-                <?php 
-                  foreach($supervisores as $supervisor) {
-                    echo "<option value='".$supervisor['idsupervisor']."'>".$supervisor['supervisor']."</option>";
-                  };
-                ?> 
-              </select>
-            </div>
+
             <!-- Equipo -->
             <div class="col-12 mt-2">
                 <label class="form-label text-secondary" style="font-size:12px;" style="font-size:12px;">Equipo</label>
@@ -174,12 +163,12 @@
             <!-- km -->
             <div class="col-6 mt-2">
               <label for="txtKm" class="form-label text-secondary" style="font-size:12px;">Km:</label>
-              <input type="number" class="form-control" id="txtKm"/>
+              <input type="number" class="form-control" id="txtKm" value="0"/>
             </div>
             <!-- Hm -->
             <div class="col-6 mt-2">
               <label for="txtHm" class="form-label text-secondary" style="font-size:12px;">Hm:</label>
-              <input type="number" class="form-control" id="txtHm"/>
+              <input type="number" class="form-control" id="txtHm" value="0"/>
             </div>
           </div>  
         </div>

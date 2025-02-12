@@ -1,44 +1,56 @@
 <?php 
-    session_start();
-	$res=false;
-    $id=0;
-	$msg='Error general creando el Informe.';
-    require_once $_SERVER['DOCUMENT_ROOT']."/gesman/data/SesionData.php";
-    require_once $_SERVER['DOCUMENT_ROOT']."/gesman/connection/ConnGesmanDb.php";
-    require_once $_SERVER['DOCUMENT_ROOT']."/informes/data/InformesData.php";
-    require_once $_SERVER['DOCUMENT_ROOT']."/gesman/data/OrdenesData.php";
-    require_once $_SERVER['DOCUMENT_ROOT']."/gesman/data/EquiposData.php";
-    require_once $_SERVER['DOCUMENT_ROOT']."/gesman/data/ClientesData.php";
+  session_start();
+  require_once $_SERVER['DOCUMENT_ROOT']."/gesman/data/SesionData.php";
+  require_once $_SERVER['DOCUMENT_ROOT']."/gesman/connection/ConnGesmanDb.php";
+  require_once $_SERVER['DOCUMENT_ROOT']."/informes/data/InformesData.php";
+  $data = array('id' => 0, 'res' => false, 'msg' => 'Error general.');
 
-    try {
-        $conmy->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        if(!FnValidarSesion()){throw new Exception("Usuario no tiene Autorización.");}
-
-        $orden=FnBuscarOrden($conmy, $_POST['ordid']);
-        if(empty($orden->id)){ throw new Exception("No se encontró la Orden."); }
-        
-        $equipo=FnBuscarEquipo($conmy, $orden->equid);
-        if(empty($orden->id)){ throw new Exception("No se encontró el Equipo."); }
-        
-        $cliente=FnBuscarCliente($conmy, $orden->cliid);
-        if(empty($orden->id)){ throw new Exception("No se encontró el Cliente."); }
-
-        $usuario=date('Ymd-His (').$_SESSION['gesman']['Nombre'].')';
-
-        $id=FnRegistrarInforme($conmy, $orden, $cliente, $equipo, $_POST['fecha'], $_POST['actividad'], $usuario);
-        if($id>0){
-            $res=true;
-            $msg='Se generó el Informe';
-        }else{
-            throw new Exception("Error generando el Informe.");  
-        }
-        $conmy=null;
-    } catch(PDOException $ex){
-        $msg=$ex->getMessage();
-        $conmy=null;
-    } catch (Exception $ex) {
-        $msg=$ex->getMessage();
-        $conmy=null;
+  try {
+    if(!FnValidarSesion()){throw new Exception("Usuario no tiene Autorización.");}
+    if(!FnValidarSesionManNivel2()){throw new Exception("Usuario no autorizado.");}
+    
+    if (empty($_POST['actividad']) || empty($_POST['fecha']) || empty($_POST['equnombre']) || empty($_POST['id'])) {
+        throw new Exception("Todos los campos obligatorios deben estar completos.");
     }
-    echo json_encode(array('res'=>$res, 'id'=>$id, 'msg'=>$msg));
+    $informe = array(
+      'ordid' => 0, 
+      'equid' => $_POST['id'],
+      'cliid' => $_SESSION['gesman']['CliId'],
+      'supid'=>$_SESSION['gesman']['PerId'],
+      'fecha' => $_POST['fecha'],
+      'ordnombre' => null, 
+      'clinombre' => $_SESSION['gesman']['CliNombre'],
+      'clicontacto' => null, 
+      'clidireccion' => null, 
+      'supnombre' => $_SESSION['gesman']['Alias'],
+      'equnombre' => $_POST['equnombre'], 
+      'equmarca' => null, 
+      'equmodelo' => null, 
+      'equserie' => null, 
+      'equdatos' => null, 
+      'equkm' => $_POST['equkm'],
+      'equhm' => $_POST['equhm'],
+      'actividad' => $_POST['actividad'],
+      'usuario' => date('Ymd-His') . '(' . $_SESSION['gesman']['Nombre'] . ')'
+    );
+    $conmy->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $informeId = FnAgregarInforme($conmy, $informe);
+    if ($informeId) {
+      $data['msg'] = "Registro exitoso.";
+      $data['res'] = true;
+      $data['id'] = $informeId;
+    } else {
+       throw new Exception("Error al procesar la solicitud.");
+    }
+    $conmy = null;  
+  } catch (PDOException $ex) {
+    $data['msg'] = $ex->getMessage();
+    $conmy = null;
+  } catch (Exception $ex) {
+    $data['msg'] = $ex->getMessage();
+    $conmy = null;
+  }
+  echo json_encode($data);
 ?>
+
+

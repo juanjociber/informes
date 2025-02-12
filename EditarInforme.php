@@ -62,7 +62,6 @@
     }
   }
   $supervisorInputValue = $supervisorValido ? $informe->Supervisor : '';
-
 ?>
 <!doctype html>
 <html lang="es">
@@ -121,17 +120,17 @@
           $html.='
           <div class="row g-3">
             <!-- FECHA -->
-            <div class="col-6 col-md-4 col-lg-3">
+            <div class="col-6 col-md-4 col-lg-4">
               <label for="dpfecha" class="form-label mb-0">Fecha :</label>
               <input type="date" class="form-control text-secondary fw-bold" id="dpfecha" value="'.$informe->Fecha.'">
             </div>
             <!-- ORDEN DE TRABAJO -->
-            <div class="col-6 col-md-4 col-lg-3">
+            <div class="col-6 col-md-4 col-lg-4">
               <label for="txtOrdNombre" class="form-label mb-0">Orden de trabajo :</label>
               <input type="text" class="form-control text-secondary fw-bold" id="txtOrdNombre" value="'.$informe->OrdNombre.'" disabled>
             </div>
             <!-- CONTACTOS -->
-            <div class="custom-select-container col-6 col-md-4 col-lg-3">
+            <div class="custom-select-container col-12 col-md-4 col-lg-4">
               <label for="cbCliContacto" class="form-label mb-0">Contacto :</label>
               <div class="custom-select-wrapper">
                 <input type="text" id="cbCliContacto" class="custom-select-input text-secondary fw-bold" value="'.$informe->CliContacto.'" />
@@ -143,21 +142,28 @@
                 $html.='</div>
               </div>
             </div>
+            
             <!-- SUPERVISORES -->
-            <div class="custom-select-container col-6 col-lg-3">
+            <div class="custom-select-container col-12 col-md-6">
               <label for="cbSupervisor" class="form-label mb-0">Supervisor :</label>
               <div class="custom-select-wrapper">
                 <input type="text" class="custom-select-input text-secondary fw-bold" id="cbSupervisor" value="'.$supervisorInputValue.'"/>
+                <input type="hidden" id="txtPerId" value="" />
                 <span class="custom-select-arrow"><i class="bi bi-chevron-down"></i></span>
                 <div id="supervisorList" class="custom-select-list">';
                   foreach ($supervisores as $supervisor){
-                    $html.='<div class="custom-select-item" data-value="'.$supervisor['idsupervisor'].'">'.$supervisor['supervisor'].'</div>';
+                    $html.='
+                      <div class="custom-select-item" data-value="'.$supervisor['idsupervisor'].'">
+                        <input type="hidden" class="perid-value" value="'.$supervisor['perid'].'" />
+                        '.$supervisor['supervisor'].'
+                      </div>';
                   }
                 $html.='</div>
               </div>
             </div>
+
             <!-- DIRECCIÓN -->
-            <div class="col-12 col-md-6 col-lg-12">
+            <div class="col-12 col-md-6">
               <label for="txtCliDireccion" class="form-label mb-0">Lugar :</label>
               <input type="text" class="form-control text-secondary fw-bold" id="txtCliDireccion" value="'.$informe->CliDireccion.'" >
             </div>      

@@ -58,6 +58,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Editar Equipo | GPEM S.A.C</title>
     <link rel="shortcut icon" href="/mycloud/logos/favicon.ico">
+    <link rel="stylesheet" href="/mycloud/library/croppie_2.6.5/css/croppie.min.css">
     <link rel="stylesheet" href="/mycloud/library/fontawesome-free-5.9.0-web/css/all.css">
     <link rel="stylesheet" href="/mycloud/library/SweetAlert2/css/sweetalert2.min.css">
     <link rel="stylesheet" href="/mycloud/library/bootstrap-5.0.2-dist/css/bootstrap.min.css">
@@ -69,54 +70,94 @@
       #canvas{
         width:100%
       }
-      @media(min-width:768px){.contenedor-imagen{display: grid; grid-template-columns:1fr 1fr !important; gap:10px;}}  
-      /* @media(min-width:992px){.contenedor-imagen{grid-template-columns:1fr 1fr 1fr !important;}} */
-      .imagen-ajustada {
-        width: 100%;
-        height: 200px;
-        object-fit: contain;
+      .contenedor-imagen{display: grid; grid-template-columns:1fr 1fr; gap:20px;}
+      @media(min-width:992px){
+        .contenedor-imagen{
+          grid-template-columns: 1fr 1fr 1fr;
+        }
       }
-      #editarInformeEquipo:hover svg g {
-        stroke: #FFFFFF; 
-      }
-      #adjuntarInformeEquipoArchivo:hover svg #Archivo {
-        stroke: #FFFFFF; 
-      }
-      .divselect {
-          cursor: pointer;
-          transition: all .25s ease-in-out;
-      }
-      .divselect:hover {
-          background-color: #ccd1d1;
-          transition: background-color .5s;
-      }
-
+      @media(min-width:1200px){
+        .contenedor-imagen{
+          grid-template-columns: 1fr 1fr 1fr 1fr;
+        }
+      }  
+      .imagen-ajustada { width: 100%; height: 100%; object-fit: cover; }
+      #editarInformeEquipo:hover svg g { stroke: #FFFFFF;}
+      #adjuntarInformeEquipoArchivo:hover svg #Archivo { stroke: #FFFFFF; }
+      .divselect { cursor: pointer; transition: all .25s ease-in-out; }
+      .divselect:hover { background-color: #ccd1d1; transition: background-color .5s;}
       .select2-selection__rendered {
-          line-height: 36px !important;
-          background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
-          background-repeat: no-repeat;
-          background-position: right 0.75rem center;
-          background-size: 16px 12px;
+        line-height: 36px !important;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 16px 12px;
       }
       .select2-search__field{
-          border: 1px solid #ced4da !important;
-          height: 37px !important;
+        border: 1px solid #ced4da !important;
+        height: 37px !important;
       }
       .select2-search__field:focus{
-          color: #212529;
-          background-color: #fff !important;
-          border-color: #86b7fe !important;
-          outline: 0 !important;
-          box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25) !important;
+        color: #212529;
+        background-color: #fff !important;
+        border-color: #86b7fe !important;
+        outline: 0 !important;
+        box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25) !important;
       }
       .select2-container .select2-selection--single {
-          height: 37px !important;
-          border: 1px solid #ced4da !important;
+        height: 37px !important;
+        border: 1px solid #ced4da !important;
       }
       .select2-selection__arrow {
-          display: none !important;
-          /*height: 34px !important;*/
+        display: none !important;
       }
+      .mostrar { display: block; }
+      .oculto { display: none; }
+      #controles, #trazado, #controles2, #trazado2{ text-align: center; padding: 10px; }
+      #divImagen{ padding: 0 250px; }
+      /*ESTILOS IMAGEN DE ICONO DE CARGA*/
+      .profile-img {
+        width: 80px; /* alto y ancho específico para que el círculo sea redondo */
+        height: 80px;
+        border-radius: 50%; 
+        overflow: hidden; /* oculta todo el contenido fuera de la caja */
+        position: relative;
+        margin-left: 15px;
+      }
+      .profile-img img {
+        position: absolute;
+        width: 100%;
+      }
+      .profile-img .file {
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+        font-size: 14px;
+        background: #212529b8;
+        color: #fff;
+        text-align: center;
+        padding: 2px 0 10px;
+      }
+      .profile-img .file input {
+        position: absolute;
+        display: block;
+        width: 100%;
+        opacity: 0;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        cursor: pointer; 
+      }
+      .contenedor-dibujoCanvas{
+        text-align:center;
+      }
+      .contenedor-btn-trazado{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .contenedor-btn-trazado input{ margin-right: 5px; }
+      .contenedor-btn-trazado button{ margin-right: 5px; }
     </style>
   </head>
   <body>
@@ -154,8 +195,9 @@
         <div class="row mb-3">
           <?php
           $html=''; 
-          $html.='<div class="d-flex justify-content-start align-items-center">
-            <button id="editarInformeEquipo" class="btn btn-outline-primary" onclick="FnModalModificarInformeEquipo('.$ID.');" style="margin-right: 10px;">
+          $html.='
+          <div class="d-flex justify-content-start align-items-center">
+            <button id="editarInformeEquipo" class="col-12 btn btn-outline-primary" onclick="FnModalModificarInformeEquipo('.$ID.');" style="margin-right: 10px;">
               <svg id="editarDatoEquipo" xmlns="http://www.w3.org/2000/svg" width="23" height="28" viewBox="0 0 59 64">
                 <title>Editar</title>
                 <g fill="none" stroke="#0d6efd" stroke-width="3">
@@ -167,15 +209,6 @@
               </svg>
               EDITAR
             </button>
-            <button id="adjuntarInformeEquipoArchivo" class="btn btn-outline-secondary" onclick="FnModalInformeAgregarArchivo();">
-              <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="23px" height="28px" viewBox="0 0 59 63" version="1.1" id="guardarId2">
-                <title>Archivo</title>
-                <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                  <path d="M36.3,46.5 L12.1,22.4 C9.4,19.7 9.1,15.6 11.8,12.9 L11.8,12.9 C14.5,10.2 19.1,10.1 21.8,12.8 L53.6,44.4 C57.8,48.6 58.2,54.9 54.5,58.5 L54.5,58.5 C50.8,62.1 44.5,61.7 40.3,57.6 L4.7,22.1 C-0.1,17.4 -0.2,9.8 4.3,5.3 L5.3,4.3 C9.8,-0.2 17.4,-0.1 22.2,4.7 L46,28.4" id="Archivo" stroke="#6c757d" stroke-width="3"/>
-                </g>
-              </svg>
-              ADJUNTAR
-            </button>
           </div>';
           echo $html;
           ?>
@@ -185,6 +218,10 @@
           $html='';
           $html.=' 
             <div class="row border-top mb-3">
+              <div class="col-6 col-md-4 mt-2">
+                <label class="form-label mb-0">Referencia :</label>
+                <p class="mb-0 text-secondary fw-bold" style="font-size:15px" id="txtEquReferencia1">'.$informe->EquReferencia.'</p>
+              </div>
               <div class="col-6 col-md-4 mt-2">
                 <label class="form-label mb-0">Nombre :</label>
                 <p class="mb-0 text-secondary fw-bold" style="font-size:15px" id="txtEquNombre1">'.$informe->EquNombre.'</p>
@@ -220,7 +257,18 @@
         <?php
           $html=''; 
           $html.='
-          <div class="row border-top contenedor-imagen pt-4">';
+          <div class="d-flex justify-content-start align-items-center">
+            <button id="adjuntarInformeEquipoArchivo" class="col-12 btn btn-outline-secondary" onclick="FnModalInformeAgregarArchivo();">
+              <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="23px" height="28px" viewBox="0 0 59 63" version="1.1" id="guardarId2">
+                <title>Archivo</title>
+                <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                  <path d="M36.3,46.5 L12.1,22.4 C9.4,19.7 9.1,15.6 11.8,12.9 L11.8,12.9 C14.5,10.2 19.1,10.1 21.8,12.8 L53.6,44.4 C57.8,48.6 58.2,54.9 54.5,58.5 L54.5,58.5 C50.8,62.1 44.5,61.7 40.3,57.6 L4.7,22.1 C-0.1,17.4 -0.2,9.8 4.3,5.3 L5.3,4.3 C9.8,-0.2 17.4,-0.1 22.2,4.7 L46,28.4" id="Archivo" stroke="#6c757d" stroke-width="3"/>
+                </g>
+              </svg>
+              ADJUNTAR
+            </button>
+          </div>
+          <div class="border-top contenedor-imagen pt-4">';
             if ($isAuthorized){
               foreach($archivos as $archivo){
                 if($archivo['tabla']==='INFE'){
@@ -264,6 +312,10 @@
           <!-- START MODAL-BODY -->
           <div class="modal-body mb-2" id='modal-body'>
             <div class="row">
+              <div class ="col-12 mt-2">
+                <label for="" class="form-label mb-0">Referencia :</label>
+                <input type="text" id="txtEquReferencia2" class="form-control text-secondary" value="<?php echo $informe->EquReferencia;?>"/>
+              </div>
               <div class="col-12 col-md-6 mt-2">
                 <label for="cbEquipo" class="form-label mb-0">Nombre :</label>
                 <select class="js-example-responsive" name="cbEquipo" id="cbEquipo" style="width: 100%">
@@ -329,18 +381,46 @@
                 <label class="form-label mb-0">Descripción</label>
                 <input type="text" class="form-control text-secondary" id="txtDescripcion" <?php echo !$isAuthorized ? 'disabled' : ''; ?>>
               </div>
-              <div class="col-12">
-                <label for="adjuntarImagenInput" class="form-label mb-0">Imagen</label>
-                <input id="fileImagen" type="file" accept="image/*,.pdf" class="form-control mb-2" <?php echo !$isAuthorized ? 'disabled' : ''; ?>/>
+              <div class="col-12">           
+                <div class="profile-img">
+                  <img src="/mycloud/icos/logo-gpem.jpg" alt="" />
+                  <div class="file btn btn-lg btn-primary">
+                    Cargar Imagen
+                    <input type="file" id="fileImagen" accept="image/*,.pdf" />
+                  </div>
+                </div>
+              
               </div>
+
+              <!-- Controles (Inicialmente ocultos) -->
+              <div id="controles" class="oculto">
+                  <p class="m-0 mb-2 fw-bold text-secondary">HERRAMIENTAS PARA RECORTAR Y ROTAR</p>
+                  <button style="border: none !important;border-radius: 5px; padding:0px 15px; font-size:25px; background-color: #095dfa; color: #FFFFFF" id="rotateLeft">&#8634;</button>
+                  <button style="border: none !important;border-radius: 5px; padding:0px 15px; font-size:25px; background-color: #095dfa; color: #FFFFFF" id="rotateRight">&#8635;</button>
+                  <button style="border: none !important;border-radius: 5px; padding:0px 15px; font-size:25px; background-color: #00d500; color: #FFFFFF" id="save">&#10003;</button>
+                </div>
+                <!--Botones (inicialmente ocultos, aparecen despues de recortar imagen)-->
+                <div id="trazado" class="oculto">
+                  <p class="m-0 mb-2 fw-bold text-secondary">HERRAMIENTAS PARA REALIZAR TRAZADO</p>
+                  <div class="contenedor-btn-trazado">
+                    <input type="color" id="colorPicker" value="#ff0000">
+                    <button style="border: none !important;border-radius: 5px; padding:8px 15px; font-size:14px; background-color: #095dfa; color: #FFFFFF" id="clearCanvas">Limpiar</button>
+                    <button style="border: none !important;border-radius: 5px; padding:0px 15px; font-size:25px; background-color: #00d500; color: #FFFFFF" id="guardarTrazo">&#10003;</button>
+                  </div>
+                </div>
+                <div id="crop-area"></div>
+                <div class="contenedor-dibujoCanvas">
+                  <canvas id="dibujoCanvas" class="oculto" style="border: 1px solid #d2d2d2;"></canvas>
+                </div>
+
               <div class="col-12 m-0">
-                  <div class="col-md-12 text-center" id="divImagen"><i class="fas fa-images fs-2"></i></div>
+                  <div class="col-md-12 text-center" id="divImagen"></div>
               </div>
             </div>
           </div>
           <div id="msjAgregarImagen" class="modal-body pt-1"></div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary fw-bold pt-2 pb-2 col-12" onclick="FnAgregarInformeArchivo(); return false;">
+            <button type="button" id="btn-guardar-archivo" class="btn btn-primary fw-bold pt-2 pb-2 col-12" onclick="FnAgregarInformeArchivo(); return false;">
               <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" widht="18px" height="23px" x="0px" y="0px" viewBox="0 0 611.923 611.923" xml:space="preserve" style='margin-right:10px'>
                 <g fill="none" stroke="#FFFFFF" stroke-width="20">
                   <path d="M606.157,120.824L489.908,4.575c-2.46-2.46-6.612-4.152-10.764-4.152H434.32H175.988H40.672   C18.222,0.423,0,18.721,0,41.095v529.734c0,22.45,18.298,40.672,40.672,40.672h86.341h368.661h75.577   c22.45,0,40.672-18.299,40.672-40.672V131.665C611.077,128.359,609.463,124.207,606.157,120.824z M419.328,31.177v136.162   c0,0.846-0.846,0.846-0.846,0.846h-42.363V31.177H419.328z M344.596,31.177v137.008H192.595c-0.846,0-0.846-0.846-0.846-0.846   V31.177H344.596z M141.929,580.9V390.688c0-35.674,29.062-64.737,64.737-64.737h208.434c35.674,0,64.737,29.062,64.737,64.737   v190.135H141.929V580.9z M580.401,570.905c0,4.997-4.152,9.995-9.995,9.995h-59.816V390.688c0-52.281-43.209-95.49-95.49-95.49   H207.511c-52.281,0-95.49,43.209-95.49,95.49v190.135H40.595c-4.997,0-9.995-4.152-9.995-9.995V41.095   c0-4.997,4.152-9.995,9.995-9.995h120.401v136.162c0,17.453,14.147,31.523,31.523,31.523h225.886   c17.453,0,31.523-14.147,31.523-31.523V31.177h23.219l107.1,107.1L580.401,570.905L580.401,570.905z M422.634,490.33   c0,8.304-6.612,14.916-14.916,14.916H217.506c-8.304,0-14.916-6.612-14.916-14.916c0-8.303,6.612-14.916,14.916-14.916h189.289   C415.945,475.415,422.634,482.027,422.634,490.33z M422.634,410.678c0,8.303-6.612,14.916-14.916,14.916H217.506   c-8.304,0-14.916-6.612-14.916-14.916s6.612-14.916,14.916-14.916h189.289C415.945,394.84,422.634,401.529,422.634,410.678z"/>
@@ -357,6 +437,7 @@
     </div>
 
     <script src="/mycloud/library/jquery-3.5.1/jquery-3.5.1.js"></script>
+    <script src="/mycloud/library/croppie_2.6.5/js/croppie.min.js"></script>
     <script src="/mycloud/library/bootstrap-5.0.2-dist/js/bootstrap.min.js"></script>
     <script src="/mycloud/library/SweetAlert2/js/sweetalert2.all.min.js"></script>
     <script src="/mycloud/library/select2-4.1.0-rc.0/dist/js/select2.min.js"></script>

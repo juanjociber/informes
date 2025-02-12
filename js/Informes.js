@@ -21,7 +21,7 @@ $(document).ready(function() {
         dataType: 'json',
         data: function (params) {
           return {
-              codigo: params.term // parametros a enviar al server. params.term captura lo que se escribe en el input
+              nombre: params.term // parametros a enviar al server. params.term captura lo que se escribe en el input
           };
         },
         processResults: function (datos) {
@@ -29,7 +29,7 @@ $(document).ready(function() {
             results:datos.data.map(function(elem) {
                 return {
                     id:elem.id,
-                    text:elem.codigo,
+                    text:elem.nombre,
                 };
             })
           }
@@ -53,7 +53,7 @@ $(document).ready(function() {
       dataType: 'json',
       data: function (params) {
           return {
-              codigo: params.term // parametros a enviar al server. params.term captura lo que se escribe en el input
+              nombre: params.term // parametros a enviar al server. params.term captura lo que se escribe en el input
           };
       },
       processResults: function (datos) {
@@ -61,7 +61,7 @@ $(document).ready(function() {
           results:datos.data.map(function(elem) {
               return {
                 id: elem.id,
-                text: elem.codigo,
+                text: elem.nombre,
               };
           })
         }
@@ -212,15 +212,18 @@ async function FnAgregarInforme() {
     vgLoader.classList.remove('loader-full-hidden');
     const formData = new FormData();
     formData.append('fecha', document.getElementById('txtFechaInforme').value);
-    const actividad = document.getElementById('txtActividadInforme').value;
-    formData.append('actividad', actividad);
-    formData.append('supervisor', document.getElementById('cbSupervisorInforme').options[document.getElementById('cbSupervisorInforme').selectedIndex].text);
+    formData.append('actividad', document.getElementById('txtActividadInforme').value);
+    // formData.append('supervisor', document.getElementById('cbSupervisorInforme').options[document.getElementById('cbSupervisorInforme').selectedIndex].text);
     formData.append('id', document.getElementById('cbEquipo2').value);
-    formData.append('equ_codigo', document.getElementById('cbEquipo2').options[document.getElementById('cbEquipo2').selectedIndex].text);
+    formData.append('equnombre', document.getElementById('cbEquipo2').options[document.getElementById('cbEquipo2').selectedIndex].text);
     formData.append('equkm', document.getElementById('txtKm').value);
     formData.append('equhm', document.getElementById('txtHm').value);
 
-    const response = await fetch("/informes/insert/AgregarInforme2.php", {
+    formData.forEach((value,key) =>{
+      console.log(key+':',value);
+    })
+
+    const response = await fetch("/informes/insert/AgregarInforme.php", {
       method: "POST",
       body: formData
     });

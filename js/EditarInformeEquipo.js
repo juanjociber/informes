@@ -277,14 +277,16 @@ $(document).ready(function() {
 
 // FUNCIÓN MÓDIFICAR EQUIPO
 const FnModificarInformeEquipo = async () => {
+  vgLoader.classList.remove('loader-full-hidden');
   try {
-    vgLoader.classList.remove('loader-full-hidden');
+    console.log('clic')
     id = document.getElementById('txtInformeId').value;
     equnombre = document.getElementById('cbEquipo').options[document.getElementById('cbEquipo').selectedIndex].text;
     equmarca = document.getElementById('txtEquMarca2').value;
     equmodelo = document.getElementById('txtEquModelo2').value;
     equserie = document.getElementById('txtEquSerie2').value;
     equdatos = document.getElementById('txtEquDatos2').value;
+    equreferencia = document.getElementById('txtEquReferencia2').value; 
     equkm = document.getElementById('txtEquKm2').value;
     equhm = document.getElementById('txtEquHm2').value;
 
@@ -296,6 +298,7 @@ const FnModificarInformeEquipo = async () => {
     formData.append('EquModelo', equmodelo);
     formData.append('EquSerie', equserie);
     formData.append('EquDatos', equdatos);
+    formData.append('EquReferencia', equreferencia);
     formData.append('EquKm', equkm);
     formData.append('EquHm', equhm);
 
@@ -313,6 +316,7 @@ const FnModificarInformeEquipo = async () => {
     document.querySelector('#txtEquModelo1').textContent = equmodelo;
     document.querySelector('#txtEquSerie1').textContent = equserie;
     document.querySelector('#txtEquDatos1').textContent = equdatos;
+    document.querySelector('#txtEquReferencia1').textContent = equreferencia;
     document.querySelector('#txtEquKm1').textContent = equkm;
     document.querySelector('#txtEquHm1').textContent = equhm;
     // Mostrar el SweetAlert
@@ -370,5 +374,154 @@ document.getElementById('editarInformeEquipo').addEventListener('click', functio
 document.getElementById('adjuntarInformeEquipoArchivo').addEventListener('click', function() {
   document.getElementById('Archivo').setAttribute('stroke', '#6c757d');
 });
+
+
+/**=============================================
+ * FUNCIÓN: RECORTAR, ROTAR, ZOOM y TRAZAR
+ * =============================================
+ */
+function FnInitCroppieDrawing(instanceId) {
+  let croppieInstance;
+  const controles = document.getElementById(`controles${instanceId}`);
+  const cropArea = document.getElementById(`crop-area${instanceId}`);
+  const canvas = document.getElementById(`dibujoCanvas${instanceId}`);
+  const ctx = canvas.getContext('2d');
+  let drawing = false;
+  let img;
+  let lastX = 0, lastY = 0, lastTime = 0;
+
+  // Permite darle precisión cuando se dibuja el canvas
+  function calcularVelocidad(x, y) {
+    const now = Date.now();
+    const deltaX = x - lastX;
+    const deltaY = y - lastY;
+    const distancia = Math.sqrt(deltaX ** 2 + deltaY ** 2);
+    const tiempo = now - lastTime || 1;
+    const velocidad = distancia / tiempo;
+    lastX = x;
+    lastY = y;
+    lastTime = now;
+    return velocidad;
+  }
+
+  document.getElementById(`fileImagen${instanceId}`).addEventListener('change', function (event) {
+    let reader = new FileReader();
+    reader.onload = function (e) {
+      if (croppieInstance) croppieInstance.destroy();
+      croppieInstance = new Croppie(cropArea, {
+        viewport: { width: 300, height: 300, type: 'square' },
+        boundary: { width: 400, height: 400 },
+        showZoomer: true,
+        enableOrientation: true
+      });
+      croppieInstance.bind({ url: e.target.result });
+      controles.classList.remove('oculto');
+      cropArea.classList.remove('oculto');
+    };
+    reader.readAsDataURL(event.target.files[0]);
+  });
+
+  document.getElementById(`rotateLeft${instanceId}`).addEventListener('click', () => croppieInstance.rotate(-90));
+  document.getElementById(`rotateRight${instanceId}`).addEventListener('click', () => croppieInstance.rotate(90));
+
+  document.getElementById(`save${instanceId}`).addEventListener('click', function () {
+    croppieInstance.result({ type: 'base64', size: 'viewport', format: 'jpeg' }).then(function (base64) {
+      img = new Image();
+      img.onload = function () {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+        canvas.classList.remove('oculto');
+        document.getElementById(`trazado${instanceId}`).classList.remove('oculto');
+      };
+      img.src = base64;
+    });
+    cropArea.classList.add('oculto');
+    controles.classList.add('oculto');
+  });
+
+  function getCoordenadas(event) {
+    let x, y;
+    if (event.touches) {
+      const touch = event.touches[0];
+      const rect = canvas.getBoundingClientRect();
+      x = touch.clientX - rect.left;
+      y = touch.clientY - rect.top;
+    } else {
+      x = event.offsetX;
+      y = event.offsetY;
+    }
+    return { x, y };
+  }
+
+  function iniciarDibujo(event) {
+    drawing = true;
+    const { x, y } = getCoordenadas(event);
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    lastX = x;
+    lastY = y;
+    lastTime = Date.now();
+  }
+
+  function dibujar(event) {
+    if (!drawing) return;
+    const { x, y } = getCoordenadas(event);
+    const velocidad = calcularVelocidad(x, y);
+    ctx.strokeStyle = document.getElementById(`colorPicker${instanceId}`).value;
+    ctx.lineWidth = Math.max(2, Math.min(5, 5 - velocidad * 2));
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    const pasos = Math.max(1, Math.round(velocidad * 10));
+    for (let i = 0; i < pasos; i++) {
+      const interpolX = lastX + (x - lastX) * (i / pasos);
+      const interpolY = lastY + (y - lastY) * (i / pasos);
+      ctx.lineTo(interpolX, interpolY);
+      ctx.stroke();
+    }
+    lastX = x;
+    lastY = y;
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+  }
+  function finalizarDibujo() { drawing = false; }
+
+  canvas.addEventListener('mousedown', iniciarDibujo);
+  canvas.addEventListener('mousemove', dibujar);
+  canvas.addEventListener('mouseup', finalizarDibujo);
+  canvas.addEventListener('mouseleave', finalizarDibujo);
+  canvas.addEventListener('touchstart', (event) => { iniciarDibujo(event); event.preventDefault(); });
+  canvas.addEventListener('touchmove', (event) => { dibujar(event); event.preventDefault(); });
+  canvas.addEventListener('touchend', finalizarDibujo);
+  canvas.addEventListener('touchcancel', finalizarDibujo);
+
+  document.getElementById(`clearCanvas${instanceId}`).addEventListener('click', () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, 0, 0);
+  });
+
+  document.getElementById(`guardarTrazo${instanceId}`).addEventListener('click', function () {
+    document.getElementById(`trazado${instanceId}`).classList.add('oculto');
+    document.getElementById(`btn-guardar-archivo${instanceId}`).removeAttribute('disabled');
+    const newCanvas = document.createElement('canvas');
+    newCanvas.setAttribute('id', `canvas${instanceId}`);
+    const newCtx = newCanvas.getContext('2d');
+    newCanvas.width = canvas.width;
+    newCanvas.height = canvas.height;
+    newCtx.drawImage(img, 0, 0);
+    newCtx.drawImage(canvas, 0, 0);
+    newCtx.font = '15px Verdana';
+    newCtx.fillStyle = 'rgba(216, 216, 216, 0.7)';
+    newCtx.fillText("GPEM SAC", newCanvas.width - 100, newCanvas.height - 10);
+    document.getElementById(`divImagen${instanceId}`).innerHTML = '';
+    document.getElementById(`divImagen${instanceId}`).appendChild(newCanvas);
+    canvas.classList.add('oculto');
+  });
+}
+FnInitCroppieDrawing('');
+// FnInitCroppieDrawing('2');
+
+
+
 
 

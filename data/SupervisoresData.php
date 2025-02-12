@@ -1,7 +1,7 @@
 <?php 
   function FnBuscarSupervisores($comy) {
     try {
-      $stmt = $comy->prepare("SELECT idsupervisor, idcliente, supervisor FROM cli_supervisores WHERE idcliente = 1");
+      $stmt = $comy->prepare("SELECT idsupervisor, perid, idcliente, supervisor FROM cli_supervisores WHERE idcliente = 1");
       $stmt->execute(); 
       $supervisores = $stmt->fetchAll(PDO::FETCH_ASSOC);
       return $supervisores;
